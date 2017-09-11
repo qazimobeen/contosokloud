@@ -3,9 +3,9 @@
     "manifestVersion": "1.0",
     "version": "1.0.0",
     "id": "c1dfba10-37bd-45e5-8967-d774a01b7f3f",
-    "packageName": "com.microsoft.teams.samples.sampleapp",
+    "packageName": "com.kloud.teams.managedservicesapp",
     "developer": {
-        "name": "Microsoft",
+        "name": "Kloud Solutions",
         "websiteUrl": "http://www.kloud.com.au",
         "privacyUrl": "http://www.kloud.com.au/privacy",
         "termsOfUseUrl": "http://www.kloud.com.au/termsofuse"
@@ -15,45 +15,54 @@
         "full": "Kloud Managed Services - Microsoft Teams App"
     },
     "description": {
-        "short": "Kloud Managed Services - Short Description...",
-        "full": "Kloud Managed Services - Full Description..."
+        "short": "Lorem ipsum dolor sit amet.",
+        "full": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."
     },
     "icons": {
-        "outline": "outline_icon.png",
-        "color": "color_icon.png"
+        "outline": "kloud44.png",
+        "color": "kloud88.png"
     },
     "accentColor": "#3F487F",
     "staticTabs": [
         {
             "entityId": "help",
             "name": "Help",
-            "contentUrl": "https://contosomanagedservices.azurewebsites.net/tabs/static/help",
-            "websiteUrl": "https://contosomanagedservices.azurewebsites.net/tabs/static/help?web=1",
+            "contentUrl": "https://contosomanagedservices.azurewebsites.net/help.html",
+            "websiteUrl": "https://contosomanagedservices.azurewebsites.net/help.html?web=1",
+            "scopes": [
+                "personal"
+            ]
+        },
+        {
+            "entityId": "index",
+            "name": "Index",
+            "contentUrl": "https://contosomanagedservices.azurewebsites.net/index.html",
+            "websiteUrl": "https://contosomanagedservices.azurewebsites.net/index.html?web=1",
             "scopes": [
                 "personal"
             ]
         }
     ],
-  "tabs": [
-    {
-      "id": "c1dfba10-37bd-45e5-8967-d774a01b7f3f",
-      "name": "Dashboard",
-      "description": {
-        "short": "Display customer managed services dashboard.",
-        "full": "Display customer managed services dashboard as a tab."
-      },
-      "icons": {
-        "44": "https://contosomanagedservices.azurewebsites.net/images/inv44.png",
-        "88": "https://contosomanagedservices.azurewebsites.net/images/inv88.png"
-      },
-      "accentColor": "#223344",
-      "configUrl": "https://contosomanagedservices.azurewebsites.net/tabs/config/configure",
-      "canUpdateConfig": true
-    }
-  ],
+	  "tabs": [
+		{
+		  "id": "c1dfba10-37bd-45e5-8967-d774a01b7f3f",
+		  "name": "Dashboard",
+		  "description": {
+			"short": "Display service management dashboard.",
+			"full": "Display service management dashboard as a tab."
+		  },
+		  "icons": {
+			"44": "https://contosomanagedservices.azurewebsites.net/images/kloud44.png",
+			"88": "https://contosomanagedservices.azurewebsites.net/images/kloud88.png"
+		  },
+		  "accentColor": "#223344",
+		  "configUrl": "https://contosomanagedservices.azurewebsites.net/configuration.html",
+		  "canUpdateConfig": true
+		}
+	  ],
     "configurableTabs": [
         {
-            "configurationUrl": "https://contosomanagedservices.azurewebsites.net/tabs/config/configure",
+            "configurationUrl": "https://contosomanagedservices.azurewebsites.net/configuration.html",
             "canUpdateConfiguration": true,
             "scopes": [
                 "team"
