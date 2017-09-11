@@ -21,6 +21,7 @@ namespace Bot_Application
     [Serializable]
     public class RootDialog : IDialog<object>
     {
+        public const string cwURI = "https://api-aus.myconnectwise.net/v2017_5/apis/3.0/";
         public class TicketDetails
         {
             public string Title { get; set; }
@@ -94,13 +95,13 @@ namespace Bot_Application
                 // Parse the command and go do the right thing
                 if (cmd.Contains("status"))
                 {
-                    TicketDetails ticketDetails =  GetTicketStatus(string.Join(" ", q));
+                    TicketDetails ticketDetails = GetTicketStatus(string.Join(" ", q));
                     await SendStatusMessage(context, ticketDetails);
                 }
                 else if (cmd.Contains("contact"))
                 {
                     CompanyDetails companyDetails = GetContactDetails(string.Join(" ", q));
-                     await SendContactDetailsMessage(context, companyDetails);
+                    await SendContactDetailsMessage(context, companyDetails);
                 }
                 //else if (cmd.Contains("link"))
                 //{
@@ -149,7 +150,7 @@ namespace Bot_Application
             {
                 reply.Text = $"Company could not be found";
             }
-            
+
 
             ConnectorClient client = new ConnectorClient(new Uri(context.Activity.ServiceUrl));
             ResourceResponse resp = await client.Conversations.ReplyToActivityAsync((Activity)reply);
@@ -235,7 +236,8 @@ namespace Bot_Application
 
                 ConnectorClient client = new ConnectorClient(new Uri(context.Activity.ServiceUrl));
                 ResourceResponse resp = await client.Conversations.UpdateActivityAsync(context.Activity.Conversation.Id, activityId, (Activity)reply);
-            } else
+            }
+            else
             {
                 System.Diagnostics.Debug.WriteLine($"Could not update task {taskItemGuid}");
             }
@@ -288,22 +290,34 @@ namespace Bot_Application
             await context.PostAsync(helpMessage);
         }
 
+        private static HttpResponseMessage GetCWResponse(string uri)
+        {
+            HttpResponseMessage response = null;
+            string accessToken = "S2xvdWRUcmFpbmluZytxcHBWZkFNZlVWMXJaZ0tKOk1vU1RCdURzMG5MRlp5b3A=";
+            HttpClient httpClient = new HttpClient();
+            httpClient.BaseAddress = new Uri(uri);
+            httpClient.DefaultRequestHeaders.Add("Authorization", "Basic " + accessToken);
+            httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+            response = httpClient.GetAsync(uri).Result;
+
+            return response;
+
+        }
+
+
         private CompanyDetails GetContactDetails(string companyId)
         {
             CompanyDetails cDetails = null;
             AMContactDetails amContactDetails = null;
-            string accessToken = "S2xvdWRUcmFpbmluZytxcHBWZkFNZlVWMXJaZ0tKOk1vU1RCdURzMG5MRlp5b3A=";
-            HttpClient clientCompany = new HttpClient();
-            string urlCompany = string.Format("https://api-aus.myconnectwise.net/v2017_5/apis/3.0/company/companies/{0}", companyId);
-            clientCompany.BaseAddress = new Uri(urlCompany);
-            clientCompany.DefaultRequestHeaders.Add("Authorization", "Basic " + accessToken);
-
-            clientCompany.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-            HttpResponseMessage response = clientCompany.GetAsync(urlCompany).Result;
             JObject companyObject = null;
-            if (response.IsSuccessStatusCode)
+
+            string urlCompany = string.Format("{0}company/companies/{1}", cwURI, companyId);
+
+            HttpResponseMessage responseCompany = GetCWResponse(urlCompany);
+
+            if (responseCompany.IsSuccessStatusCode)
             {
-                using (HttpContent content = response.Content)
+                using (HttpContent content = responseCompany.Content)
                 {
                     Task<string> result = content.ReadAsStringAsync();
                     companyObject = JObject.Parse(result.Result);
@@ -314,12 +328,9 @@ namespace Bot_Application
                 string amId = defaultContactObject["id"].ToString();
                 string amName = defaultContactObject["name"].ToString();
 
-                string contactInfoUrl = string.Format("https://api-aus.myconnectwise.net/v4_6_release/apis/3.0//company/contacts/{0}/communications", amId);
-                HttpClient clientContactInfo = new HttpClient();
-                clientContactInfo.BaseAddress = new Uri(contactInfoUrl);
-                clientContactInfo.DefaultRequestHeaders.Add("Authorization", "Basic " + accessToken);
-                clientContactInfo.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-                HttpResponseMessage responsecontactInfo = clientContactInfo.GetAsync(contactInfoUrl).Result;
+                string contactInfoUrl = string.Format("{0}company/contacts/{1}/communications", cwURI, amId);
+
+                HttpResponseMessage responsecontactInfo = GetCWResponse(contactInfoUrl);
 
                 if (responsecontactInfo.IsSuccessStatusCode)
                 {
@@ -333,7 +344,7 @@ namespace Bot_Application
                         {
                             var itemProperties = item.Children<JProperty>();
                             var myElement = itemProperties.FirstOrDefault(x => x.Name == "communicationType");
-                            if(myElement.Value.ToString() == "Phone")
+                            if (myElement.Value.ToString() == "Phone")
                             {
                                 phoneNumber = itemProperties.FirstOrDefault(x => x.Name == "value").Value.ToString();
                             }
@@ -343,7 +354,8 @@ namespace Bot_Application
                             }
                         }
 
-                        amContactDetails = new AMContactDetails { Name = amName, Email = email, PhoneNumber = phoneNumber};
+                        amContactDetails = new AMContactDetails { Name = amName, Email = email, PhoneNumber = phoneNumber };
+
                         cDetails.AMContactDetails = amContactDetails;
                     }
                 }
@@ -354,24 +366,23 @@ namespace Bot_Application
         private TicketDetails GetTicketStatus(string ticketNumber)
         {
             TicketDetails tickDetails = null;
-            string accessToken = "S2xvdWRUcmFpbmluZytxcHBWZkFNZlVWMXJaZ0tKOk1vU1RCdURzMG5MRlp5b3A=";
-            HttpClient client = new HttpClient();
-            string url = string.Format("https://api-aus.myconnectwise.net/v2017_5/apis/3.0/service/tickets/{0}", ticketNumber);
-            client.BaseAddress = new Uri(url);
-            client.DefaultRequestHeaders.Add("Authorization", "Basic " + accessToken);
+            string url = string.Format("{0}/service/tickets/{1}", cwURI, ticketNumber);
 
-            client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-            HttpResponseMessage response = client.GetAsync(url).Result;
+            HttpResponseMessage response = GetCWResponse(url);
 
             if (response.IsSuccessStatusCode)
             {
                 using (HttpContent content = response.Content)
                 {
                     Task<string> result = content.ReadAsStringAsync();
+                    JObject ticketObject = JObject.Parse(result.Result);
 
-                    JObject o = JObject.Parse(result.Result);
-
-                    tickDetails = new TicketDetails { Title = o["summary"].ToString(), SubTitle = ticketNumber, Text = o["status"]["name"].ToString() };
+                    tickDetails = new TicketDetails
+                    {
+                        Title = ticketObject["summary"].ToString(),
+                        SubTitle = ticketNumber,
+                        Text = ticketObject["status"]["name"].ToString()
+                    };
                 }
             }
 
