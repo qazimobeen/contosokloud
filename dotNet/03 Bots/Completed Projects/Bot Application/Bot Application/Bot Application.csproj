@@ -112,6 +112,16 @@
   <ItemGroup>
     <Content Include="default.htm" />
     <Content Include="Global.asax" />
+    <Content Include="Images\color_icon.png" />
+    <Content Include="Images\image1.png" />
+    <Content Include="Images\image2.png" />
+    <Content Include="Images\image3.png" />
+    <Content Include="Images\image4.png" />
+    <Content Include="Images\image5.png" />
+    <Content Include="Images\image6.png" />
+    <Content Include="Images\image7.png" />
+    <Content Include="Images\image8.png" />
+    <Content Include="Images\image9.png" />
     <Content Include="Web.config">
       <SubType>Designer</SubType>
     </Content>

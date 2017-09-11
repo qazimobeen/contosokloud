@@ -128,7 +128,7 @@ namespace Bot_Application
                 {
                     new CardImage()
                     {
-                        Url = $"../images/image{random.Next(1, 9)}.png",
+                        Url = $"https://contosomanagedservices.azurewebsites.net/images/kloud88.png"
                     }
                 }
             };
