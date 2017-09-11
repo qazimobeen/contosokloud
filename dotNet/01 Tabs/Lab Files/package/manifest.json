@@ -3,10 +3,10 @@
   "manifestVersion": "0.4",
   "version": "1.0",
   "developer": {
-    "name": "Contoso",
-    "websiteUrl": "http://www.contoso.com",
-    "privacyUrl": "http://www.contoso.com/privacy",
-    "termsOfUseUrl": "http://www.contoso.com/termsofuse"
+    "name": "Kloud Solutions",
+    "websiteUrl": "http://www.kloud.com.au/",
+    "privacyUrl": "http://www.kloud.com.au/",
+    "termsOfUseUrl": "http://www.kloud.com.au/"
   },
   "tabs": [
     {
@@ -17,11 +17,11 @@
         "full": "Work with bicycle & accessory inventory items as a tab."
       },
       "icons": {
-        "44": "https://<APPNAME>.azurewebsites.net/images/inv44.png",
-        "88": "https://<APPNAME>.azurewebsites.net/images/inv88.png"
+        "44": "https://contosomanagedservices.azurewebsites.net/images/inv44.png",
+        "88": "https://contosomanagedservices.azurewebsites.net/images/inv88.png"
       },
       "accentColor": "#223344",
-      "configUrl": "https://<APPNAME>.azurewebsites.net/configuration.html",
+      "configUrl": "https://contosomanagedservices.azurewebsites.net/configuration.html",
       "canUpdateConfig": true
     }
   ],
