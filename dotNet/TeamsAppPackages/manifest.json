@@ -1,0 +1,134 @@
+{
+    "$schema": "https://statics.teams.microsoft.com/sdk/v1.0/manifest/MicrosoftTeams.schema.json",
+    "manifestVersion": "1.0",
+    "version": "1.0.0",
+    "id": "c1dfba10-37bd-45e5-8967-d774a01b7f3f",
+    "packageName": "com.microsoft.teams.samples.sampleapp",
+    "developer": {
+        "name": "Microsoft",
+        "websiteUrl": "http://www.kloud.com.au",
+        "privacyUrl": "http://www.kloud.com.au/privacy",
+        "termsOfUseUrl": "http://www.kloud.com.au/termsofuse"
+    },
+    "name": {
+        "short": "Kloud Managed Services",
+        "full": "Kloud Managed Services - Microsoft Teams App"
+    },
+    "description": {
+        "short": "Kloud Managed Services - Short Description...",
+        "full": "Kloud Managed Services - Full Description..."
+    },
+    "icons": {
+        "outline": "outline_icon.png",
+        "color": "color_icon.png"
+    },
+    "accentColor": "#3F487F",
+    "staticTabs": [
+        {
+            "entityId": "help",
+            "name": "Help",
+            "contentUrl": "https://contosomanagedservices.azurewebsites.net/tabs/static/help",
+            "websiteUrl": "https://contosomanagedservices.azurewebsites.net/tabs/static/help?web=1",
+            "scopes": [
+                "personal"
+            ]
+        }
+    ],
+  "tabs": [
+    {
+      "id": "c1dfba10-37bd-45e5-8967-d774a01b7f3f",
+      "name": "Dashboard",
+      "description": {
+        "short": "Display customer managed services dashboard.",
+        "full": "Display customer managed services dashboard as a tab."
+      },
+      "icons": {
+        "44": "https://contosomanagedservices.azurewebsites.net/images/inv44.png",
+        "88": "https://contosomanagedservices.azurewebsites.net/images/inv88.png"
+      },
+      "accentColor": "#223344",
+      "configUrl": "https://contosomanagedservices.azurewebsites.net/tabs/config/configure",
+      "canUpdateConfig": true
+    }
+  ],
+    "configurableTabs": [
+        {
+            "configurationUrl": "https://contosomanagedservices.azurewebsites.net/tabs/config/configure",
+            "canUpdateConfiguration": true,
+            "scopes": [
+                "team"
+            ]
+        }
+    ],
+    "bots": [
+        {
+            "botId": "c1dfba10-37bd-45e5-8967-d774a01b7f3f",
+            "isNotificationOnly": false,
+            "scopes": [
+                "team",
+                "personal"
+            ],
+            "commandLists": [
+                {
+                    "scopes": [
+                        "team"
+                    ],
+                    "commands": [
+                        {
+                            "title": "contact",
+                            "description": "Query for account manager contact information"
+                        },
+                        {
+                            "title": "hours",
+                            "description": "Query remaining hours for service agreement"
+                        },
+                        {
+                            "title": "tickets",
+                            "description": "Query for service requests and incidents"
+                        }
+					]
+                }
+            ]
+        }
+    ],
+    "connectors": [
+        {
+            "connectorId": "c1dfba10-37bd-45e5-8967-d774a01b7f3f",
+            "scopes": [
+                "team"
+            ]
+        }
+    ],
+    "composeExtensions": [
+        {
+            "botId": "c1dfba10-37bd-45e5-8967-d774a01b7f3f",
+            "scopes": [
+                "personal",
+                "team"
+            ],
+            "commands": [
+                {
+                    "id": "searchCmd",
+                    "title": "Search tickets",
+                    "initialRun": true,
+                    "description": "Search tickets",
+                    "parameters": [
+                        {
+                            "name": "search",
+                            "title": "Search",
+                            "description": "Search tickets"
+                        }
+                    ]
+                }
+            ]
+        }
+    ],
+    "permissions": [
+        "identity",
+        "messageTeamMembers"
+    ],
+    "validDomains": [
+        "contosomanagedservices.azurewebsites.net",
+        "contosomanagedservicesbotapi.azurewebsites.net"
+    ]
+}
