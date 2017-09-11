@@ -23,18 +23,23 @@ namespace Bot_Application
             {
                 ConnectorClient connector = new ConnectorClient(new Uri(activity.ServiceUrl));
                 Activity reply;
+                Random random = new Random();
 
-                if (activity.Text.ToLower().Equals("what is our inventory of replacement tires?"))
+                if (activity.Text.ToLower().Contains("contact"))
                 {
-                    Random random = new Random();
-                    reply = activity.CreateReply($"{random.Next(1,100)}");
+                    reply = activity.CreateReply(GetAccountManagerDetails());
                 }
-                else {
-                    // calculate something for us to return
-                    int length = (activity.Text ?? string.Empty).Length;
-
-                    // return our reply to the user
-                    reply = activity.CreateReply($"You sent {activity.Text} which was {length} characters");
+                else if (activity.Text.ToLower().Contains("hours"))
+                {
+                    reply = activity.CreateReply(GetTicketDetails());
+                }
+                else if (activity.Text.ToLower().Contains("tickets"))
+                {
+                    reply = activity.CreateReply(GetContractDetails());
+                }
+                else
+                {
+                    reply = activity.CreateReply($"your word is not defined");
                 }
 
                 await connector.Conversations.ReplyToActivityAsync(reply);
@@ -45,6 +50,22 @@ namespace Bot_Application
             }
             var response = Request.CreateResponse(HttpStatusCode.OK);
             return response;
+        }
+
+
+        private string GetContractDetails()
+        {
+            return "contract-details";
+        }
+
+        private string GetTicketDetails()
+        {
+            return "ticket-details";
+        }
+
+        private string GetAccountManagerDetails()
+        {
+            return "account-manager-details";
         }
 
         private Activity HandleSystemMessage(Activity message)

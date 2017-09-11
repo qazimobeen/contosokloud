@@ -3,6 +3,7 @@ C:\_src\teamsheck\dotNet\03 Bots\Completed Projects\Bot Application\Bot Applicat
 C:\_src\teamsheck\dotNet\03 Bots\Completed Projects\Bot Application\Bot Application\bin\Bot Application1.pdb
 C:\_src\teamsheck\dotNet\03 Bots\Completed Projects\Bot Application\Bot Application\bin\Autofac.dll
 C:\_src\teamsheck\dotNet\03 Bots\Completed Projects\Bot Application\Bot Application\bin\Chronic.dll
+C:\_src\teamsheck\dotNet\03 Bots\Completed Projects\Bot Application\Bot Application\bin\Microsoft.Bot.Builder.Autofac.dll
 C:\_src\teamsheck\dotNet\03 Bots\Completed Projects\Bot Application\Bot Application\bin\Microsoft.Bot.Builder.dll
 C:\_src\teamsheck\dotNet\03 Bots\Completed Projects\Bot Application\Bot Application\bin\Microsoft.Bot.Connector.dll
 C:\_src\teamsheck\dotNet\03 Bots\Completed Projects\Bot Application\Bot Application\bin\Microsoft.IdentityModel.Protocol.Extensions.dll
@@ -15,6 +16,7 @@ C:\_src\teamsheck\dotNet\03 Bots\Completed Projects\Bot Application\Bot Applicat
 C:\_src\teamsheck\dotNet\03 Bots\Completed Projects\Bot Application\Bot Application\bin\System.Web.Http.WebHost.dll
 C:\_src\teamsheck\dotNet\03 Bots\Completed Projects\Bot Application\Bot Application\bin\Autofac.xml
 C:\_src\teamsheck\dotNet\03 Bots\Completed Projects\Bot Application\Bot Application\bin\Microsoft.Bot.Builder.xml
+C:\_src\teamsheck\dotNet\03 Bots\Completed Projects\Bot Application\Bot Application\bin\Microsoft.Bot.Builder.Autofac.xml
 C:\_src\teamsheck\dotNet\03 Bots\Completed Projects\Bot Application\Bot Application\bin\Microsoft.Bot.Connector.xml
 C:\_src\teamsheck\dotNet\03 Bots\Completed Projects\Bot Application\Bot Application\bin\Microsoft.IdentityModel.Protocol.Extensions.xml
 C:\_src\teamsheck\dotNet\03 Bots\Completed Projects\Bot Application\Bot Application\bin\Microsoft.WindowsAzure.Configuration.xml
@@ -24,19 +26,17 @@ C:\_src\teamsheck\dotNet\03 Bots\Completed Projects\Bot Application\Bot Applicat
 C:\_src\teamsheck\dotNet\03 Bots\Completed Projects\Bot Application\Bot Application\bin\System.Web.Http.xml
 C:\_src\teamsheck\dotNet\03 Bots\Completed Projects\Bot Application\Bot Application\bin\System.Web.Http.WebHost.xml
 C:\_src\teamsheck\dotNet\03 Bots\Completed Projects\Bot Application\Bot Application\bin\ar\Microsoft.Bot.Builder.resources.dll
+C:\_src\teamsheck\dotNet\03 Bots\Completed Projects\Bot Application\Bot Application\bin\cs\Microsoft.Bot.Builder.resources.dll
+C:\_src\teamsheck\dotNet\03 Bots\Completed Projects\Bot Application\Bot Application\bin\de-dE\Microsoft.Bot.Builder.resources.dll
 C:\_src\teamsheck\dotNet\03 Bots\Completed Projects\Bot Application\Bot Application\bin\en\Microsoft.Bot.Builder.resources.dll
 C:\_src\teamsheck\dotNet\03 Bots\Completed Projects\Bot Application\Bot Application\bin\es\Microsoft.Bot.Builder.resources.dll
 C:\_src\teamsheck\dotNet\03 Bots\Completed Projects\Bot Application\Bot Application\bin\fa\Microsoft.Bot.Builder.resources.dll
 C:\_src\teamsheck\dotNet\03 Bots\Completed Projects\Bot Application\Bot Application\bin\fr\Microsoft.Bot.Builder.resources.dll
+C:\_src\teamsheck\dotNet\03 Bots\Completed Projects\Bot Application\Bot Application\bin\it\Microsoft.Bot.Builder.resources.dll
 C:\_src\teamsheck\dotNet\03 Bots\Completed Projects\Bot Application\Bot Application\bin\ja\Microsoft.Bot.Builder.resources.dll
+C:\_src\teamsheck\dotNet\03 Bots\Completed Projects\Bot Application\Bot Application\bin\nl\Microsoft.Bot.Builder.resources.dll
+C:\_src\teamsheck\dotNet\03 Bots\Completed Projects\Bot Application\Bot Application\bin\pt-BR\Microsoft.Bot.Builder.resources.dll
 C:\_src\teamsheck\dotNet\03 Bots\Completed Projects\Bot Application\Bot Application\bin\ru\Microsoft.Bot.Builder.resources.dll
 C:\_src\teamsheck\dotNet\03 Bots\Completed Projects\Bot Application\Bot Application\bin\zh-hans\Microsoft.Bot.Builder.resources.dll
 C:\_src\teamsheck\dotNet\03 Bots\Completed Projects\Bot Application\Bot Application\obj\Debug\Bot Application1.dll
 C:\_src\teamsheck\dotNet\03 Bots\Completed Projects\Bot Application\Bot Application\obj\Debug\Bot Application1.pdb
-C:\_src\teamsheck\dotNet\03 Bots\Completed Projects\Bot Application\Bot Application\bin\Microsoft.Bot.Builder.Autofac.dll
-C:\_src\teamsheck\dotNet\03 Bots\Completed Projects\Bot Application\Bot Application\bin\Microsoft.Bot.Builder.Autofac.xml
-C:\_src\teamsheck\dotNet\03 Bots\Completed Projects\Bot Application\Bot Application\bin\cs\Microsoft.Bot.Builder.resources.dll
-C:\_src\teamsheck\dotNet\03 Bots\Completed Projects\Bot Application\Bot Application\bin\de-dE\Microsoft.Bot.Builder.resources.dll
-C:\_src\teamsheck\dotNet\03 Bots\Completed Projects\Bot Application\Bot Application\bin\it\Microsoft.Bot.Builder.resources.dll
-C:\_src\teamsheck\dotNet\03 Bots\Completed Projects\Bot Application\Bot Application\bin\nl\Microsoft.Bot.Builder.resources.dll
-C:\_src\teamsheck\dotNet\03 Bots\Completed Projects\Bot Application\Bot Application\bin\pt-BR\Microsoft.Bot.Builder.resources.dll
