@@ -130,6 +130,9 @@
     <Compile Include="App_Start\WebApiConfig.cs" />
     <Compile Include="Controllers\MessagesController.cs" />
     <Compile Include="Dialogs\RootDialog.cs" />
+    <Compile Include="Entities\AccountManager.cs" />
+    <Compile Include="Entities\Company.cs" />
+    <Compile Include="Entities\Ticket.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>

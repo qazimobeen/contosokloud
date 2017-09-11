@@ -12,6 +12,7 @@ using System.Collections.Generic;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using Newtonsoft.Json.Linq;
+using Bot_Application.Entities;
 
 namespace Bot_Application
 {
@@ -22,25 +23,6 @@ namespace Bot_Application
     public class RootDialog : IDialog<object>
     {
         public const string cwURI = "https://api-aus.myconnectwise.net/v2017_5/apis/3.0/";
-        public class TicketDetails
-        {
-            public string Title { get; set; }
-            public string SubTitle { get; set; }
-            public string Text { get; set; }
-        }
-
-        public class CompanyDetails
-        {
-            public string Name { get; set; }
-            public string Address { get; set; }
-            public AMContactDetails AMContactDetails { get; set; }
-        }
-        public class AMContactDetails
-        {
-            public string Name { get; set; }
-            public string Email { get; set; }
-            public string PhoneNumber { get; set; }
-        }
 
         public Task StartAsync(IDialogContext context)
         {
@@ -59,8 +41,6 @@ namespace Bot_Application
         {
             var activity = await result as Activity;
 
-            //Strip out all mentions.  As all channel messages to a bot must @mention the bot itself, you must strip out the bot name at minimum.
-            // This uses the extension SDK function GetTextWithoutMentions() to strip out ALL mentions
             var text = activity.GetTextWithoutMentions().ToLower();
 
             //Supports 5 commands:  Help, Welcome (sent from HandleSystemMessage when bot is added), Create, Find, Assign, and Link 
@@ -95,12 +75,12 @@ namespace Bot_Application
                 // Parse the command and go do the right thing
                 if (cmd.Contains("status"))
                 {
-                    TicketDetails ticketDetails = GetTicketStatus(string.Join(" ", q));
+                    Ticket ticketDetails = GetTicketStatus(string.Join(" ", q));
                     await SendStatusMessage(context, ticketDetails);
                 }
                 else if (cmd.Contains("contact"))
                 {
-                    CompanyDetails companyDetails = GetContactDetails(string.Join(" ", q));
+                    Company companyDetails = GetContactDetails(string.Join(" ", q));
                     await SendContactDetailsMessage(context, companyDetails);
                 }
                 //else if (cmd.Contains("link"))
@@ -116,19 +96,19 @@ namespace Bot_Application
             context.Wait(MessageReceivedAsync);
         }
 
-        private async Task SendContactDetailsMessage(IDialogContext context, CompanyDetails companyDetails)
+        private async Task SendContactDetailsMessage(IDialogContext context, Company company)
         {
             IMessageActivity reply = context.MakeMessage();
             reply.Attachments = new List<Attachment>();
 
-            if (companyDetails != null)
+            if (company != null)
             {
                 ThumbnailCard card = new ThumbnailCard()
                 {
 
-                    Title = $"{companyDetails.AMContactDetails.Name}",
-                    Subtitle = $"{companyDetails.AMContactDetails.Email}",
-                    Text = companyDetails.AMContactDetails.PhoneNumber,
+                    Title = $"{company.AccountManager.Name}",
+                    Subtitle = $"{company.AccountManager.Email}",
+                    Text = company.AccountManager.PhoneNumber,
                     Images = new List<CardImage>()
                 {
                     new CardImage()
@@ -148,7 +128,7 @@ namespace Bot_Application
             }
             else
             {
-                reply.Text = $"Company could not be found";
+                reply.Text = $"I could not find the Account Manager for your company :(";
             }
 
 
@@ -162,19 +142,18 @@ namespace Bot_Application
         /// <param name="context"></param>
         /// <param name="taskItemTitle"></param>
         /// <returns></returns>
-        private async Task SendStatusMessage(IDialogContext context, TicketDetails ticketDetails)
+        private async Task SendStatusMessage(IDialogContext context, Ticket ticket)
         {
             IMessageActivity reply = context.MakeMessage();
             reply.Attachments = new List<Attachment>();
 
-            if (ticketDetails != null)
+            if (ticket != null)
             {
-
                 ThumbnailCard card = new ThumbnailCard()
                 {
-                    Title = $"{ticketDetails.Title}",
-                    Subtitle = $"#{ticketDetails.SubTitle}",
-                    Text = ticketDetails.Text,
+                    Title = $"{ticket.Title}",
+                    Subtitle = $"#{ticket.SubTitle}",
+                    Text = ticket.Text,
                     Images = new List<CardImage>()
                 {
                     new CardImage()
@@ -194,7 +173,7 @@ namespace Bot_Application
             }
             else
             {
-                reply.Text = $"Ticket could not be found";
+                reply.Text = $"I could not find this ticket :(";
             }
 
             ConnectorClient client = new ConnectorClient(new Uri(context.Activity.ServiceUrl));
@@ -305,10 +284,10 @@ namespace Bot_Application
         }
 
 
-        private CompanyDetails GetContactDetails(string companyId)
+        private Company GetContactDetails(string companyId)
         {
-            CompanyDetails cDetails = null;
-            AMContactDetails amContactDetails = null;
+            Company company = null;
+            AccountManager accountManager = null;
             JObject companyObject = null;
 
             string urlCompany = string.Format("{0}company/companies/{1}", cwURI, companyId);
@@ -321,16 +300,16 @@ namespace Bot_Application
                 {
                     Task<string> result = content.ReadAsStringAsync();
                     companyObject = JObject.Parse(result.Result);
-                    cDetails = new CompanyDetails { Name = companyObject["name"].ToString(), Address = companyObject["addressLine1"].ToString() };
+                    company = new Company { Name = companyObject["name"].ToString(), Address = companyObject["addressLine1"].ToString() };
                 }
 
                 JObject defaultContactObject = JObject.Parse(companyObject["defaultContact"].ToString());
-                string amId = defaultContactObject["id"].ToString();
-                string amName = defaultContactObject["name"].ToString();
+                string accountManagerId = defaultContactObject["id"].ToString();
+                string accountManagerName = defaultContactObject["name"].ToString();
 
-                string contactInfoUrl = string.Format("{0}company/contacts/{1}/communications", cwURI, amId);
+                string contactInfoUri = string.Format("{0}company/contacts/{1}/communications", cwURI, accountManagerId);
 
-                HttpResponseMessage responsecontactInfo = GetCWResponse(contactInfoUrl);
+                HttpResponseMessage responsecontactInfo = GetCWResponse(contactInfoUri);
 
                 if (responsecontactInfo.IsSuccessStatusCode)
                 {
@@ -354,18 +333,18 @@ namespace Bot_Application
                             }
                         }
 
-                        amContactDetails = new AMContactDetails { Name = amName, Email = email, PhoneNumber = phoneNumber };
+                        accountManager = new AccountManager { Name = accountManagerName, Email = email, PhoneNumber = phoneNumber };
 
-                        cDetails.AMContactDetails = amContactDetails;
+                        company.AccountManager = accountManager;
                     }
                 }
             }
-            return cDetails;
+            return company;
         }
 
-        private TicketDetails GetTicketStatus(string ticketNumber)
+        private Ticket GetTicketStatus(string ticketNumber)
         {
-            TicketDetails tickDetails = null;
+            Ticket tickDetails = null;
             string url = string.Format("{0}/service/tickets/{1}", cwURI, ticketNumber);
 
             HttpResponseMessage response = GetCWResponse(url);
@@ -377,7 +356,7 @@ namespace Bot_Application
                     Task<string> result = content.ReadAsStringAsync();
                     JObject ticketObject = JObject.Parse(result.Result);
 
-                    tickDetails = new TicketDetails
+                    tickDetails = new Ticket
                     {
                         Title = ticketObject["summary"].ToString(),
                         SubTitle = ticketNumber,
