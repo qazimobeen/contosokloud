@@ -12,6 +12,7 @@ using System.Collections.Generic;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using Newtonsoft.Json.Linq;
+using Bot_Application.Service;
 
 namespace Bot_Application
 {
@@ -45,6 +46,7 @@ namespace Bot_Application
         private async Task MessageReceivedAsync(IDialogContext context, IAwaitable<object> result)
         {
             var activity = await result as Activity;
+
 
             //Strip out all mentions.  As all channel messages to a bot must @mention the bot itself, you must strip out the bot name at minimum.
             // This uses the extension SDK function GetTextWithoutMentions() to strip out ALL mentions
@@ -85,15 +87,25 @@ namespace Bot_Application
                     TicketDetails ticketDetails =  GetTicketStatus(string.Join(" ", q));
                     await SendStatusMessage(context, ticketDetails);
                 }
-                //else if (cmd.Contains("assign"))
-                //{
-                //    string guid = split[1];
-                //    await UpdateMessage(context, guid);
-                //}
-                //else if (cmd.Contains("link"))
-                //{
-                //    // await SendDeeplink(context, activity, string.Join(" ", q));
-                //}
+                else if (cmd.Contains("hours"))
+                    {
+                    CompanyDetails hourDetails = GetHoursDetails("123344");
+                        await SendCompanyDetailsMessage(context, hourDetails);
+                    }
+                    //else if (cmd.Contains("assign"))
+                    //{
+                    //    string guid = split[1];
+                    //    await UpdateMessage(context, guid);
+                    //}
+                    //else if (cmd.Contains("link"))
+                    //{
+                    //    // await SendDeeplink(context, activity, string.Join(" ", q));
+                    //}
+                else if (cmd.Contains("ticket"))
+                {
+                    JArray tickets = GetTickets(string.Join(" ", q));
+                    await SendTicketDetailsMessage(context, tickets);
+                }
                 else
                 {
                     await SendHelpMessage(context, "I'm sorry, I did not understand you :(");
@@ -148,6 +160,101 @@ namespace Bot_Application
             //string activityId = resp.Id.ToString();
             //context.ConversationData.SetValue("task " + taskItem.Guid, new Tuple<string, ThumbnailCard>(activityId, card));
         }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="context"></param>
+        /// <param name="ticketDetails"></param>
+        /// <returns></returns>
+        private async Task SendCompanyDetailsMessage(IDialogContext context, CompanyDetails cDetails)
+        {
+            //var taskItem = Utils.Utils.CreateTaskItem();
+            //taskItem.Title = taskItemTitle;
+
+            IMessageActivity reply = context.MakeMessage();
+            reply.Attachments = new List<Attachment>();
+
+            var random = new Random();
+
+            ThumbnailCard card = new ThumbnailCard()
+            {
+                Title = $"{cDetails.CompanyName}",
+                Subtitle = $"Total Hours: {cDetails.totalHours}",
+                Text = cDetails.CompanyId,
+                Images = new List<CardImage>()
+                {
+                    new CardImage()
+                    {
+                        Url = $"https://contosomanagedservices.azurewebsites.net/images/kloud88.png"
+                    }
+                }
+            };
+
+            //card.Buttons = new List<CardAction>()
+            //{
+            //    new CardAction("openUrl", "View task", null, "https://www.microsoft.com"),
+            //    new CardAction("imBack", "Assign to me", null, $"assign {taskItem.Guid}")
+            //};
+
+            reply.Attachments.Add(card.ToAttachment());
+
+            ConnectorClient client = new ConnectorClient(new Uri(context.Activity.ServiceUrl));
+            ResourceResponse resp = await client.Conversations.ReplyToActivityAsync((Activity)reply);
+
+            // Cache the response activity ID and previous task card.
+            //string activityId = resp.Id.ToString();
+            //context.ConversationData.SetValue("task " + taskItem.Guid, new Tuple<string, ThumbnailCard>(activityId, card));
+        }
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="context"></param>
+        /// <param name="cDetails"></param>
+        /// <returns></returns>
+        private async Task SendTicketDetailsMessage(IDialogContext context, JArray tDetails)
+        {
+            //var taskItem = Utils.Utils.CreateTaskItem();
+            //taskItem.Title = taskItemTitle;
+
+            IMessageActivity reply = context.MakeMessage();
+            reply.Attachments = new List<Attachment>();
+
+            var random = new Random();
+
+            foreach (JObject o in tDetails)
+            {
+                ThumbnailCard card = new ThumbnailCard()
+                {
+                    Title = $"{o["summary"].ToString()}",
+                    //Subtitle = $"Total Hours: {cDetails.totalHours}",
+                    //Text = cDetails.CompanyId,
+                    Images = new List<CardImage>()
+                {
+                    new CardImage()
+                    {
+                        Url = $"https://contosomanagedservices.azurewebsites.net/images/kloud88.png"
+                    }
+                }
+                };
+
+                reply.Attachments.Add(card.ToAttachment());
+            }
+
+            //card.Buttons = new List<CardAction>()
+            //{
+            //    new CardAction("openUrl", "View task", null, "https://www.microsoft.com"),
+            //    new CardAction("imBack", "Assign to me", null, $"assign {taskItem.Guid}")
+            //};
+
+            ConnectorClient client = new ConnectorClient(new Uri(context.Activity.ServiceUrl));
+            ResourceResponse resp = await client.Conversations.ReplyToActivityAsync((Activity)reply);
+
+            // Cache the response activity ID and previous task card.
+            //string activityId = resp.Id.ToString();
+            //context.ConversationData.SetValue("task " + taskItem.Guid, new Tuple<string, ThumbnailCard>(activityId, card));
+        }
+
 
         /// <summary>
         /// Helper method to update an existing message for the given task item GUID.
@@ -263,5 +370,61 @@ namespace Bot_Application
             }
             return tickDetails;
         }
+
+        private JArray GetTickets(string ClientNumber)
+        {
+
+            JArray Obj = null;
+            string accessToken = "S2xvdWRUcmFpbmluZytxcHBWZkFNZlVWMXJaZ0tKOk1vU1RCdURzMG5MRlp5b3A=";
+            HttpClient client = new HttpClient();
+            string url = "https://api-aus.myconnectwise.net/v4_6_release/apis/3.0/service/tickets?orderby=dateEntered desc&pageSize=5";
+            client.BaseAddress = new Uri(url);
+            client.DefaultRequestHeaders.Add("Authorization", "Basic " + accessToken);
+
+            client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+            HttpResponseMessage response = client.GetAsync(url).Result;
+
+            if (response.IsSuccessStatusCode)
+            {
+                using (HttpContent content = response.Content)
+                {
+                    Task<string> result = content.ReadAsStringAsync();
+
+                     Obj = JArray.Parse(result.Result);
+
+                    foreach (JObject o in Obj)
+                    {
+                        TicketDetails tickDetails = null;
+                        //tickDetails = new TicketDetails { Title = o["summary"].ToString() };
+
+                        tickDetails = new TicketDetails { Title = o["summary"].ToString(), SubTitle = ClientNumber, Text = o["status"]["name"].ToString() };
+
+                    }
+                    }
+            }
+            else
+            {
+                //Display unable to receive
+                //Console.WriteLine("{0} ({1})", (int)response.StatusCode, response.ReasonPhrase);
+            }
+            return Obj;
+        }
+
+        public CompanyDetails GetHoursDetails(string ClientID) {
+
+            CompanyDetails cDetails = new CompanyDetails();
+
+            Random rnd1 = new Random();
+            cDetails.CompanyId = ClientID;
+
+            Random random = new Random();
+            int randomNumber = random.Next(0, 100);
+
+            cDetails.totalHours = randomNumber.ToString();
+            cDetails.CompanyName = "Qantas";
+
+            return cDetails;
+        }
+
     }
 }

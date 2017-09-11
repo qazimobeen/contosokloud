@@ -41,7 +41,7 @@ namespace Bot_Application
                 //    reply = activity.CreateReply(GetAccountManagerDetails());
                 //}
                 //else if (activity.Text.ToLower().Contains("status"))
-                //{
+                //{ 
                 //    reply = activity.CreateReply("The status of your ticket is : " + GetTicketStatus(""));
                 //}
                 //else if (activity.Text.ToLower().Contains("tickets"))
