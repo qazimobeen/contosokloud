@@ -2,4 +2,8 @@
 # This .gitignore file was automatically created by Microsoft(R) Visual Studio.
 ################################################################################
 
-/dotNet/03 Bots/Completed Projects/Bot Application/Bot Application/bin
+dotNet/03 Bots/Completed Projects/Bot Application/Bot Application/bin/
+dotNet/03 Bots/Completed Projects/Bot Application/Bot Application/obj/
+
+dotNet/03 Bots/Completed Projects/Bot Application/.vs/
+.vs/
