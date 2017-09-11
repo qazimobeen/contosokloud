@@ -26,7 +26,19 @@ namespace Bot_Application
             public string Title { get; set; }
             public string SubTitle { get; set; }
             public string Text { get; set; }
+        }
 
+        public class CompanyDetails
+        {
+            public string Name { get; set; }
+            public string Address { get; set; }
+        }
+        public class AMContactDetails
+        {
+            public CompanyDetails CompanyDetails { get; set; }
+            public string Name { get; set; }
+            public string Email { get; set; }
+            public string PhoneNumber { get; set; }
         }
 
         public Task StartAsync(IDialogContext context)
@@ -231,6 +243,23 @@ namespace Bot_Application
                 + "* To create a deep link, you can type **link** followed by the tab name";
 
             await context.PostAsync(helpMessage);
+        }
+
+        private AMContactDetails GetAMContactDetails(string companyId)
+        {
+            AMContactDetails amContactDetails = null;
+            string accessToken = "S2xvdWRUcmFpbmluZytxcHBWZkFNZlVWMXJaZ0tKOk1vU1RCdURzMG5MRlp5b3A=";
+            HttpClient client = new HttpClient();
+            string urlCompany = string.Format("https://api-aus.myconnectwise.net/v2017_5/apis/3.0/service/tickets/{0}", companyId);
+            client.BaseAddress = new Uri(urlCompany);
+            client.DefaultRequestHeaders.Add("Authorization", "Basic " + accessToken);
+
+            client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+            HttpResponseMessage response = client.GetAsync(urlCompany).Result;
+
+
+
+            return amContactDetails;
         }
 
         private TicketDetails GetTicketStatus(string ticketNumber)
