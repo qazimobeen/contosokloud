@@ -32,10 +32,10 @@ namespace Bot_Application
         {
             public string Name { get; set; }
             public string Address { get; set; }
+            public AMContactDetails AMContactDetails { get; set; }
         }
         public class AMContactDetails
         {
-            public CompanyDetails CompanyDetails { get; set; }
             public string Name { get; set; }
             public string Email { get; set; }
             public string PhoneNumber { get; set; }
@@ -70,12 +70,12 @@ namespace Bot_Application
                 if (text.Contains("contact"))
                 {
                     //TODO: Return account manager info
-                    await SendHelpMessage(context, "Sure, I can provide help info about this contact");
+                    await SendHelpMessage(context, "Sure, I can provide account manager info for this company");
                 }
                 else if (text.Contains("status"))
                 {
                     //TODO : Prompt user for ticket number if not provided
-                    await SendHelpMessage(context, "Sure, I can provide help info about the status of this ticket");
+                    await SendHelpMessage(context, "Sure, I can provide info about the status of this ticket");
                 }
                 else if (text.Contains("tickets"))
                 {
@@ -97,11 +97,11 @@ namespace Bot_Application
                     TicketDetails ticketDetails =  GetTicketStatus(string.Join(" ", q));
                     await SendStatusMessage(context, ticketDetails);
                 }
-                //else if (cmd.Contains("assign"))
-                //{
-                //    string guid = split[1];
-                //    await UpdateMessage(context, guid);
-                //}
+                else if (cmd.Contains("contact"))
+                {
+                    CompanyDetails companyDetails = GetContactDetails(string.Join(" ", q));
+                     await SendContactDetailsMessage(context, companyDetails);
+                }
                 //else if (cmd.Contains("link"))
                 //{
                 //    // await SendDeeplink(context, activity, string.Join(" ", q));
@@ -115,6 +115,46 @@ namespace Bot_Application
             context.Wait(MessageReceivedAsync);
         }
 
+        private async Task SendContactDetailsMessage(IDialogContext context, CompanyDetails companyDetails)
+        {
+            IMessageActivity reply = context.MakeMessage();
+            reply.Attachments = new List<Attachment>();
+
+            if (companyDetails != null)
+            {
+                ThumbnailCard card = new ThumbnailCard()
+                {
+
+                    Title = $"{companyDetails.AMContactDetails.Name}",
+                    Subtitle = $"{companyDetails.AMContactDetails.Email}",
+                    Text = companyDetails.AMContactDetails.PhoneNumber,
+                    Images = new List<CardImage>()
+                {
+                    new CardImage()
+                    {
+                        Url = $"https://contosomanagedservices.azurewebsites.net/images/kloud88.png"
+                    }
+                }
+                };
+
+                //card.Buttons = new List<CardAction>()
+                //{
+                //    new CardAction("openUrl", "View task", null, "https://www.microsoft.com"),
+                //    new CardAction("imBack", "Assign to me", null, $"assign {taskItem.Guid}")
+                //};
+
+                reply.Attachments.Add(card.ToAttachment());
+            }
+            else
+            {
+                reply.Text = $"Company could not be found";
+            }
+            
+
+            ConnectorClient client = new ConnectorClient(new Uri(context.Activity.ServiceUrl));
+            ResourceResponse resp = await client.Conversations.ReplyToActivityAsync((Activity)reply);
+        }
+
         /// <summary>
         /// Helper method to create a simple task card and send it back as a message.
         /// </summary>
@@ -123,35 +163,38 @@ namespace Bot_Application
         /// <returns></returns>
         private async Task SendStatusMessage(IDialogContext context, TicketDetails ticketDetails)
         {
-            //var taskItem = Utils.Utils.CreateTaskItem();
-            //taskItem.Title = taskItemTitle;
-
             IMessageActivity reply = context.MakeMessage();
             reply.Attachments = new List<Attachment>();
 
-            var random = new Random();
-
-            ThumbnailCard card = new ThumbnailCard()
+            if (ticketDetails != null)
             {
-                Title = $"{ticketDetails.Title}",
-                Subtitle = $"#{ticketDetails.SubTitle}",
-                Text = ticketDetails.Text,
-                Images = new List<CardImage>()
+
+                ThumbnailCard card = new ThumbnailCard()
+                {
+                    Title = $"{ticketDetails.Title}",
+                    Subtitle = $"#{ticketDetails.SubTitle}",
+                    Text = ticketDetails.Text,
+                    Images = new List<CardImage>()
                 {
                     new CardImage()
                     {
                         Url = $"https://contosomanagedservices.azurewebsites.net/images/kloud88.png"
                     }
                 }
-            };
+                };
 
-            //card.Buttons = new List<CardAction>()
-            //{
-            //    new CardAction("openUrl", "View task", null, "https://www.microsoft.com"),
-            //    new CardAction("imBack", "Assign to me", null, $"assign {taskItem.Guid}")
-            //};
+                //card.Buttons = new List<CardAction>()
+                //{
+                //    new CardAction("openUrl", "View task", null, "https://www.microsoft.com"),
+                //    new CardAction("imBack", "Assign to me", null, $"assign {taskItem.Guid}")
+                //};
 
-            reply.Attachments.Add(card.ToAttachment());
+                reply.Attachments.Add(card.ToAttachment());
+            }
+            else
+            {
+                reply.Text = $"Ticket could not be found";
+            }
 
             ConnectorClient client = new ConnectorClient(new Uri(context.Activity.ServiceUrl));
             ResourceResponse resp = await client.Conversations.ReplyToActivityAsync((Activity)reply);
@@ -245,21 +288,67 @@ namespace Bot_Application
             await context.PostAsync(helpMessage);
         }
 
-        private AMContactDetails GetAMContactDetails(string companyId)
+        private CompanyDetails GetContactDetails(string companyId)
         {
+            CompanyDetails cDetails = null;
             AMContactDetails amContactDetails = null;
             string accessToken = "S2xvdWRUcmFpbmluZytxcHBWZkFNZlVWMXJaZ0tKOk1vU1RCdURzMG5MRlp5b3A=";
-            HttpClient client = new HttpClient();
-            string urlCompany = string.Format("https://api-aus.myconnectwise.net/v2017_5/apis/3.0/service/tickets/{0}", companyId);
-            client.BaseAddress = new Uri(urlCompany);
-            client.DefaultRequestHeaders.Add("Authorization", "Basic " + accessToken);
+            HttpClient clientCompany = new HttpClient();
+            string urlCompany = string.Format("https://api-aus.myconnectwise.net/v2017_5/apis/3.0/company/companies/{0}", companyId);
+            clientCompany.BaseAddress = new Uri(urlCompany);
+            clientCompany.DefaultRequestHeaders.Add("Authorization", "Basic " + accessToken);
 
-            client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-            HttpResponseMessage response = client.GetAsync(urlCompany).Result;
+            clientCompany.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+            HttpResponseMessage response = clientCompany.GetAsync(urlCompany).Result;
+            JObject companyObject = null;
+            if (response.IsSuccessStatusCode)
+            {
+                using (HttpContent content = response.Content)
+                {
+                    Task<string> result = content.ReadAsStringAsync();
+                    companyObject = JObject.Parse(result.Result);
+                    cDetails = new CompanyDetails { Name = companyObject["name"].ToString(), Address = companyObject["addressLine1"].ToString() };
+                }
 
+                JObject defaultContactObject = JObject.Parse(companyObject["defaultContact"].ToString());
+                string amId = defaultContactObject["id"].ToString();
+                string amName = defaultContactObject["name"].ToString();
 
+                string contactInfoUrl = string.Format("https://api-aus.myconnectwise.net/v4_6_release/apis/3.0//company/contacts/{0}/communications", amId);
+                HttpClient clientContactInfo = new HttpClient();
+                clientContactInfo.BaseAddress = new Uri(contactInfoUrl);
+                clientContactInfo.DefaultRequestHeaders.Add("Authorization", "Basic " + accessToken);
+                clientContactInfo.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+                HttpResponseMessage responsecontactInfo = clientContactInfo.GetAsync(contactInfoUrl).Result;
 
-            return amContactDetails;
+                if (responsecontactInfo.IsSuccessStatusCode)
+                {
+                    using (HttpContent content1 = responsecontactInfo.Content)
+                    {
+                        Task<string> resultContactInfo = content1.ReadAsStringAsync();
+                        JArray contactInfoObject = JArray.Parse(resultContactInfo.Result);
+                        string phoneNumber = "";
+                        string email = "";
+                        foreach (var item in contactInfoObject.Children())
+                        {
+                            var itemProperties = item.Children<JProperty>();
+                            var myElement = itemProperties.FirstOrDefault(x => x.Name == "communicationType");
+                            if(myElement.Value.ToString() == "Phone")
+                            {
+                                phoneNumber = itemProperties.FirstOrDefault(x => x.Name == "value").Value.ToString();
+                            }
+                            if (myElement.Value.ToString() == "Email")
+                            {
+                                email = itemProperties.FirstOrDefault(x => x.Name == "value").Value.ToString();
+                            }
+                        }
+
+                        amContactDetails = new AMContactDetails { Name = amName, Email = email, PhoneNumber = phoneNumber};
+                        cDetails.AMContactDetails = amContactDetails;
+                    }
+                }
+            }
+            return cDetails;
         }
 
         private TicketDetails GetTicketStatus(string ticketNumber)
@@ -285,11 +374,7 @@ namespace Bot_Application
                     tickDetails = new TicketDetails { Title = o["summary"].ToString(), SubTitle = ticketNumber, Text = o["status"]["name"].ToString() };
                 }
             }
-            else
-            {
-                //Display unable to receive
-                //Console.WriteLine("{0} ({1})", (int)response.StatusCode, response.ReasonPhrase);
-            }
+
             return tickDetails;
         }
     }
