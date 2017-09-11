@@ -1,0 +1,22 @@
+{
+  "name": "teams",
+  "version": "1.0.0",
+  "description": "Microsoft Teams HackFest",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "Kloud",
+    "Microsoft",
+    "Teams",
+    "Office",
+    "365"
+  ],
+  "author": "Kloud Solutions",
+  "license": "ISC",
+  "dependencies": {
+    "botbuilder": "^3.9.1",
+    "restify": "^5.2.0"
+  }
+}
