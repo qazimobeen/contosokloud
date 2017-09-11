@@ -1,0 +1,145 @@
+<html>
+	<head>
+		<title>Configure</title>
+		<script src="https://statics.teams.microsoft.com/sdk/v0.4/js/MicrosoftTeams.min.js"></script>
+		<script src="https://ajax.aspnetcdn.com/ajax/jQuery/jquery-3.2.1.min.js"></script>
+		<style type="text/css">
+			body {
+				margin: 0;
+				padding: 8px 15px;
+				background-color: #F5F5F5;
+				border-top: 1px solid #3F487F;
+				border-bottom: 1px solid #3F487F;
+				color: #222;
+				font-family: "Segoe UI Semilight","Segoe WPC","Segoe UI", Helvetica, Arial, "Arial Unicode MS", Sans-Serif;
+				font-size: 80%;
+			}
+			.row{
+				padding: 8px 0px;
+			}
+			.row input{
+				border:none;
+				border-bottom: 1px solid #3F487F;
+				background-color: transparent;
+				margin: 0 5px;
+				padding: 3px 5px;
+			}
+
+			.row input:hover{background-color: rgba(0,0,0,0.05);}
+			.row input:active{background-color: rgba(0,0,0,0.1);}
+
+			#todos_signin {
+				font-family: 'Segoe UI Bold', sans-serif;
+				font-size: 100%;
+				color: #3F487F;
+				text-align: right;
+				min-height: 16px;
+				margin: 0 16px;
+			}
+			select#color {
+				background: transparent;
+				border: 1px solid #3F487F;
+				margin: 0 0 0 8px;
+				padding: 2px 15px;
+				text-align: left;
+				font-family: "Segoe UI Semilight","Segoe WPC","Segoe UI", Helvetica, Arial, "Arial Unicode MS", sans-serif;
+			}
+		</style>
+	</head>
+	<body>
+		<h3>Teams Sample Configuration</h3>
+		This is the configuration flow a team owner would go through when adding this tab.  Make sure you have enough explanation about your product so the first time user understands what your product does and how to configure it.
+	    <div id="todos_signin"></div>
+		<div class="row">
+			<label for="name">Name of your tab: </label>
+			<input type="text" name="name" id="name" value="" autofocus />
+		</div>
+		<div class="row">
+			<label for="numdays">Days to track: </label>
+			<input type="text" name="numdays" id="numdays" value="4" />
+		</div>
+		<div class="row"> 
+			<label for="color">Background color of your tasks: </label>
+			<select  name="color" id="color">
+				<option value="#fffad1" selected>Yellow</option> 
+				<option value="#d1fdff">Blue</option>
+				<option value="#ffd1d1">Red</option>
+				<option value="#daffd1">Green</option>
+			</select>
+		</div>
+
+
+		<script type="text/javascript">
+
+			function getURLParam(name) {
+				var url = window.location.search.substring(1);
+				var variables = url.split('&');
+				for (var i = 0; i < variables.length; i++) {
+					var variable = variables[i].split('=');
+					if (variable[0] === name) {
+						return decodeURIComponent(variable[1]);
+					}
+				}
+			}
+			
+			var host = `https://${window.location.hostname}`;
+			var color = '';
+			var name = '';
+			var entity = '';
+			var numdays = '';
+			var url = '';
+			var websiteUrl = '';
+			var context;
+			var auth = getURLParam('auth');
+
+			// Initialize the Microsoft Teams Library
+			microsoftTeams.initialize();
+
+			// Set the 'Save' Button state based on name field content
+			$('#name').on('input', function () {
+				if ($('#name').val().length != 0) {
+					microsoftTeams.settings.setValidityState(true);
+				}
+				else {
+					microsoftTeams.settings.setValidityState(false);
+				}
+			});
+
+			// Save handler when user clicked on Save button
+			microsoftTeams.settings.registerOnSaveHandler(function(saveEvent){
+				microsoftTeams.getContext(function(context) {
+					color = $('#color').val();
+					name = $('#name').val();
+					numdays = $('#numdays').val();
+
+					url = `${host}/tabs/index?teamId=` +
+						`${encodeURIComponent(context.teamId)}` + 
+						`&channelId=${encodeURIComponent(context.channelId)}` +
+						`&color=${encodeURIComponent(color)}` + 
+						`&numdays=${numdays}`;
+						
+					url += (auth) ? `&auth=${auth}` : '';
+					websiteUrl = url + `&web=1`;
+
+					entity = `todotab-${name}-${context.teamId}-${context.channelId}`;
+
+					microsoftTeams.settings.setSettings({
+						entityId: entity,
+						contentUrl: url,
+						suggestedDisplayName: name,
+						websiteUrl: websiteUrl
+					});
+
+					saveEvent.notifySuccess();
+				});
+			});
+
+			if (auth) {
+				$.get(`${host}/graph/beta/me`, function (data) {
+					$('#todos_signin').html(`<div class="signin">Signed in as: ${data.displayName} </div>`);
+				});
+			}
+
+		</script>
+	</body>
+</html>
