@@ -1,0 +1,129 @@
+{
+    "$schema": "https://statics.teams.microsoft.com/sdk/v1.0/manifest/MicrosoftTeams.schema.json",
+    "manifestVersion": "1.0",
+    "version": "1.0.0",
+    "id": "[Your Teams App GUID Here]",
+    "packageName": "com.microsoft.teams.samples.sampleapp",
+    "developer": {
+        "name": "Microsoft",
+        "websiteUrl": "https://www.microsoft.com",
+        "privacyUrl": "https://www.microsoft.com/privacy",
+        "termsOfUseUrl": "https://www.microsoft.com/termsofuse"
+    },
+    "name": {
+        "short": "Sample App in Node.js",
+        "full": "Sample App in Node.js - full name"
+    },
+    "description": {
+        "short": "This is a small sample app we made for you, in Node.js!",
+        "full": "This is a small sample app we made for you, in Node.js! This app has samples of many of the capabilities Microsoft Teams supports"
+    },
+    "icons": {
+        "outline": "outline_icon.png",
+        "color": "color_icon.png"
+    },
+    "accentColor": "#3F487F",
+    "staticTabs": [
+        {
+            "entityId": "mytasks",
+            "name": "My Tasks",
+            "contentUrl": "[https://YourHostURL.ext]/tabs/index",
+            "websiteUrl": "[https://YourHostURL.ext]/tabs/index?web=1",
+            "scopes": [
+                "personal"
+            ]
+        },
+        {
+            "entityId": "info",
+            "name": "Info",
+            "contentUrl": "[https://YourHostURL.ext]/tabs/about",
+            "websiteUrl": "[https://YourHostURL.ext]/tabs/about?web=1",
+            "scopes": [
+                "personal"
+            ]
+        }
+    ],
+    "configurableTabs": [
+        {
+            "configurationUrl": "[https://YourHostURL.ext]/tabs/configure",
+            "canUpdateConfiguration": true,
+            "scopes": [
+                "team"
+            ]
+        }
+    ],
+    "bots": [
+        {
+            "botId": "[Your Bot ID Here]",
+            "isNotificationOnly": false,
+            "scopes": [
+                "team",
+                "personal"
+            ],
+            "commandLists": [
+                {
+                    "scopes": [
+                        "team",
+                        "personal"
+                    ],
+                    "commands": [
+                        {
+                            "title": "help",
+                            "description": "Find out what I can do"
+                        },
+                        {
+                            "title": "create",
+                            "description": "Create a brand new task, just give me a title"
+                        },
+                        {
+                            "title": "find",
+                            "description": "I can help you find a task, just give me a title"
+                        },
+                        {
+                            "title": "link",
+                            "description": "Create a link to a tab, just give me the tab name"
+                        }
+                    ]
+                }
+            ]
+        }
+    ],
+    "connectors": [
+        {
+            "connectorId": "[Your Connector ID]",
+            "scopes": [
+                "team"
+            ]
+        }
+    ],
+    "composeExtensions": [
+        {
+            "botId": "[Your Bot ID Here]",
+            "scopes": [
+                "personal",
+                "team"
+            ],
+            "commands": [
+                {
+                    "id": "searchCmd",
+                    "title": "Search tasks",
+                    "description": "Search tasks",
+                    "parameters": [
+                        {
+                            "name": "search",
+                            "title": "Search",
+                            "description": "Search tasks"
+                        }
+                    ]
+                }
+            ]
+        }
+    ],
+    "permissions": [
+        "identity",
+        "messageTeamMembers"
+    ],
+    "validDomains": [
+        "[YourHostURL.ext]"
+    ]
+}

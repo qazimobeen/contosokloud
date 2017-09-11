@@ -1,0 +1,254 @@
+<html>
+<head>
+	<title>Sample App</title>
+	<script src="https://statics.teams.microsoft.com/sdk/v0.4/js/MicrosoftTeams.min.js"></script>
+	<script src="https://ajax.aspnetcdn.com/ajax/jQuery/jquery-3.2.1.min.js"></script>
+	<style type="text/css">
+		body {
+			margin: 0;
+			background: transparent;
+			color: #222;
+			font-family: "Segoe UI Semilight", "Segoe WPC", "Segoe UI", Helvetica, Arial, "Arial Unicode MS", Sans-Serif;
+			font-size: 80%;
+		}
+		
+		#todos_header {
+			padding: 1% 1% 0.5%;
+			display: flex;
+			min-width: 800px;
+			font-family: 'Segoe UI Bold', sans-serif;
+			font-size: 120%;
+			color: #3F487F;
+			line-height: 0%
+		}
+
+		#todos_container {
+			margin: 0;
+			padding: 1% 1% 0.5%;
+			display: flex;
+			width: 96%;
+			height: 90%;
+			min-width: 800px;
+		}
+		
+		.day {
+			height: 100%;
+			width: 20%;
+			padding: 0 30px;
+			list-style: none;
+			width: 250px;
+		}
+
+		.day.center {margin: 0 auto;}
+		
+		.day li {
+			margin-bottom: 30px;
+		}
+		
+		.title {
+			font-family: 'Segoe UI Bold', sans-serif;
+			font-size: 200%;
+			color: #3F487F;
+		}
+		
+		.task {
+			min-height: 75px;
+			padding: 20px 20px 10px 20px;
+			background: #FFFFFF;
+			cursor: -webkit-grab;
+			box-shadow: 0 0 45px #DDD;
+			border-radius: 5px;
+			border: 3px solid transparent;
+			width: 200px;
+		}
+		
+		.task.selected {
+			box-shadow: 0 0 25px #999;
+			border: 3px solid #cc0000;
+		}
+		
+		.task:hover {
+			box-shadow: 0 0 45px #999;
+		}
+		
+		.task h3 {
+			font-family: 'Segoe UI Black', sans-serif;
+			color: #1d3470;
+			font-size: 12px;
+			border-bottom: 1px solid #ccc;
+		}
+		
+		.task h3 {
+			padding: 0 0 8px 0;
+			margin: 0;
+		}
+		
+		.task p {
+			padding: 0;
+			margin: 7px 0;
+			font-family: 'Segoe UI Light', sans-serif;
+		}
+		
+		.task p.assigned {
+			font-family: 'Segoe UI Regular', sans-serif;
+		}
+		
+		.task p.id {
+			color: #CC0000;
+			font-family: 'Segoe UI Black';
+			text-align: right;
+			margin: 0;
+			font-size: 9px;
+		}
+		
+		.task p.getlink {
+			color: #1d3470;
+			font-family: 'Segoe UI Black';
+			text-align: right;
+			margin: 0;
+			font-size: 9px;
+			cursor: pointer;
+		}
+		
+		.task .image {
+			width: 100%;
+			height: 110px;
+			margin: 25px 0;
+			background-size: cover;
+			border-radius: 10px;
+			background-position: center;
+			background-repeat: no-repeat;
+		}
+
+		#todos_signin {
+			font-family: 'Segoe UI Bold', sans-serif;
+			font-size: 100%;
+			color: #3F487F;
+			text-align: right;
+			min-height: 16px;
+			margin: 16px 16px;
+		}
+	</style>
+</head>
+
+<body>
+    <div id="todos_signin"></div>
+    <div id="todos_header"></div>
+    <div id="todos_container"></div>
+
+	<script type="text/javascript">
+		// Gets URL parameters
+		function getURLParam(name) {
+			var url = window.location.search.substring(1);
+			var variables = url.split('&');
+			for (var i = 0; i < variables.length; i++) {
+				var variable = variables[i].split('=');
+				if (variable[0] === name) {
+					return decodeURIComponent(variable[1]);
+				}
+			}
+		}
+
+		var teamId = getURLParam('teamId');
+		var numdays = getURLParam('numdays') || 5;
+		var channelId = getURLParam('channelId');
+		var web = getURLParam('web');
+		var auth = getURLParam('auth');
+		var color = getURLParam('color') || '#fffad1';
+
+		var host = `https://${window.location.hostname}`;
+
+		// Get fake task data
+		$.get(`${host}/api/tasks/team?numdays=${numdays}`, function (data) {
+
+        	var html = ``;
+			var cols = data.length;			
+			var owner = (teamId) ? 'team' : 'mine';
+
+			for (var i = 0; i < cols; i++) {
+				var day = data[i];				
+
+				var dayHTML = `
+			  		<ul id="day-{i}" class="day">
+						<li class="title">
+							${day.title}
+						</li>
+					`;
+
+				var rows = (teamId) ? data[i].tasks.length : data[i].tasks.length * 0.3;
+				for (var j = 0; j < rows; j++) {					
+					var task = day.tasks[j];
+					var subentity = `${i}${j}`;
+					var getLink = (teamId) ? '<p class="getlink">Get Link</p>' : '';
+
+					//Adjust fake data:
+					//- If personal task board, set all tasks to be mine.
+					//- If team task board, set only some tasks to be mine leaving the remainder assigned to others.
+					var myTask = !teamId || (Math.floor(Math.random() * 4) == 0)
+					var myTaskClass = myTask ? 'myTask' : '';
+					var myTaskStyle = myTask ? `background-color:${color}` : '';
+					var assigned = myTask ? 'Me' : task.assigned;
+
+					var image = `${host}/static/img/image${Math.floor(Math.random() * 9) + 1}.png`;
+					var taskHTML = `
+							<li class="task" style="${myTaskStyle}" id="task-${subentity}">								
+								<p class="id">${subentity}</p>
+								<h3 class="title">${task.title}</h3>
+								<p class="assigned ${myTaskClass}">Assigned to: <strong>${assigned}</strong></p>
+								<p>${task.description}</p>								
+								<div class="image" style="background-image: url(${image});"></div>							
+								${getLink}
+							</li>
+						`;
+					dayHTML += taskHTML;
+				}
+
+				dayHTML += `</ul>`;
+				html += dayHTML;
+			}
+
+			$('#todos_container').html(html);
+
+			$('.task').on('click', function () {
+				$('.task').removeClass('selected');
+				$(this).addClass('selected');
+			});
+
+			if (auth) {
+				// Call Microsoft Graph, via server proxy, to get user name.
+				$.get(`${host}/graph/beta/me`, function (myData) {
+					$('#todos_signin').html(`<div class="signin">Signed in as: ${myData.displayName} </div>`);
+					$('.myTask').html(myData.displayName);
+				});
+			}
+
+			// Everything above here is part of the original Task Tracking app.
+			// The following code is all that was added to make it work inside Microsoft Teams.
+
+			if (web) {
+				$('#todos_header').html(`<h1>Task Tracker</h1>`);
+			} else {
+				// Page is inside Microsoft Teams tab.  Don't show the page header/navigation.
+				microsoftTeams.initialize();
+
+				// If 'get link' clicked on a task, ask Microsoft Teams to show dialog with a deep link to it
+				$('.getlink').on('click', function () {
+					var subEntityId = $(this).siblings('.id').text();
+					var subEntityLabel = $(this).siblings('.title').text();
+					microsoftTeams.shareDeepLink({subEntityId: subEntityId, subEntityLabel: subEntityLabel});
+				});
+
+				//If we arrived at this page by following a deep link to a task,
+				//then its id will be in the 'subentityId'.  Select this task.
+				microsoftTeams.getContext((context) => {
+					if (context.subEntityId != null) {
+						$(`#task-${context.subEntityId}`).addClass('selected');
+					}				
+				});
+			}
+
+		});
+	</script>
+</body>
+
+</html>

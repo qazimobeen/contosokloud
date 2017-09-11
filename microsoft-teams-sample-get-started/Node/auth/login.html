@@ -1,0 +1,105 @@
+<html>
+<head>
+	<title>Login</title>
+	<script src="https://statics.teams.microsoft.com/sdk/v0.4/js/MicrosoftTeams.min.js"></script>
+	<script src="https://ajax.aspnetcdn.com/ajax/jQuery/jquery-3.2.1.min.js"></script>
+	<style type="text/css">
+		body {
+			margin: 0;
+			background: transparent;
+			color: #222;
+			font-family: "Segoe UI Semilight", "Segoe WPC", "Segoe UI", Helvetica, Arial, "Arial Unicode MS", Sans-Serif;
+			font-size: 80%;
+		}
+		
+		#todos_header {
+			padding: 1% 1% 0.5%;
+			display: flex;
+			min-width: 250px;
+			font-family: 'Segoe UI Bold', sans-serif;
+			color: #3F487F;
+			line-height: 0%
+		}
+
+		#todos_container {
+			margin: 0;
+			padding: 1% 1% 0.5%;
+			display: flex;
+			min-width: 250px;
+		}
+
+		button {
+			background-color: #3F487F;
+			border: none;
+			color: white;
+			padding: 10px 32px;
+			text-align: center;
+			text-decoration: none;
+			display: inline-block;
+			font-size: 14px;
+			width: 160px;
+			height: 40px;
+			cursor: pointer;
+		}
+
+	</style>
+</head>
+
+<body>
+<div id="todos_header">
+	<h1>Task Tracker</h1>
+</div>
+<div id="todos_container">
+	<button id="signIn" onclick="login()">
+		Sign In
+	</button>
+</div>
+<script type="text/javascript">
+
+	function getURLParam(name) {
+		var url = window.location.search.substring(1);
+		var variables = url.split('&');
+		for (var i = 0; i < variables.length; i++) {
+			var variable = variables[i].split('=');
+			if (variable[0] === name) {
+				return decodeURIComponent(variable[1]);
+			}
+		}
+	}
+
+
+	var host = `https://${window.location.hostname}`;
+	var authUrl;
+	$.get(`${host}/api/authurl`, function (data) {
+		authUrl = data.authUrl;
+	});
+
+	if (!getURLParam('web')) {
+		//If inside iframe in Microsoft Teams, then intialize Teams library.
+		microsoftTeams.initialize();
+	}
+	
+	function login() {
+		if (getURLParam('web')) {
+			//Regular login outside of Microsoft Teams.
+			//Redirect to auth URL asking for redirect to originally requested page.
+			window.location = authUrl + '&state=' + encodeURIComponent(getURLParam('redirectUrl'));
+		} else {
+			//If inside iframe in Microsoft Teams, then login via Teams pop-up because
+			//auth URL won't load in an iframe.
+			//After success, redirect pop-up to new 'loginresult' page.
+			//It will trigger callback below that can redirect to originally requested page.
+			microsoftTeams.authentication.authenticate({
+				url: authUrl + '&state=loginresult',
+				width: 800,
+				height: 600,
+				successCallback: () => {window.location = getURLParam('redirectUrl');},
+				failureCallback: () => {}
+			});
+		}
+	}
+
+</script>
+</body>
+
+</html>
