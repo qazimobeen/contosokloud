@@ -12,6 +12,8 @@ using System.Collections.Generic;
 using Microsoft.Bot.Builder.Dialogs;
 using Newtonsoft.Json.Linq;
 
+using Bot_Application.Dialogs;
+
 namespace Bot_Application
 {
     [BotAuthentication]
@@ -32,29 +34,17 @@ namespace Bot_Application
         {
             if (activity.Type == ActivityTypes.Message)
             {
-                //ConnectorClient connector = new ConnectorClient(new Uri(activity.ServiceUrl));
-                //Activity reply;
-               
-
-                //if (activity.Text.ToLower().Contains("contact"))
-                //{
-                //    reply = activity.CreateReply(GetAccountManagerDetails());
-                //}
-                //else if (activity.Text.ToLower().Contains("status"))
-                //{
-                //    reply = activity.CreateReply("The status of your ticket is : " + GetTicketStatus(""));
-                //}
-                //else if (activity.Text.ToLower().Contains("tickets"))
-                //{
-                //    reply = activity.CreateReply(GetContractDetails());
-                //}
-                //else
-                //{
-                //    reply = activity.CreateReply($"your word is not defined");
-                //}
-
-                //await connector.Conversations.ReplyToActivityAsync(reply);
-                await Conversation.SendAsync(activity, () => new Bot_Application.RootDialog());
+                if (activity.Text.ToLower().Contains("luis"))
+                {
+                    // added LUIS 
+                    await Conversation.SendAsync(activity, () => new RootLuisDialog());
+                }
+                else
+                {
+                    // regular chat
+                    //await Conversation.SendAsync(activity, () => new RootDialog());
+                    await Conversation.SendAsync(activity, () => new RootLuisDialog());
+                }
             }
             else
             {
