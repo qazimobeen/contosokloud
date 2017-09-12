@@ -40,6 +40,13 @@ namespace Bot_Application
         {
             var activity = await result as Activity;
 
+            var teamsChannelData = activity.GetChannelData<TeamsChannelData>();
+            var teamId = (teamsChannelData != null && teamsChannelData.Team != null) ? teamsChannelData.Team.Id : "";
+            var channelId = (teamsChannelData != null && teamsChannelData.Channel != null) ? teamsChannelData.Channel.Id : "";
+
+            //TODO: Get Customer ID from SharePoint configuration list.
+            var customerId = "19321";
+
             var text = activity.GetTextWithoutMentions().ToLower();
 
             //Supports 5 commands:  Help, Welcome (sent from HandleSystemMessage when bot is added), Create, Find, Assign, and Link 
@@ -49,8 +56,8 @@ namespace Bot_Application
             {
                 if (text.Contains("contact"))
                 {
-                    //TODO: Return account manager info
-                    await SendHelpMessage(context, "Sure, I can provide account manager info for this company");
+                    Company companyDetails = ConnectWiseHelper.GetContactDetails(customerId);
+                    await SendContactDetailsMessage(context, companyDetails);
                 }
                 else if (text.Contains("status"))
                 {
@@ -77,15 +84,6 @@ namespace Bot_Application
                     Ticket ticketDetails = ConnectWiseHelper.GetTicketStatus(string.Join(" ", q));
                     await SendStatusMessage(context, ticketDetails);
                 }
-                else if (cmd.Contains("contact"))
-                {
-                    Company companyDetails = ConnectWiseHelper.GetContactDetails(string.Join(" ", q));
-                    await SendContactDetailsMessage(context, companyDetails);
-                }
-                //else if (cmd.Contains("link"))
-                //{
-                //    // await SendDeeplink(context, activity, string.Join(" ", q));
-                //}
                 else
                 {
                     await SendHelpMessage(context, "I'm sorry, I did not understand you :(");
@@ -117,11 +115,12 @@ namespace Bot_Application
                 }
                 };
 
-                //card.Buttons = new List<CardAction>()
-                //{
-                //    new CardAction("openUrl", "View task", null, "https://www.microsoft.com"),
-                //    new CardAction("imBack", "Assign to me", null, $"assign {taskItem.Guid}")
-                //};
+                card.Buttons = new List<CardAction>()
+                {
+                    new CardAction("openUrl", "Skype", null, string.Format("sip:{0}",company.AccountManager.Email)),
+                    new CardAction("openUrl", "Call", null, string.Format("tel:{0}",company.AccountManager.PhoneNumber)),
+                    new CardAction("openUrl", "Email", null, string.Format("mailto:{0}",company.AccountManager.Email))
+                };
 
                 reply.Attachments.Add(card.ToAttachment());
             }
@@ -162,11 +161,12 @@ namespace Bot_Application
                 }
                 };
 
-                //card.Buttons = new List<CardAction>()
-                //{
-                //    new CardAction("openUrl", "View task", null, "https://www.microsoft.com"),
-                //    new CardAction("imBack", "Assign to me", null, $"assign {taskItem.Guid}")
-                //};
+                // TODO: Retrieve Company Name from SharePoint configuration list.
+                var companyName = "kloudtraining";
+                card.Buttons = new List<CardAction>()
+                {
+                    new CardAction("openUrl", "View ticket", null, string.Format("https://aus.myconnectwise.net/v4_6_release/services/system_io/Service/fv_sr100_request.rails?service_recid={0}&companyName={1}",ticket.SubTitle, companyName))
+                };
 
                 reply.Attachments.Add(card.ToAttachment());
             }
@@ -181,44 +181,6 @@ namespace Bot_Application
             // Cache the response activity ID and previous task card.
             //string activityId = resp.Id.ToString();
             //context.ConversationData.SetValue("task " + taskItem.Guid, new Tuple<string, ThumbnailCard>(activityId, card));
-        }
-
-        /// <summary>
-        /// Helper method to update an existing message for the given task item GUID.
-        /// </summary>
-        /// <param name="context"></param>
-        /// <param name="taskItemGuid"></param>
-        /// <returns></returns>
-        private async Task UpdateMessage(IDialogContext context, string taskItemGuid)
-        {
-            Tuple<string, ThumbnailCard> cachedMessage;
-
-            //Retrieve passed task guid from the ConversationData cache
-            if (context.ConversationData.TryGetValue("task " + taskItemGuid, out cachedMessage))
-            {
-                IMessageActivity reply = context.MakeMessage();
-                reply.Attachments = new List<Attachment>();
-
-                string activityId = cachedMessage.Item1;
-                ThumbnailCard card = cachedMessage.Item2;
-
-                card.Subtitle = $"Assigned to: {context.Activity.From.Name}";
-
-                card.Buttons = new List<CardAction>()
-                {
-                    new CardAction("openUrl", "View task", null, "https://www.microsoft.com"),
-                    new CardAction("openUrl", "Update details", null, "https://www.microsoft.com")
-                };
-
-                reply.Attachments.Add(card.ToAttachment());
-
-                ConnectorClient client = new ConnectorClient(new Uri(context.Activity.ServiceUrl));
-                ResourceResponse resp = await client.Conversations.UpdateActivityAsync(context.Activity.Conversation.Id, activityId, (Activity)reply);
-            }
-            else
-            {
-                System.Diagnostics.Debug.WriteLine($"Could not update task {taskItemGuid}");
-            }
         }
 
         /// <summary>
@@ -261,9 +223,11 @@ namespace Bot_Application
         private async Task SendHelpMessage(IDialogContext context, string firstLine)
         {
             var helpMessage = $"{firstLine} \n\n Here's what I can help you do \n\n"
-                + "* To create a new task, you can type **create** followed by the task name\n"
-                + "* To find an existing task, you can type **find** followed by the task name\n"
-                + "* To create a deep link, you can type **link** followed by the tab name";
+                + "* To find out my account manager contact information, you can type **contact**\n"
+                + "* To find out remaining hours in my service agreement this month, you can type **hours**\n"
+                + "* To get latest status of service request or incident, you can type **status** followed by the ticket number\n"
+                + "* To find most recent service requests or incidents, you can type **tickets**\n"
+                + "* To find service requests or incidents for a specific period, you can type **tickets** followed by start date and end date";
 
             await context.PostAsync(helpMessage);
         }
