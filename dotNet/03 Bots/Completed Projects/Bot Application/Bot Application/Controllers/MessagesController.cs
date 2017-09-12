@@ -25,7 +25,32 @@ namespace Bot_Application
         {
             if (activity.Type == ActivityTypes.Message)
             {
-                await Conversation.SendAsync(activity, () => new Bot_Application.RootDialog());
+                //ConnectorClient connector = new ConnectorClient(new Uri(activity.ServiceUrl));
+                //Activity reply;
+
+
+                //if (activity.Text.ToLower().Contains("contact"))
+                //{
+                //    reply = activity.CreateReply(GetAccountManagerDetails());
+                //}
+                //else if (activity.Text.ToLower().Contains("status"))
+                //{ 
+                //    reply = activity.CreateReply("The status of your ticket is : " + GetTicketStatus(""));
+                //}
+                //else if (activity.Text.ToLower().Contains("tickets"))
+                //{
+                //    reply = activity.CreateReply(GetContractDetails());
+                //}
+                //else
+                //{
+                //    reply = activity.CreateReply($"your word is not defined");
+                //}
+
+                //await connector.Conversations.ReplyToActivityAsync(reply);
+
+                await Conversation.SendAsync(activity, () => new Bot_Application.Dialogs.RootLuisDialog());
+
+                //await Conversation.SendAsync(activity, () => new Bot_Application.RootDialog());
             }
             else
             {

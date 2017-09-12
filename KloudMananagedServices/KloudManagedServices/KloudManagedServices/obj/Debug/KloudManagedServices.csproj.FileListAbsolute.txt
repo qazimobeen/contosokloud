@@ -1,0 +1,113 @@
+C:\Projects\Microsoft Teams Hackfest\KloudMananagedServices\KloudManagedServices\KloudManagedServices\bin\roslyn\csc.exe
+C:\Projects\Microsoft Teams Hackfest\KloudMananagedServices\KloudManagedServices\KloudManagedServices\bin\roslyn\csc.exe.config
+C:\Projects\Microsoft Teams Hackfest\KloudMananagedServices\KloudManagedServices\KloudManagedServices\bin\roslyn\csc.rsp
+C:\Projects\Microsoft Teams Hackfest\KloudMananagedServices\KloudManagedServices\KloudManagedServices\bin\roslyn\csi.exe
+C:\Projects\Microsoft Teams Hackfest\KloudMananagedServices\KloudManagedServices\KloudManagedServices\bin\roslyn\csi.exe.config
+C:\Projects\Microsoft Teams Hackfest\KloudMananagedServices\KloudManagedServices\KloudManagedServices\bin\roslyn\csi.rsp
+C:\Projects\Microsoft Teams Hackfest\KloudMananagedServices\KloudManagedServices\KloudManagedServices\bin\roslyn\Microsoft.Build.Tasks.CodeAnalysis.dll
+C:\Projects\Microsoft Teams Hackfest\KloudMananagedServices\KloudManagedServices\KloudManagedServices\bin\roslyn\Microsoft.CodeAnalysis.CSharp.dll
+C:\Projects\Microsoft Teams Hackfest\KloudMananagedServices\KloudManagedServices\KloudManagedServices\bin\roslyn\Microsoft.CodeAnalysis.CSharp.Scripting.dll
+C:\Projects\Microsoft Teams Hackfest\KloudMananagedServices\KloudManagedServices\KloudManagedServices\bin\roslyn\Microsoft.CodeAnalysis.dll
+C:\Projects\Microsoft Teams Hackfest\KloudMananagedServices\KloudManagedServices\KloudManagedServices\bin\roslyn\Microsoft.CodeAnalysis.Scripting.dll
+C:\Projects\Microsoft Teams Hackfest\KloudMananagedServices\KloudManagedServices\KloudManagedServices\bin\roslyn\Microsoft.CodeAnalysis.VisualBasic.dll
+C:\Projects\Microsoft Teams Hackfest\KloudMananagedServices\KloudManagedServices\KloudManagedServices\bin\roslyn\Microsoft.CSharp.Core.targets
+C:\Projects\Microsoft Teams Hackfest\KloudMananagedServices\KloudManagedServices\KloudManagedServices\bin\roslyn\Microsoft.DiaSymReader.Native.amd64.dll
+C:\Projects\Microsoft Teams Hackfest\KloudMananagedServices\KloudManagedServices\KloudManagedServices\bin\roslyn\Microsoft.DiaSymReader.Native.x86.dll
+C:\Projects\Microsoft Teams Hackfest\KloudMananagedServices\KloudManagedServices\KloudManagedServices\bin\roslyn\Microsoft.VisualBasic.Core.targets
+C:\Projects\Microsoft Teams Hackfest\KloudMananagedServices\KloudManagedServices\KloudManagedServices\bin\roslyn\Microsoft.Win32.Primitives.dll
+C:\Projects\Microsoft Teams Hackfest\KloudMananagedServices\KloudManagedServices\KloudManagedServices\bin\roslyn\System.AppContext.dll
+C:\Projects\Microsoft Teams Hackfest\KloudMananagedServices\KloudManagedServices\KloudManagedServices\bin\roslyn\System.Collections.Immutable.dll
+C:\Projects\Microsoft Teams Hackfest\KloudMananagedServices\KloudManagedServices\KloudManagedServices\bin\roslyn\System.Console.dll
+C:\Projects\Microsoft Teams Hackfest\KloudMananagedServices\KloudManagedServices\KloudManagedServices\bin\roslyn\System.Diagnostics.FileVersionInfo.dll
+C:\Projects\Microsoft Teams Hackfest\KloudMananagedServices\KloudManagedServices\KloudManagedServices\bin\roslyn\System.Diagnostics.Process.dll
+C:\Projects\Microsoft Teams Hackfest\KloudMananagedServices\KloudManagedServices\KloudManagedServices\bin\roslyn\System.Diagnostics.StackTrace.dll
+C:\Projects\Microsoft Teams Hackfest\KloudMananagedServices\KloudManagedServices\KloudManagedServices\bin\roslyn\System.IO.Compression.dll
+C:\Projects\Microsoft Teams Hackfest\KloudMananagedServices\KloudManagedServices\KloudManagedServices\bin\roslyn\System.IO.FileSystem.dll
+C:\Projects\Microsoft Teams Hackfest\KloudMananagedServices\KloudManagedServices\KloudManagedServices\bin\roslyn\System.IO.FileSystem.DriveInfo.dll
+C:\Projects\Microsoft Teams Hackfest\KloudMananagedServices\KloudManagedServices\KloudManagedServices\bin\roslyn\System.IO.FileSystem.Primitives.dll
+C:\Projects\Microsoft Teams Hackfest\KloudMananagedServices\KloudManagedServices\KloudManagedServices\bin\roslyn\System.IO.Pipes.dll
+C:\Projects\Microsoft Teams Hackfest\KloudMananagedServices\KloudManagedServices\KloudManagedServices\bin\roslyn\System.Reflection.Metadata.dll
+C:\Projects\Microsoft Teams Hackfest\KloudMananagedServices\KloudManagedServices\KloudManagedServices\bin\roslyn\System.Security.AccessControl.dll
+C:\Projects\Microsoft Teams Hackfest\KloudMananagedServices\KloudManagedServices\KloudManagedServices\bin\roslyn\System.Security.Claims.dll
+C:\Projects\Microsoft Teams Hackfest\KloudMananagedServices\KloudManagedServices\KloudManagedServices\bin\roslyn\System.Security.Cryptography.Algorithms.dll
+C:\Projects\Microsoft Teams Hackfest\KloudMananagedServices\KloudManagedServices\KloudManagedServices\bin\roslyn\System.Security.Cryptography.Encoding.dll
+C:\Projects\Microsoft Teams Hackfest\KloudMananagedServices\KloudManagedServices\KloudManagedServices\bin\roslyn\System.Security.Cryptography.Primitives.dll
+C:\Projects\Microsoft Teams Hackfest\KloudMananagedServices\KloudManagedServices\KloudManagedServices\bin\roslyn\System.Security.Cryptography.X509Certificates.dll
+C:\Projects\Microsoft Teams Hackfest\KloudMananagedServices\KloudManagedServices\KloudManagedServices\bin\roslyn\System.Security.Principal.Windows.dll
+C:\Projects\Microsoft Teams Hackfest\KloudMananagedServices\KloudManagedServices\KloudManagedServices\bin\roslyn\System.Text.Encoding.CodePages.dll
+C:\Projects\Microsoft Teams Hackfest\KloudMananagedServices\KloudManagedServices\KloudManagedServices\bin\roslyn\System.Threading.Thread.dll
+C:\Projects\Microsoft Teams Hackfest\KloudMananagedServices\KloudManagedServices\KloudManagedServices\bin\roslyn\System.ValueTuple.dll
+C:\Projects\Microsoft Teams Hackfest\KloudMananagedServices\KloudManagedServices\KloudManagedServices\bin\roslyn\System.Xml.ReaderWriter.dll
+C:\Projects\Microsoft Teams Hackfest\KloudMananagedServices\KloudManagedServices\KloudManagedServices\bin\roslyn\System.Xml.XmlDocument.dll
+C:\Projects\Microsoft Teams Hackfest\KloudMananagedServices\KloudManagedServices\KloudManagedServices\bin\roslyn\System.Xml.XPath.dll
+C:\Projects\Microsoft Teams Hackfest\KloudMananagedServices\KloudManagedServices\KloudManagedServices\bin\roslyn\System.Xml.XPath.XDocument.dll
+C:\Projects\Microsoft Teams Hackfest\KloudMananagedServices\KloudManagedServices\KloudManagedServices\bin\roslyn\vbc.exe
+C:\Projects\Microsoft Teams Hackfest\KloudMananagedServices\KloudManagedServices\KloudManagedServices\bin\roslyn\vbc.exe.config
+C:\Projects\Microsoft Teams Hackfest\KloudMananagedServices\KloudManagedServices\KloudManagedServices\bin\roslyn\vbc.rsp
+C:\Projects\Microsoft Teams Hackfest\KloudMananagedServices\KloudManagedServices\KloudManagedServices\bin\roslyn\VBCSCompiler.exe
+C:\Projects\Microsoft Teams Hackfest\KloudMananagedServices\KloudManagedServices\KloudManagedServices\bin\roslyn\VBCSCompiler.exe.config
+C:\Projects\Microsoft Teams Hackfest\KloudMananagedServices\KloudManagedServices\KloudManagedServices\bin\KloudManagedServices.dll.config
+C:\Projects\Microsoft Teams Hackfest\KloudMananagedServices\KloudManagedServices\KloudManagedServices\bin\KloudManagedServices.dll
+C:\Projects\Microsoft Teams Hackfest\KloudMananagedServices\KloudManagedServices\KloudManagedServices\bin\KloudManagedServices.pdb
+C:\Projects\Microsoft Teams Hackfest\KloudMananagedServices\KloudManagedServices\KloudManagedServices\bin\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.dll
+C:\Projects\Microsoft Teams Hackfest\KloudMananagedServices\KloudManagedServices\KloudManagedServices\bin\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.xml
+C:\Projects\Microsoft Teams Hackfest\KloudMananagedServices\KloudManagedServices\KloudManagedServices\obj\Debug\KloudManagedServices.csprojResolveAssemblyReference.cache
+C:\Projects\Microsoft Teams Hackfest\KloudMananagedServices\KloudManagedServices\KloudManagedServices\obj\Debug\KloudManagedServices.csproj.CoreCompileInputs.cache
+C:\Projects\Microsoft Teams Hackfest\KloudMananagedServices\KloudManagedServices\KloudManagedServices\obj\Debug\KloudManagedServices.dll
+C:\Projects\Microsoft Teams Hackfest\KloudMananagedServices\KloudManagedServices\KloudManagedServices\obj\Debug\KloudManagedServices.pdb
+D:\GIT\contosokloud\KloudMananagedServices\KloudManagedServices\KloudManagedServices\bin\roslyn\csc.exe
+D:\GIT\contosokloud\KloudMananagedServices\KloudManagedServices\KloudManagedServices\bin\roslyn\csc.exe.config
+D:\GIT\contosokloud\KloudMananagedServices\KloudManagedServices\KloudManagedServices\bin\roslyn\csc.rsp
+D:\GIT\contosokloud\KloudMananagedServices\KloudManagedServices\KloudManagedServices\bin\roslyn\csi.exe
+D:\GIT\contosokloud\KloudMananagedServices\KloudManagedServices\KloudManagedServices\bin\roslyn\csi.exe.config
+D:\GIT\contosokloud\KloudMananagedServices\KloudManagedServices\KloudManagedServices\bin\roslyn\csi.rsp
+D:\GIT\contosokloud\KloudMananagedServices\KloudManagedServices\KloudManagedServices\bin\roslyn\Microsoft.Build.Tasks.CodeAnalysis.dll
+D:\GIT\contosokloud\KloudMananagedServices\KloudManagedServices\KloudManagedServices\bin\roslyn\Microsoft.CodeAnalysis.CSharp.dll
+D:\GIT\contosokloud\KloudMananagedServices\KloudManagedServices\KloudManagedServices\bin\roslyn\Microsoft.CodeAnalysis.CSharp.Scripting.dll
+D:\GIT\contosokloud\KloudMananagedServices\KloudManagedServices\KloudManagedServices\bin\roslyn\Microsoft.CodeAnalysis.dll
+D:\GIT\contosokloud\KloudMananagedServices\KloudManagedServices\KloudManagedServices\bin\roslyn\Microsoft.CodeAnalysis.Scripting.dll
+D:\GIT\contosokloud\KloudMananagedServices\KloudManagedServices\KloudManagedServices\bin\roslyn\Microsoft.CodeAnalysis.VisualBasic.dll
+D:\GIT\contosokloud\KloudMananagedServices\KloudManagedServices\KloudManagedServices\bin\roslyn\Microsoft.CSharp.Core.targets
+D:\GIT\contosokloud\KloudMananagedServices\KloudManagedServices\KloudManagedServices\bin\roslyn\Microsoft.DiaSymReader.Native.amd64.dll
+D:\GIT\contosokloud\KloudMananagedServices\KloudManagedServices\KloudManagedServices\bin\roslyn\Microsoft.DiaSymReader.Native.x86.dll
+D:\GIT\contosokloud\KloudMananagedServices\KloudManagedServices\KloudManagedServices\bin\roslyn\Microsoft.VisualBasic.Core.targets
+D:\GIT\contosokloud\KloudMananagedServices\KloudManagedServices\KloudManagedServices\bin\roslyn\Microsoft.Win32.Primitives.dll
+D:\GIT\contosokloud\KloudMananagedServices\KloudManagedServices\KloudManagedServices\bin\roslyn\System.AppContext.dll
+D:\GIT\contosokloud\KloudMananagedServices\KloudManagedServices\KloudManagedServices\bin\roslyn\System.Collections.Immutable.dll
+D:\GIT\contosokloud\KloudMananagedServices\KloudManagedServices\KloudManagedServices\bin\roslyn\System.Console.dll
+D:\GIT\contosokloud\KloudMananagedServices\KloudManagedServices\KloudManagedServices\bin\roslyn\System.Diagnostics.FileVersionInfo.dll
+D:\GIT\contosokloud\KloudMananagedServices\KloudManagedServices\KloudManagedServices\bin\roslyn\System.Diagnostics.Process.dll
+D:\GIT\contosokloud\KloudMananagedServices\KloudManagedServices\KloudManagedServices\bin\roslyn\System.Diagnostics.StackTrace.dll
+D:\GIT\contosokloud\KloudMananagedServices\KloudManagedServices\KloudManagedServices\bin\roslyn\System.IO.Compression.dll
+D:\GIT\contosokloud\KloudMananagedServices\KloudManagedServices\KloudManagedServices\bin\roslyn\System.IO.FileSystem.dll
+D:\GIT\contosokloud\KloudMananagedServices\KloudManagedServices\KloudManagedServices\bin\roslyn\System.IO.FileSystem.DriveInfo.dll
+D:\GIT\contosokloud\KloudMananagedServices\KloudManagedServices\KloudManagedServices\bin\roslyn\System.IO.FileSystem.Primitives.dll
+D:\GIT\contosokloud\KloudMananagedServices\KloudManagedServices\KloudManagedServices\bin\roslyn\System.IO.Pipes.dll
+D:\GIT\contosokloud\KloudMananagedServices\KloudManagedServices\KloudManagedServices\bin\roslyn\System.Reflection.Metadata.dll
+D:\GIT\contosokloud\KloudMananagedServices\KloudManagedServices\KloudManagedServices\bin\roslyn\System.Security.AccessControl.dll
+D:\GIT\contosokloud\KloudMananagedServices\KloudManagedServices\KloudManagedServices\bin\roslyn\System.Security.Claims.dll
+D:\GIT\contosokloud\KloudMananagedServices\KloudManagedServices\KloudManagedServices\bin\roslyn\System.Security.Cryptography.Algorithms.dll
+D:\GIT\contosokloud\KloudMananagedServices\KloudManagedServices\KloudManagedServices\bin\roslyn\System.Security.Cryptography.Encoding.dll
+D:\GIT\contosokloud\KloudMananagedServices\KloudManagedServices\KloudManagedServices\bin\roslyn\System.Security.Cryptography.Primitives.dll
+D:\GIT\contosokloud\KloudMananagedServices\KloudManagedServices\KloudManagedServices\bin\roslyn\System.Security.Cryptography.X509Certificates.dll
+D:\GIT\contosokloud\KloudMananagedServices\KloudManagedServices\KloudManagedServices\bin\roslyn\System.Security.Principal.Windows.dll
+D:\GIT\contosokloud\KloudMananagedServices\KloudManagedServices\KloudManagedServices\bin\roslyn\System.Text.Encoding.CodePages.dll
+D:\GIT\contosokloud\KloudMananagedServices\KloudManagedServices\KloudManagedServices\bin\roslyn\System.Threading.Thread.dll
+D:\GIT\contosokloud\KloudMananagedServices\KloudManagedServices\KloudManagedServices\bin\roslyn\System.ValueTuple.dll
+D:\GIT\contosokloud\KloudMananagedServices\KloudManagedServices\KloudManagedServices\bin\roslyn\System.Xml.ReaderWriter.dll
+D:\GIT\contosokloud\KloudMananagedServices\KloudManagedServices\KloudManagedServices\bin\roslyn\System.Xml.XmlDocument.dll
+D:\GIT\contosokloud\KloudMananagedServices\KloudManagedServices\KloudManagedServices\bin\roslyn\System.Xml.XPath.dll
+D:\GIT\contosokloud\KloudMananagedServices\KloudManagedServices\KloudManagedServices\bin\roslyn\System.Xml.XPath.XDocument.dll
+D:\GIT\contosokloud\KloudMananagedServices\KloudManagedServices\KloudManagedServices\bin\roslyn\vbc.exe
+D:\GIT\contosokloud\KloudMananagedServices\KloudManagedServices\KloudManagedServices\bin\roslyn\vbc.exe.config
+D:\GIT\contosokloud\KloudMananagedServices\KloudManagedServices\KloudManagedServices\bin\roslyn\vbc.rsp
+D:\GIT\contosokloud\KloudMananagedServices\KloudManagedServices\KloudManagedServices\bin\roslyn\VBCSCompiler.exe
+D:\GIT\contosokloud\KloudMananagedServices\KloudManagedServices\KloudManagedServices\bin\roslyn\VBCSCompiler.exe.config
+D:\GIT\contosokloud\KloudMananagedServices\KloudManagedServices\KloudManagedServices\bin\KloudManagedServices.dll.config
+D:\GIT\contosokloud\KloudMananagedServices\KloudManagedServices\KloudManagedServices\bin\KloudManagedServices.dll
+D:\GIT\contosokloud\KloudMananagedServices\KloudManagedServices\KloudManagedServices\bin\KloudManagedServices.pdb
+D:\GIT\contosokloud\KloudMananagedServices\KloudManagedServices\KloudManagedServices\bin\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.dll
+D:\GIT\contosokloud\KloudMananagedServices\KloudManagedServices\KloudManagedServices\bin\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.xml
+D:\GIT\contosokloud\KloudMananagedServices\KloudManagedServices\KloudManagedServices\obj\Debug\KloudManagedServices.csprojResolveAssemblyReference.cache
+D:\GIT\contosokloud\KloudMananagedServices\KloudManagedServices\KloudManagedServices\obj\Debug\KloudManagedServices.dll
+D:\GIT\contosokloud\KloudMananagedServices\KloudManagedServices\KloudManagedServices\obj\Debug\KloudManagedServices.pdb
