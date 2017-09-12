@@ -14,6 +14,7 @@ namespace Bot_Application.Entities
         public string recordType { get; set; }
         public string dateEntered { get; set; }
 
+        public string CompanyName {get;set;}
 
         
     }

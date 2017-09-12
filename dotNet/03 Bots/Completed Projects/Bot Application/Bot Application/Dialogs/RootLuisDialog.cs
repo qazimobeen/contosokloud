@@ -8,7 +8,9 @@ using Microsoft.Bot.Builder.FormFlow;
 using Microsoft.Bot.Builder.Luis;
 using Microsoft.Bot.Builder.Luis.Models;
 using Microsoft.Bot.Connector;
-
+using Bot_Application.Helper;
+using Bot_Application.Entities;
+using Newtonsoft.Json.Linq;
 
 namespace Bot_Application.Dialogs
 {
@@ -70,9 +72,41 @@ namespace Bot_Application.Dialogs
         [LuisIntent("contact")]
         public async Task contact(IDialogContext context, LuisResult result)
         {
-            string message = $"LUIS - contact - It appears to be your Account Manager is";
+            string message = $"LUIS - contact - Your Account Manager details are as follows:";
 
             await context.PostAsync(message);
+
+            IMessageActivity reply = context.MakeMessage();
+            reply.Attachments = new List<Attachment>();
+
+            //TODO: get company details dynamically
+            Company company = ConnectWiseHelper.GetContactDetails("19321");
+
+            ThumbnailCard card = new ThumbnailCard()
+            {
+
+                Title = $"{company.AccountManager.Name}",
+                Subtitle = $"{company.AccountManager.Email}",
+                Text = company.AccountManager.PhoneNumber,
+                Images = new List<CardImage>()
+                {
+                    new CardImage()
+                    {
+                        Url = $"https://contosomanagedservices.azurewebsites.net/images/kloud88.png"
+                    }
+                }
+            };
+
+            card.Buttons = new List<CardAction>()
+                {
+                    new CardAction("openUrl", "Skype", null, string.Format("sip:{0}",company.AccountManager.Email)),
+                    new CardAction("openUrl", "Call", null, string.Format("tel:{0}",company.AccountManager.PhoneNumber)),
+                    new CardAction("openUrl", "Email", null, string.Format("mailto:{0}",company.AccountManager.Email))
+                };
+
+            reply.Attachments.Add(card.ToAttachment());
+
+            await context.PostAsync(reply);
 
             context.Wait(this.MessageReceived);
         }
@@ -84,25 +118,83 @@ namespace Bot_Application.Dialogs
 
             await context.PostAsync(message);
 
+            await context.PostAsync(new Random().Next().ToString());
+
             context.Wait(this.MessageReceived);
         }
 
         [LuisIntent("status")]
         public async Task status(IDialogContext context, LuisResult result)
         {
-            string message = $"LUIS - status - {result.Query} Let me find out the status of your ticket";
+            string message = $"LUIS - status - {result.Query} Let me find out the status of your tickets...";
 
             await context.PostAsync(message);
 
-            /*
-            await context.PostAsync(result.Query);
-            await context.PostAsync(result.AlteredQuery);
-            await context.PostAsync(result.CompositeEntities.Count.ToString());
-            await context.PostAsync(result.Dialog.Status);
-            await context.PostAsync(result.Entities.Count.ToString());
-            await context.PostAsync(result.Intents.Count.ToString());
-            await context.PostAsync(result.TopScoringIntent.Intent);
-            */
+            if (result.Entities.Count == 1)
+            {
+                //SCENARIO: a single ticket ID is passed to LUIS
+
+                Ticket ticket = DialogHelper.EntertainIntentStatus(context, result);
+
+                if (ticket != null)
+                {
+                    IMessageActivity reply = context.MakeMessage();
+                    reply.Attachments = new List<Attachment>();
+
+                    ThumbnailCard card = new ThumbnailCard()
+                    {
+                        Title = $"{ticket.Title}",
+                        Subtitle = $"#{ticket.SubTitle}",
+                        Text = ticket.Text,
+                        Images = new List<CardImage>()
+                {
+                    new CardImage()
+                    {
+                        Url = $"https://contosomanagedservices.azurewebsites.net/images/kloud88.png"
+                    }
+                }
+                    };
+
+                    // TODO: Retrieve Company Name from SharePoint configuration list.
+                    var companyName = ticket.CompanyName;
+                    card.Buttons = new List<CardAction>()
+                {
+                    new CardAction("openUrl", "View ticket", null, string.Format("https://aus.myconnectwise.net/v4_6_release/services/system_io/Service/fv_sr100_request.rails?service_recid={0}&companyName={1}",ticket.SubTitle, companyName))
+                };
+
+                    reply.Attachments.Add(card.ToAttachment());
+
+                    await context.PostAsync(reply);
+                }
+                else
+                {
+                    await context.PostAsync("LUIS - status - I could not find this ticket :(");
+                }
+            }
+            else 
+            {
+                //SCENARIO: all tickets or 5 tickets
+                //TODO: get customer ID dynamically
+                JArray ticketDetails = ConnectWiseHelper.GetTickets("1234");
+
+                IMessageActivity reply = context.MakeMessage();
+                reply.Attachments = new List<Attachment>();
+                reply.AttachmentLayout = AttachmentLayoutTypes.Carousel;
+
+                foreach (JObject o in ticketDetails)
+                {
+                    ThumbnailCard card = new ThumbnailCard()
+                    {
+                        Title = $"{o["summary"].ToString()}",
+                        Subtitle = $"Status: { o["status"]["name"].ToString()}," + $"  Date Entered: { o["dateEntered"].ToString()}",
+                        Text = $"Ticket Id: { o["id"].ToString()}" + $" Ticket Type: { o["recordType"].ToString()}"
+                    };
+
+                    reply.Attachments.Add(card.ToAttachment());
+                }
+
+                await context.PostAsync(reply);
+            }
 
             context.Wait(this.MessageReceived);
         }

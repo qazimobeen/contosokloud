@@ -54,18 +54,23 @@ namespace Bot_Application
             var split = text.ToLower().Split(' ');
             if (split.Length < 2)
             {
-                if (text.Contains("contact"))
+                var cmd = split[0].Trim().ToLower();
+                if (cmd == "contact")
                 {
                     Company companyDetails = ConnectWiseHelper.GetContactDetails(customerId);
                     await SendContactDetailsMessage(context, companyDetails);
                 }
-                else if (text.Contains("status"))
+                else if (cmd == "status")
                 {
-                    //TODO : Prompt user for ticket number if not provided
-                    await SendHelpMessage(context, "Sure, I can provide info about the status of this ticket");
+                    await SendHelpMessage(context, "Sure, I can provide info about the status of a ticket");
                 }
-                else if (text.Contains("tickets"))
+                else if (cmd == "ticket")
                 {
+                    await SendHelpMessage(context, "Sure, I can provide info about a ticket");
+                }
+                else if (cmd == "tickets")
+                {
+                    //TODO: Get 5 most recent service tickets
                     await SendHelpMessage(context, "Sure, I can provide help info about this ticket");
                 }
                 else
@@ -75,14 +80,44 @@ namespace Bot_Application
             }
             else
             {
-                var q = split.Skip(1);
-                var cmd = split[0];
+                var cmd = split[0].Trim().ToLower();
 
                 // Parse the command and go do the right thing
-                if (cmd.Contains("status"))
+                if (cmd == "status")
                 {
-                    Ticket ticketDetails = ConnectWiseHelper.GetTicketStatus(string.Join(" ", q));
+                    var ticketNumber = split.Skip(1);
+                    Ticket ticketDetails = ConnectWiseHelper.GetTicketStatus(string.Join(" ", ticketNumber));
                     await SendStatusMessage(context, ticketDetails);
+                }
+                else if (cmd == "ticket")
+                {
+                    var ticketNumber = split.Skip(1);
+                    Ticket ticketDetails = ConnectWiseHelper.GetTicketStatus(string.Join(" ", ticketNumber));
+                    await SendStatusMessage(context, ticketDetails);
+                }
+                else if (cmd.Contains("tickets"))
+                {
+                    var CustomerId = "19373";
+                    var validParams = false;
+                    DateTime fromDate = DateTime.MinValue;
+                    DateTime toDate = DateTime.MinValue;
+                    if (split.Length == 3)
+                    {
+
+                        validParams = DateTime.TryParse(split[1], out fromDate);
+                        validParams = DateTime.TryParse(split[2], out toDate);
+                    }
+                    if(validParams)
+                    {
+                        // TODO: Get service tickets between from/to date range
+                        JArray ticketDetails = ConnectWiseHelper.GetTicketsFromAndTo(CustomerId,fromDate, toDate);
+                        await SendTicketDetailsMessage(context, ticketDetails);
+
+                    }
+                    else
+                    {
+                        await SendHelpMessage(context, "I'm sorry, you must enter a valid from date and to date :(");
+                    }
                 }
                 else
                 {
@@ -227,9 +262,104 @@ namespace Bot_Application
                 + "* To find out remaining hours in my service agreement this month, you can type **hours**\n"
                 + "* To get latest status of service request or incident, you can type **status** followed by the ticket number\n"
                 + "* To find most recent service requests or incidents, you can type **tickets**\n"
-                + "* To find service requests or incidents for a specific period, you can type **tickets** followed by start date and end date";
+                + "* To find service requests or incidents for a specific period, you can type **tickets** followed by from date and to date";
 
             await context.PostAsync(helpMessage);
         }
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="context"></param>
+        /// <param name="ticketDetails"></param>
+        /// <returns></returns>
+        private async Task SendCompanyDetailsMessage(IDialogContext context, Company cDetails)
+        {
+            //var taskItem = Utils.Utils.CreateTaskItem();
+            //taskItem.Title = taskItemTitle;
+
+            IMessageActivity reply = context.MakeMessage();
+            reply.Attachments = new List<Attachment>();
+
+            ThumbnailCard card = new ThumbnailCard()
+            {
+                Title = $"{cDetails.Name}",
+                Subtitle = $"Total Hours: {cDetails.TotalHoursUsed}",
+                Text = cDetails.Id,
+                Images = new List<CardImage>()
+                {
+                    new CardImage()
+                    {
+                        Url = $"https://contosomanagedservices.azurewebsites.net/images/kloud88.png"
+                    }
+                }
+            };
+
+            //card.Buttons = new List<CardAction>()
+            //{
+            //    new CardAction("openUrl", "View task", null, "https://www.microsoft.com"),
+            //    new CardAction("imBack", "Assign to me", null, $"assign {taskItem.Guid}")
+            //};
+
+            reply.Attachments.Add(card.ToAttachment());
+
+            ConnectorClient client = new ConnectorClient(new Uri(context.Activity.ServiceUrl));
+            ResourceResponse resp = await client.Conversations.ReplyToActivityAsync((Activity)reply);
+
+            // Cache the response activity ID and previous task card.
+            //string activityId = resp.Id.ToString();
+            //context.ConversationData.SetValue("task " + taskItem.Guid, new Tuple<string, ThumbnailCard>(activityId, card));
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="context"></param>
+        /// <param name="cDetails"></param>
+        /// <returns></returns>
+        private async Task SendTicketDetailsMessage(IDialogContext context, JArray tDetails)
+        {
+            //var taskItem = Utils.Utils.CreateTaskItem();
+            //taskItem.Title = taskItemTitle;
+
+            IMessageActivity reply = context.MakeMessage();
+            reply.Attachments = new List<Attachment>();
+
+            var random = new Random();
+
+            foreach (JObject o in tDetails)
+            {
+                ThumbnailCard card = new ThumbnailCard()
+                {
+                    Title = $"{o["summary"].ToString()}",
+                    Subtitle = $"Status: { o["status"]["name"].ToString()}," + $"  Date Entered: { o["dateEntered"].ToString()}",
+                    Text = $"Ticket Id: { o["id"].ToString()}" + $" Ticket Type: { o["recordType"].ToString()}"
+                    //Subtitle = $"Total Hours: {cDetails.totalHours}",
+                    //Text = cDetails.CompanyId,
+                    //    Images = new List<CardImage>()
+                    //{
+                    //    new CardImage()
+                    //    {
+                    //        Url = $"https://contosomanagedservices.azurewebsites.net/images/kloud88.png"
+                    //    }
+                    //}
+                };
+
+                reply.Attachments.Add(card.ToAttachment());
+            }
+
+            //card.Buttons = new List<CardAction>()
+            //{
+            //    new CardAction("openUrl", "View task", null, "https://www.microsoft.com"),
+            //    new CardAction("imBack", "Assign to me", null, $"assign {taskItem.Guid}")
+            //};
+
+            ConnectorClient client = new ConnectorClient(new Uri(context.Activity.ServiceUrl));
+            ResourceResponse resp = await client.Conversations.ReplyToActivityAsync((Activity)reply);
+
+            // Cache the response activity ID and previous task card.
+            //string activityId = resp.Id.ToString();
+            //context.ConversationData.SetValue("task " + taskItem.Guid, new Tuple<string, ThumbnailCard>(activityId, card));
+        }
+
     }
 }

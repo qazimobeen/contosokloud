@@ -123,7 +123,8 @@ namespace Bot_Application.Helper
                     {
                         Title = ticketObject["summary"].ToString(),
                         SubTitle = ticketNumber,
-                        Text = ticketObject["status"]["name"].ToString()
+                        Text = ticketObject["status"]["name"].ToString(),
+                        CompanyName = ticketObject["company"]["name"].ToString()
                     };
                 }
             }
@@ -133,12 +134,12 @@ namespace Bot_Application.Helper
 
         public static JArray GetTickets(string ClientID)
         {
-
+            ClientID = "19373";
             JArray Obj = null;
             //string accessToken = "S2xvdWRUcmFpbmluZytxcHBWZkFNZlVWMXJaZ0tKOk1vU1RCdURzMG5MRlp5b3A=";
-           // HttpClient client = new HttpClient();
-           // string ticketInfoUri = "https://api-aus.myconnectwise.net/v4_6_release/apis/3.0/service/tickets?orderby=dateEntered desc&pageSize=5";
-            string ticketInfoUri = string.Format("{0}/service/tickets?orderby=dateEntered desc&pageSize=5", cwURI);
+            // HttpClient client = new HttpClient();
+            // string ticketInfoUri = "https://api-aus.myconnectwise.net/v4_6_release/apis/3.0/service/tickets?orderby=dateEntered desc&pageSize=5";
+            string ticketInfoUri = string.Format("{0}/service/tickets?conditions=company/id={1}&orderby=dateEntered desc&pageSize=5", cwURI, ClientID);
 
             https://api-aus.myconnectwise.net/v4_6_release/apis/3.0/service/tickets/61295?orderby=dateEntered desc&pageSize=5
             //19321
@@ -175,6 +176,67 @@ namespace Bot_Application.Helper
             return Obj;
         }
 
+        /// <summary>
+        /// This function get tickets for to and from date time
+        /// </summary>
+        /// <param name="ClientID"></param>
+        /// <returns></returns>
+        public static JArray GetTicketsFromAndTo(string ClientID, DateTime From, DateTime To)
+        {
+            // TODO: Get Client Id form somewhere else. 
+            DateTime.TryParse("2015-02-20T17:04:26Z", out From);
+            DateTime.TryParse("2016-02-20T17:04:26Z", out To);
+
+            //From.ToString(isoDateTimeFormat.SortableDateTimePattern);
+            From.ToString("yyyy-MM-ddTHH:mm:ssZ");
+
+            JArray Obj = null;
+            //string accessToken = "S2xvdWRUcmFpbmluZytxcHBWZkFNZlVWMXJaZ0tKOk1vU1RCdURzMG5MRlp5b3A=";
+            // HttpClient client = new HttpClient();
+            // string ticketInfoUri = "https://api-aus.myconnectwise.net/v4_6_release/apis/3.0/service/tickets?orderby=dateEntered desc&pageSize=5";
+            string ticketInfoUri = string.Format("{0}/service/tickets?conditions=company/id={1} and dateEntered > {2} and dateEntered <  {3} &orderby=dateEntered desc&orderby=dateEntered desc&pageSize=5", cwURI, ClientID, From, To);
+
+            https://api-aus.myconnectwise.net/v4_6_release/apis/3.0/service/tickets/61295?orderby=dateEntered desc&pageSize=5
+            //19321
+            //client.BaseAddress = new Uri(url);
+            //client.DefaultRequestHeaders.Add("Authorization", "Basic " + accessToken);
+
+            //client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+            HttpResponseMessage response = GetCWResponse(ticketInfoUri);
+
+            if (response.IsSuccessStatusCode)
+            {
+                using (HttpContent content = response.Content)
+                {
+                    Task<string> result = content.ReadAsStringAsync();
+
+                    Obj = JArray.Parse(result.Result);
+
+                    foreach (JObject o in Obj)
+                    {
+                        Ticket tickDetails = null;
+                        //tickDetails = new TicketDetails { Title = o["summary"].ToString() };
+
+                        tickDetails = new Ticket
+                        {
+                            Title = o["summary"].ToString(),
+                            SubTitle = ClientID,
+                            Text = o["status"]["name"].ToString(),
+                            Id = o["id"].ToString(),
+                            recordType = o["recordType"].ToString(),
+                            dateEntered = o["dateEntered"].ToString()
+                        };
+
+                    }
+                }
+            }
+            else
+            {
+                //Display unable to receive
+                //Console.WriteLine("{0} ({1})", (int)response.StatusCode, response.ReasonPhrase);
+            }
+            return Obj;
+        }
         public static Company GetHoursDetails(string ClientID)
         {
 
