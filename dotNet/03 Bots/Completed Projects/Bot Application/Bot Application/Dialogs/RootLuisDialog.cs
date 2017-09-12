@@ -126,7 +126,7 @@ namespace Bot_Application.Dialogs
         [LuisIntent("status")]
         public async Task status(IDialogContext context, LuisResult result)
         {
-            string message = $"LUIS - status - {result.Query} Let me find out the status of your tickets...";
+            string message = $"LUIS - status - Let me find out the status of your tickets...";
 
             await context.PostAsync(message);
 
