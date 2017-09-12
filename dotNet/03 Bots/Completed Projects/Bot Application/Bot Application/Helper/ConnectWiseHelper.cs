@@ -130,5 +130,66 @@ namespace Bot_Application.Helper
 
             return tickDetails;
         }
+
+        public static JArray GetTickets(string ClientID)
+        {
+
+            JArray Obj = null;
+            //string accessToken = "S2xvdWRUcmFpbmluZytxcHBWZkFNZlVWMXJaZ0tKOk1vU1RCdURzMG5MRlp5b3A=";
+           // HttpClient client = new HttpClient();
+           // string ticketInfoUri = "https://api-aus.myconnectwise.net/v4_6_release/apis/3.0/service/tickets?orderby=dateEntered desc&pageSize=5";
+            string ticketInfoUri = string.Format("{0}/service/tickets?orderby=dateEntered desc&pageSize=5", cwURI);
+
+            https://api-aus.myconnectwise.net/v4_6_release/apis/3.0/service/tickets/61295?orderby=dateEntered desc&pageSize=5
+            //19321
+            //client.BaseAddress = new Uri(url);
+            //client.DefaultRequestHeaders.Add("Authorization", "Basic " + accessToken);
+
+            //client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+            HttpResponseMessage response = GetCWResponse(ticketInfoUri);
+
+            if (response.IsSuccessStatusCode)
+            {
+                using (HttpContent content = response.Content)
+                {
+                    Task<string> result = content.ReadAsStringAsync();
+
+                    Obj = JArray.Parse(result.Result);
+
+                    foreach (JObject o in Obj)
+                    {
+                        Ticket tickDetails = null;
+                        //tickDetails = new TicketDetails { Title = o["summary"].ToString() };
+
+                        tickDetails = new Ticket { Title = o["summary"].ToString(), SubTitle = ClientID, Text = o["status"]["name"].ToString(), Id = o["id"].ToString(),
+                            recordType = o["recordType"].ToString(), dateEntered = o["dateEntered"].ToString() };
+
+                    }
+                }
+            }
+            else
+            {
+                //Display unable to receive
+                //Console.WriteLine("{0} ({1})", (int)response.StatusCode, response.ReasonPhrase);
+            }
+            return Obj;
+        }
+
+        public static Company GetHoursDetails(string ClientID)
+        {
+
+            Company cDetails = new Company();
+
+            Random rnd1 = new Random();
+            cDetails.Id = ClientID;
+
+            Random random = new Random();
+            int randomNumber = random.Next(0, 100);
+
+            cDetails.TotalHoursUsed = randomNumber.ToString();
+            cDetails.Name = "Qantas";
+
+            return cDetails;
+        }
     }
 }

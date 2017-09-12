@@ -84,6 +84,20 @@ namespace Bot_Application
                     Company companyDetails = ConnectWiseHelper.GetContactDetails(string.Join(" ", q));
                     await SendContactDetailsMessage(context, companyDetails);
                 }
+
+                else if (cmd.Contains("hours"))
+                {
+                    Company companyDetails = ConnectWiseHelper.GetHoursDetails(string.Join(" ", q));
+                    await SendCompanyDetailsMessage(context, companyDetails);
+                }
+
+                else if (cmd.Contains("ticket"))
+                {
+                    JArray tDetails = ConnectWiseHelper.GetTickets("1234");
+                    await SendTicketDetailsMessage(context, tDetails);
+                }
+
+
                 //else if (cmd.Contains("link"))
                 //{
                 //    // await SendDeeplink(context, activity, string.Join(" ", q));
@@ -191,7 +205,7 @@ namespace Bot_Application
         /// <param name="context"></param>
         /// <param name="ticketDetails"></param>
         /// <returns></returns>
-        private async Task SendCompanyDetailsMessage(IDialogContext context, CompanyDetails cDetails)
+        private async Task SendCompanyDetailsMessage(IDialogContext context, Company cDetails)
         {
             //var taskItem = Utils.Utils.CreateTaskItem();
             //taskItem.Title = taskItemTitle;
@@ -199,13 +213,11 @@ namespace Bot_Application
             IMessageActivity reply = context.MakeMessage();
             reply.Attachments = new List<Attachment>();
 
-            var random = new Random();
-
             ThumbnailCard card = new ThumbnailCard()
             {
-                Title = $"{cDetails.CompanyName}",
-                Subtitle = $"Total Hours: {cDetails.totalHours}",
-                Text = cDetails.CompanyId,
+                Title = $"{cDetails.Name}",
+                Subtitle = $"Total Hours: {cDetails.TotalHoursUsed}",
+                Text = cDetails.Id,
                 Images = new List<CardImage>()
                 {
                     new CardImage()
@@ -251,15 +263,17 @@ namespace Bot_Application
                 ThumbnailCard card = new ThumbnailCard()
                 {
                     Title = $"{o["summary"].ToString()}",
+                    Subtitle = $"Status: { o["status"]["name"].ToString()}," + $"  Date Entered: { o["dateEntered"].ToString()}",
+                    Text = $"Ticket Id: { o["id"].ToString()}" + $" Ticket Type: { o["recordType"].ToString()}"
                     //Subtitle = $"Total Hours: {cDetails.totalHours}",
                     //Text = cDetails.CompanyId,
-                    Images = new List<CardImage>()
-                {
-                    new CardImage()
-                    {
-                        Url = $"https://contosomanagedservices.azurewebsites.net/images/kloud88.png"
-                    }
-                }
+                    //    Images = new List<CardImage>()
+                    //{
+                    //    new CardImage()
+                    //    {
+                    //        Url = $"https://contosomanagedservices.azurewebsites.net/images/kloud88.png"
+                    //    }
+                    //}
                 };
 
                 reply.Attachments.Add(card.ToAttachment());
@@ -363,92 +377,6 @@ namespace Bot_Application
                 + "* To create a deep link, you can type **link** followed by the tab name";
 
             await context.PostAsync(helpMessage);
-        }
-
-        private TicketDetails GetTicketStatus(string ticketNumber)
-        {
-            TicketDetails tickDetails = null;
-            string accessToken = "S2xvdWRUcmFpbmluZytxcHBWZkFNZlVWMXJaZ0tKOk1vU1RCdURzMG5MRlp5b3A=";
-            HttpClient client = new HttpClient();
-            string url = string.Format("https://api-aus.myconnectwise.net/v2017_5/apis/3.0/service/tickets/{0}", ticketNumber);
-            client.BaseAddress = new Uri(url);
-            client.DefaultRequestHeaders.Add("Authorization", "Basic " + accessToken);
-
-            client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-            HttpResponseMessage response = client.GetAsync(url).Result;
-
-            if (response.IsSuccessStatusCode)
-            {
-                using (HttpContent content = response.Content)
-                {
-                    Task<string> result = content.ReadAsStringAsync();
-
-                    JObject o = JObject.Parse(result.Result);
-
-                    tickDetails = new TicketDetails { Title = o["summary"].ToString(), SubTitle = ticketNumber, Text = o["status"]["name"].ToString() };
-                }
-            }
-            else
-            {
-                //Display unable to receive
-                //Console.WriteLine("{0} ({1})", (int)response.StatusCode, response.ReasonPhrase);
-            }
-            return tickDetails;
-        }
-
-        private JArray GetTickets(string ClientNumber)
-        {
-
-            JArray Obj = null;
-            string accessToken = "S2xvdWRUcmFpbmluZytxcHBWZkFNZlVWMXJaZ0tKOk1vU1RCdURzMG5MRlp5b3A=";
-            HttpClient client = new HttpClient();
-            string url = "https://api-aus.myconnectwise.net/v4_6_release/apis/3.0/service/tickets?orderby=dateEntered desc&pageSize=5";
-            client.BaseAddress = new Uri(url);
-            client.DefaultRequestHeaders.Add("Authorization", "Basic " + accessToken);
-
-            client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-            HttpResponseMessage response = client.GetAsync(url).Result;
-
-            if (response.IsSuccessStatusCode)
-            {
-                using (HttpContent content = response.Content)
-                {
-                    Task<string> result = content.ReadAsStringAsync();
-
-                     Obj = JArray.Parse(result.Result);
-
-                    foreach (JObject o in Obj)
-                    {
-                        TicketDetails tickDetails = null;
-                        //tickDetails = new TicketDetails { Title = o["summary"].ToString() };
-
-                        tickDetails = new TicketDetails { Title = o["summary"].ToString(), SubTitle = ClientNumber, Text = o["status"]["name"].ToString() };
-
-                    }
-                    }
-            }
-            else
-            {
-                //Display unable to receive
-                //Console.WriteLine("{0} ({1})", (int)response.StatusCode, response.ReasonPhrase);
-            }
-            return Obj;
-        }
-
-        public CompanyDetails GetHoursDetails(string ClientID) {
-
-            CompanyDetails cDetails = new CompanyDetails();
-
-            Random rnd1 = new Random();
-            cDetails.CompanyId = ClientID;
-
-            Random random = new Random();
-            int randomNumber = random.Next(0, 100);
-
-            cDetails.totalHours = randomNumber.ToString();
-            cDetails.CompanyName = "Qantas";
-
-            return cDetails;
         }
 
     }
