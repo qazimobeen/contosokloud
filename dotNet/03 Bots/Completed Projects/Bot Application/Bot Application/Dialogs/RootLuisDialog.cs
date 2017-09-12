@@ -67,5 +67,44 @@ namespace Bot_Application.Dialogs
             context.Wait(this.MessageReceived);
         }
 
+        [LuisIntent("contact")]
+        public async Task contact(IDialogContext context, LuisResult result)
+        {
+            string message = $"LUIS - contact - It appears to be your Account Manager is";
+
+            await context.PostAsync(message);
+
+            context.Wait(this.MessageReceived);
+        }
+
+        [LuisIntent("tickets")]
+        public async Task tickets(IDialogContext context, LuisResult result)
+        {
+            string message = $"LUIS - tickets - Ok, I will tell you how many hours left";
+
+            await context.PostAsync(message);
+
+            context.Wait(this.MessageReceived);
+        }
+
+        [LuisIntent("status")]
+        public async Task status(IDialogContext context, LuisResult result)
+        {
+            string message = $"LUIS - status - {result.Query} Let me find out the status of your ticket";
+
+            await context.PostAsync(message);
+
+            /*
+            await context.PostAsync(result.Query);
+            await context.PostAsync(result.AlteredQuery);
+            await context.PostAsync(result.CompositeEntities.Count.ToString());
+            await context.PostAsync(result.Dialog.Status);
+            await context.PostAsync(result.Entities.Count.ToString());
+            await context.PostAsync(result.Intents.Count.ToString());
+            await context.PostAsync(result.TopScoringIntent.Intent);
+            */
+
+            context.Wait(this.MessageReceived);
+        }
     }
 }
