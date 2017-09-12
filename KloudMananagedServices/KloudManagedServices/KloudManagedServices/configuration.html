@@ -83,6 +83,11 @@
         // Initialize the Microsoft Teams Library
         microsoftTeams.initialize();
 
+        microsoftTeams.settings.getSettings(function (settings){
+            $('#customerId').val(settings.entityId);
+            $('#customerName').val(settings.suggestedDisplayName);
+        });
+
         // Set the 'Save' Button state based on name field content
         $('#customerId').on('input', function () {
             if ($('#customerId').val().length != 0 && $('#customerName').val().length != 0) {
