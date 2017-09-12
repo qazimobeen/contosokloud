@@ -17,13 +17,6 @@ namespace Bot_Application
     [BotAuthentication]
     public class MessagesController : ApiController
     {
-        //public class TicketDetails
-        //{
-        //    public string Title { get; set; }
-        //    public string SubTitle { get; set; }
-        //    public string Text { get; set; }
-            
-        //}
         /// <summary>
         /// POST: api/Messages
         /// Receive a message from a user and reply to it
@@ -69,37 +62,6 @@ namespace Bot_Application
         {
             return "contract-details";
         }
-
-        //private TicketDetails GetTicketStatus(string ticketNumber)
-        //{
-        //    TicketDetails tickDetails = null;
-        //    string accessToken = "S2xvdWRUcmFpbmluZytxcHBWZkFNZlVWMXJaZ0tKOk1vU1RCdURzMG5MRlp5b3A=";
-        //    HttpClient client = new HttpClient();
-        //    string url = string.Format("https://api-aus.myconnectwise.net/v2017_5/apis/3.0/service/tickets/{0}", ticketNumber);
-        //    client.BaseAddress = new Uri(url);
-        //    client.DefaultRequestHeaders.Add("Authorization", "Basic " + accessToken);
-  
-        //    client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-        //    HttpResponseMessage response = client.GetAsync(url).Result;
-
-        //    if (response.IsSuccessStatusCode)
-        //    {
-        //        using (HttpContent content = response.Content)
-        //        {
-        //            Task<string> result = content.ReadAsStringAsync();
-
-        //            JObject o = JObject.Parse(result.Result);
-
-        //            tickDetails = new TicketDetails { Title = ticketNumber, SubTitle = o["Summary"].ToString(), Text = o["status"]["name"].ToString() };
-        //        }
-        //    }
-        //    else
-        //    {
-        //        //Display unable to receive
-        //        //Console.WriteLine("{0} ({1})", (int)response.StatusCode, response.ReasonPhrase);
-        //    }
-        //    return tickDetails;
-        //}
 
         private string GetAccountManagerDetails()
         {

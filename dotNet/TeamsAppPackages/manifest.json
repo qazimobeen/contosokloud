@@ -92,6 +92,10 @@
                             "description": "Query remaining hours for service agreement"
                         },
                         {
+                            "title": "status",
+                            "description": "Query status of service request or incident"
+                        },
+                        {
                             "title": "tickets",
                             "description": "Query for service requests and incidents"
                         }

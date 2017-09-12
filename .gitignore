@@ -2,10 +2,19 @@
 # This .gitignore file was automatically created by Microsoft(R) Visual Studio.
 ################################################################################
 
+.vs/
+
+dotNet/03 Bots/Completed Projects/Bot Application/.vs/
+dotNet/03 Bots/Completed Projects/Bot Application/packages/
 dotNet/03 Bots/Completed Projects/Bot Application/Bot Application/bin/
 dotNet/03 Bots/Completed Projects/Bot Application/Bot Application/obj/
 
-dotNet/03 Bots/Completed Projects/Bot Application/.vs/
-.vs/
+KloudMananagedServices/KloudManagedServices/KloudManagedServices/.vs/
+KloudMananagedServices/KloudManagedServices/KloudManagedServices/packages/
+KloudMananagedServices/KloudManagedServices/KloudManagedServices/bin/
+KloudMananagedServices/KloudManagedServices/KloudManagedServices/obj/
 
-dotNet/03 Bots/Completed Projects/Bot Application/packages/
+KloudMananagedServices/KloudManagedServices/KloudManagedServicesBot/.vs/
+KloudMananagedServices/KloudManagedServices/KloudManagedServicesBot/packages/
+KloudMananagedServices/KloudManagedServices/KloudManagedServicesBot/bin/
+KloudMananagedServices/KloudManagedServices/KloudManagedServicesBot/obj/

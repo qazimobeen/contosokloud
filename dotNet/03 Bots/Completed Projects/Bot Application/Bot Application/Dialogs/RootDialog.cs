@@ -12,7 +12,8 @@ using System.Collections.Generic;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using Newtonsoft.Json.Linq;
-using Bot_Application.Service;
+using Bot_Application.Entities;
+using Bot_Application.Helper;
 
 namespace Bot_Application
 {
@@ -22,14 +23,6 @@ namespace Bot_Application
     [Serializable]
     public class RootDialog : IDialog<object>
     {
-        public class TicketDetails
-        {
-            public string Title { get; set; }
-            public string SubTitle { get; set; }
-            public string Text { get; set; }
-
-        }
-
         public Task StartAsync(IDialogContext context)
         {
             context.Wait(MessageReceivedAsync);
@@ -47,7 +40,6 @@ namespace Bot_Application
         {
             var activity = await result as Activity;
 
-
             //Strip out all mentions.  As all channel messages to a bot must @mention the bot itself, you must strip out the bot name at minimum.
             // This uses the extension SDK function GetTextWithoutMentions() to strip out ALL mentions
             var text = activity.GetTextWithoutMentions().ToLower();
@@ -60,12 +52,12 @@ namespace Bot_Application
                 if (text.Contains("contact"))
                 {
                     //TODO: Return account manager info
-                    await SendHelpMessage(context, "Sure, I can provide help info about this contact");
+                    await SendHelpMessage(context, "Sure, I can provide account manager info for this company");
                 }
                 else if (text.Contains("status"))
                 {
                     //TODO : Prompt user for ticket number if not provided
-                    await SendHelpMessage(context, "Sure, I can provide help info about the status of this ticket");
+                    await SendHelpMessage(context, "Sure, I can provide info about the status of this ticket");
                 }
                 else if (text.Contains("tickets"))
                 {
@@ -84,28 +76,18 @@ namespace Bot_Application
                 // Parse the command and go do the right thing
                 if (cmd.Contains("status"))
                 {
-                    TicketDetails ticketDetails =  GetTicketStatus(string.Join(" ", q));
+                    Ticket ticketDetails = ConnectWiseHelper.GetTicketStatus(string.Join(" ", q));
                     await SendStatusMessage(context, ticketDetails);
                 }
-                else if (cmd.Contains("hours"))
-                    {
-                    CompanyDetails hourDetails = GetHoursDetails("123344");
-                        await SendCompanyDetailsMessage(context, hourDetails);
-                    }
-                    //else if (cmd.Contains("assign"))
-                    //{
-                    //    string guid = split[1];
-                    //    await UpdateMessage(context, guid);
-                    //}
-                    //else if (cmd.Contains("link"))
-                    //{
-                    //    // await SendDeeplink(context, activity, string.Join(" ", q));
-                    //}
-                else if (cmd.Contains("ticket"))
+                else if (cmd.Contains("contact"))
                 {
-                    JArray tickets = GetTickets(string.Join(" ", q));
-                    await SendTicketDetailsMessage(context, tickets);
+                    Company companyDetails = ConnectWiseHelper.GetContactDetails(string.Join(" ", q));
+                    await SendContactDetailsMessage(context, companyDetails);
                 }
+                //else if (cmd.Contains("link"))
+                //{
+                //    // await SendDeeplink(context, activity, string.Join(" ", q));
+                //}
                 else
                 {
                     await SendHelpMessage(context, "I'm sorry, I did not understand you :(");
@@ -115,43 +97,85 @@ namespace Bot_Application
             context.Wait(MessageReceivedAsync);
         }
 
-        /// <summary>
-        /// Helper method to create a simple task card and send it back as a message.
-        /// </summary>
-        /// <param name="context"></param>
-        /// <param name="taskItemTitle"></param>
-        /// <returns></returns>
-        private async Task SendStatusMessage(IDialogContext context, TicketDetails ticketDetails)
+        private async Task SendContactDetailsMessage(IDialogContext context, Company company)
         {
-            //var taskItem = Utils.Utils.CreateTaskItem();
-            //taskItem.Title = taskItemTitle;
-
             IMessageActivity reply = context.MakeMessage();
             reply.Attachments = new List<Attachment>();
 
-            var random = new Random();
-
-            ThumbnailCard card = new ThumbnailCard()
+            if (company != null)
             {
-                Title = $"{ticketDetails.Title}",
-                Subtitle = $"#{ticketDetails.SubTitle}",
-                Text = ticketDetails.Text,
-                Images = new List<CardImage>()
+                ThumbnailCard card = new ThumbnailCard()
+                {
+
+                    Title = $"{company.AccountManager.Name}",
+                    Subtitle = $"{company.AccountManager.Email}",
+                    Text = company.AccountManager.PhoneNumber,
+                    Images = new List<CardImage>()
                 {
                     new CardImage()
                     {
                         Url = $"https://contosomanagedservices.azurewebsites.net/images/kloud88.png"
                     }
                 }
-            };
+                };
 
-            //card.Buttons = new List<CardAction>()
-            //{
-            //    new CardAction("openUrl", "View task", null, "https://www.microsoft.com"),
-            //    new CardAction("imBack", "Assign to me", null, $"assign {taskItem.Guid}")
-            //};
+                //card.Buttons = new List<CardAction>()
+                //{
+                //    new CardAction("openUrl", "View task", null, "https://www.microsoft.com"),
+                //    new CardAction("imBack", "Assign to me", null, $"assign {taskItem.Guid}")
+                //};
 
-            reply.Attachments.Add(card.ToAttachment());
+                reply.Attachments.Add(card.ToAttachment());
+            }
+            else
+            {
+                reply.Text = $"I could not find the Account Manager for your company :(";
+            }
+
+
+            ConnectorClient client = new ConnectorClient(new Uri(context.Activity.ServiceUrl));
+            ResourceResponse resp = await client.Conversations.ReplyToActivityAsync((Activity)reply);
+        }
+
+        /// <summary>
+        /// Helper method to create a simple task card and send it back as a message.
+        /// </summary>
+        /// <param name="context"></param>
+        /// <param name="taskItemTitle"></param>
+        /// <returns></returns>
+        private async Task SendStatusMessage(IDialogContext context, Ticket ticket)
+        {
+            IMessageActivity reply = context.MakeMessage();
+            reply.Attachments = new List<Attachment>();
+
+            if (ticket != null)
+            {
+                ThumbnailCard card = new ThumbnailCard()
+                {
+                    Title = $"{ticket.Title}",
+                    Subtitle = $"#{ticket.SubTitle}",
+                    Text = ticket.Text,
+                    Images = new List<CardImage>()
+                {
+                    new CardImage()
+                    {
+                        Url = $"https://contosomanagedservices.azurewebsites.net/images/kloud88.png"
+                    }
+                }
+                };
+
+                //card.Buttons = new List<CardAction>()
+                //{
+                //    new CardAction("openUrl", "View task", null, "https://www.microsoft.com"),
+                //    new CardAction("imBack", "Assign to me", null, $"assign {taskItem.Guid}")
+                //};
+
+                reply.Attachments.Add(card.ToAttachment());
+            }
+            else
+            {
+                reply.Text = $"I could not find this ticket :(";
+            }
 
             ConnectorClient client = new ConnectorClient(new Uri(context.Activity.ServiceUrl));
             ResourceResponse resp = await client.Conversations.ReplyToActivityAsync((Activity)reply);
@@ -287,7 +311,8 @@ namespace Bot_Application
 
                 ConnectorClient client = new ConnectorClient(new Uri(context.Activity.ServiceUrl));
                 ResourceResponse resp = await client.Conversations.UpdateActivityAsync(context.Activity.Conversation.Id, activityId, (Activity)reply);
-            } else
+            }
+            else
             {
                 System.Diagnostics.Debug.WriteLine($"Could not update task {taskItemGuid}");
             }
