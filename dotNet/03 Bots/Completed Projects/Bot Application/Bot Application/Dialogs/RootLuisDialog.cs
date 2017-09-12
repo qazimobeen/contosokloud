@@ -71,9 +71,41 @@ namespace Bot_Application.Dialogs
         [LuisIntent("contact")]
         public async Task contact(IDialogContext context, LuisResult result)
         {
-            string message = $"LUIS - contact - It appears to be your Account Manager is";
+            string message = $"LUIS - contact - Your Account Manager details are as follows:";
 
             await context.PostAsync(message);
+
+            IMessageActivity reply = context.MakeMessage();
+            reply.Attachments = new List<Attachment>();
+
+            //TODO: get company details dynamically
+            Company company = ConnectWiseHelper.GetContactDetails("19321");
+
+            ThumbnailCard card = new ThumbnailCard()
+            {
+
+                Title = $"{company.AccountManager.Name}",
+                Subtitle = $"{company.AccountManager.Email}",
+                Text = company.AccountManager.PhoneNumber,
+                Images = new List<CardImage>()
+                {
+                    new CardImage()
+                    {
+                        Url = $"https://contosomanagedservices.azurewebsites.net/images/kloud88.png"
+                    }
+                }
+            };
+
+            card.Buttons = new List<CardAction>()
+                {
+                    new CardAction("openUrl", "Skype", null, string.Format("sip:{0}",company.AccountManager.Email)),
+                    new CardAction("openUrl", "Call", null, string.Format("tel:{0}",company.AccountManager.PhoneNumber)),
+                    new CardAction("openUrl", "Email", null, string.Format("mailto:{0}",company.AccountManager.Email))
+                };
+
+            reply.Attachments.Add(card.ToAttachment());
+
+            await context.PostAsync(reply);
 
             context.Wait(this.MessageReceived);
         }
@@ -91,39 +123,47 @@ namespace Bot_Application.Dialogs
         [LuisIntent("status")]
         public async Task status(IDialogContext context, LuisResult result)
         {
-            string message = $"LUIS - status - {result.Query} Let me find out the status of your ticket";
+            string message = $"LUIS - status - {result.Query} Let me find out the status of your ticket...";
+
+            await context.PostAsync(message);
 
             Ticket ticket = DialogHelper.EntertainIntentStatus(context, result);
 
-            //await context.PostAsync(ticket.Text);
-
-            IMessageActivity reply = context.MakeMessage();
-            reply.Attachments = new List<Attachment>();
-
-            ThumbnailCard card = new ThumbnailCard()
+            if (ticket != null)
             {
-                Title = $"{ticket.Title}",
-                Subtitle = $"#{ticket.SubTitle}",
-                Text = ticket.Text,
-                Images = new List<CardImage>()
+
+                IMessageActivity reply = context.MakeMessage();
+                reply.Attachments = new List<Attachment>();
+
+                ThumbnailCard card = new ThumbnailCard()
+                {
+                    Title = $"{ticket.Title}",
+                    Subtitle = $"#{ticket.SubTitle}",
+                    Text = ticket.Text,
+                    Images = new List<CardImage>()
                 {
                     new CardImage()
                     {
                         Url = $"https://contosomanagedservices.azurewebsites.net/images/kloud88.png"
                     }
                 }
-            };
+                };
 
-            // TODO: Retrieve Company Name from SharePoint configuration list.
-            var companyName = "kloudtraining";
-            card.Buttons = new List<CardAction>()
+                // TODO: Retrieve Company Name from SharePoint configuration list.
+                var companyName = "kloudtraining";
+                card.Buttons = new List<CardAction>()
                 {
                     new CardAction("openUrl", "View ticket", null, string.Format("https://aus.myconnectwise.net/v4_6_release/services/system_io/Service/fv_sr100_request.rails?service_recid={0}&companyName={1}",ticket.SubTitle, companyName))
                 };
 
-            reply.Attachments.Add(card.ToAttachment());
+                reply.Attachments.Add(card.ToAttachment());
 
-            await context.PostAsync(reply);
+                await context.PostAsync(reply);
+            }
+            else
+            {
+                await context.PostAsync("LUIS - status - I could not find this ticket :(");
+            }
 
             context.Wait(this.MessageReceived);
         }
