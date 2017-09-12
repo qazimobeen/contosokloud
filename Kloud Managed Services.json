@@ -1,0 +1,306 @@
+{
+  "luis_schema_version": "2.1.0",
+  "versionId": "0.1",
+  "name": "Kloud Managed Services",
+  "desc": "a LUIS application for Kloud Managed Services",
+  "culture": "en-us",
+  "intents": [
+    {
+      "name": "boot"
+    },
+    {
+      "name": "contact"
+    },
+    {
+      "name": "None"
+    },
+    {
+      "name": "reboot"
+    },
+    {
+      "name": "resize"
+    },
+    {
+      "name": "snapshot"
+    },
+    {
+      "name": "status"
+    },
+    {
+      "name": "tickets"
+    }
+  ],
+  "entities": [
+    {
+      "name": "date"
+    },
+    {
+      "name": "service-request"
+    },
+    {
+      "name": "virtual machine"
+    }
+  ],
+  "composites": [],
+  "closedLists": [],
+  "bing_entities": [
+    "datetimeV2"
+  ],
+  "actions": [],
+  "model_features": [],
+  "regex_features": [],
+  "utterances": [
+    {
+      "text": "who is my account manager?",
+      "intent": "contact",
+      "entities": []
+    },
+    {
+      "text": "start my vm",
+      "intent": "boot",
+      "entities": []
+    },
+    {
+      "text": "start my virtual machine",
+      "intent": "boot",
+      "entities": []
+    },
+    {
+      "text": "turn on my virtual machine",
+      "intent": "boot",
+      "entities": []
+    },
+    {
+      "text": "restart my virtual machine",
+      "intent": "reboot",
+      "entities": []
+    },
+    {
+      "text": "shrink my virtual machine",
+      "intent": "resize",
+      "entities": []
+    },
+    {
+      "text": "resize my virtual machine",
+      "intent": "resize",
+      "entities": []
+    },
+    {
+      "text": "take snapshot of my virtual machine",
+      "intent": "snapshot",
+      "entities": []
+    },
+    {
+      "text": "snapshot my virtual machine",
+      "intent": "snapshot",
+      "entities": []
+    },
+    {
+      "text": "bring up my virtual machine",
+      "intent": "boot",
+      "entities": []
+    },
+    {
+      "text": "bring up my vm",
+      "intent": "boot",
+      "entities": []
+    },
+    {
+      "text": "turn on my vm",
+      "intent": "boot",
+      "entities": []
+    },
+    {
+      "text": "reboot my vm",
+      "intent": "reboot",
+      "entities": []
+    },
+    {
+      "text": "reboot my virtual machine",
+      "intent": "reboot",
+      "entities": []
+    },
+    {
+      "text": "restart my vm",
+      "intent": "reboot",
+      "entities": []
+    },
+    {
+      "text": "resize my vm",
+      "intent": "resize",
+      "entities": []
+    },
+    {
+      "text": "shrink my vm",
+      "intent": "resize",
+      "entities": []
+    },
+    {
+      "text": "expand my vm",
+      "intent": "resize",
+      "entities": []
+    },
+    {
+      "text": "expand my virtual machine",
+      "intent": "resize",
+      "entities": []
+    },
+    {
+      "text": "snapshot my vm",
+      "intent": "snapshot",
+      "entities": []
+    },
+    {
+      "text": "take snapshot of my vm",
+      "intent": "snapshot",
+      "entities": []
+    },
+    {
+      "text": "i want to check status of my incident ticket",
+      "intent": "status",
+      "entities": []
+    },
+    {
+      "text": "please tell me status of my incident",
+      "intent": "status",
+      "entities": []
+    },
+    {
+      "text": "what is the status of my incident ticket",
+      "intent": "status",
+      "entities": []
+    },
+    {
+      "text": "what is the latest update for my incident ticket",
+      "intent": "status",
+      "entities": []
+    },
+    {
+      "text": "for how many hours i can get service this month?",
+      "intent": "tickets",
+      "entities": []
+    },
+    {
+      "text": "how much service can i get for rest of the month?",
+      "intent": "tickets",
+      "entities": []
+    },
+    {
+      "text": "how many hours are left on my managed contract this month?",
+      "intent": "tickets",
+      "entities": []
+    },
+    {
+      "text": "who is first person to contact in kloud?",
+      "intent": "contact",
+      "entities": []
+    },
+    {
+      "text": "who is contact person for us?",
+      "intent": "contact",
+      "entities": []
+    },
+    {
+      "text": "whom should we contact in case of issues?",
+      "intent": "contact",
+      "entities": []
+    },
+    {
+      "text": "please tell me status of my incident # 123?",
+      "intent": "status",
+      "entities": [
+        {
+          "entity": "service-request",
+          "startPos": 39,
+          "endPos": 41
+        }
+      ]
+    },
+    {
+      "text": "status # 623",
+      "intent": "status",
+      "entities": [
+        {
+          "entity": "service-request",
+          "startPos": 9,
+          "endPos": 11
+        }
+      ]
+    },
+    {
+      "text": "incident status # 623",
+      "intent": "status",
+      "entities": [
+        {
+          "entity": "service-request",
+          "startPos": 18,
+          "endPos": 20
+        }
+      ]
+    },
+    {
+      "text": "tickets id # 123",
+      "intent": "status",
+      "entities": [
+        {
+          "entity": "service-request",
+          "startPos": 13,
+          "endPos": 15
+        }
+      ]
+    },
+    {
+      "text": "please get me status of all tickets",
+      "intent": "status",
+      "entities": []
+    },
+    {
+      "text": "status of tickets id # 623",
+      "intent": "status",
+      "entities": [
+        {
+          "entity": "service-request",
+          "startPos": 23,
+          "endPos": 25
+        }
+      ]
+    },
+    {
+      "text": "get me status of tickets from 27jan to 30jan",
+      "intent": "status",
+      "entities": [
+        {
+          "entity": "date",
+          "startPos": 30,
+          "endPos": 34
+        },
+        {
+          "entity": "date",
+          "startPos": 39,
+          "endPos": 43
+        }
+      ]
+    },
+    {
+      "text": "get me status of tickets from 15-jan-2017 to 27-jan-2017",
+      "intent": "status",
+      "entities": [
+        {
+          "entity": "date",
+          "startPos": 30,
+          "endPos": 40
+        },
+        {
+          "entity": "date",
+          "startPos": 45,
+          "endPos": 55
+        }
+      ]
+    },
+    {
+      "text": "get me status of tickets starting from 15/jan/2017 till 27/jan/2017",
+      "intent": "status",
+      "entities": []
+    }
+  ]
+}
