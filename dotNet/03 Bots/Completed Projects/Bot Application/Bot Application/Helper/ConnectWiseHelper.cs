@@ -123,7 +123,8 @@ namespace Bot_Application.Helper
                     {
                         Title = ticketObject["summary"].ToString(),
                         SubTitle = ticketNumber,
-                        Text = ticketObject["status"]["name"].ToString()
+                        Text = ticketObject["status"]["name"].ToString(),
+                        CompanyName = ticketObject["company"]["name"].ToString()
                     };
                 }
             }

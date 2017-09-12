@@ -156,7 +156,7 @@ namespace Bot_Application.Dialogs
                     };
 
                     // TODO: Retrieve Company Name from SharePoint configuration list.
-                    var companyName = "kloudtraining";
+                    var companyName = ticket.CompanyName;
                     card.Buttons = new List<CardAction>()
                 {
                     new CardAction("openUrl", "View ticket", null, string.Format("https://aus.myconnectwise.net/v4_6_release/services/system_io/Service/fv_sr100_request.rails?service_recid={0}&companyName={1}",ticket.SubTitle, companyName))
