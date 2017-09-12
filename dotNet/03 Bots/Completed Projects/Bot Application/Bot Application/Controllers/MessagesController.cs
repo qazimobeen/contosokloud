@@ -27,7 +27,7 @@ namespace Bot_Application
             {
                 //ConnectorClient connector = new ConnectorClient(new Uri(activity.ServiceUrl));
                 //Activity reply;
-               
+
 
                 //if (activity.Text.ToLower().Contains("contact"))
                 //{
@@ -47,7 +47,10 @@ namespace Bot_Application
                 //}
 
                 //await connector.Conversations.ReplyToActivityAsync(reply);
-                await Conversation.SendAsync(activity, () => new Bot_Application.RootDialog());
+
+                await Conversation.SendAsync(activity, () => new Bot_Application.Dialogs.RootLuisDialog());
+
+                //await Conversation.SendAsync(activity, () => new Bot_Application.RootDialog());
             }
             else
             {
