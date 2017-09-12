@@ -10,6 +10,7 @@ using Microsoft.Bot.Builder.Luis.Models;
 using Microsoft.Bot.Connector;
 using Bot_Application.Helper;
 using Bot_Application.Entities;
+using Newtonsoft.Json.Linq;
 
 namespace Bot_Application.Dialogs
 {
@@ -117,52 +118,82 @@ namespace Bot_Application.Dialogs
 
             await context.PostAsync(message);
 
+            await context.PostAsync(new Random().Next().ToString());
+
             context.Wait(this.MessageReceived);
         }
 
         [LuisIntent("status")]
         public async Task status(IDialogContext context, LuisResult result)
         {
-            string message = $"LUIS - status - {result.Query} Let me find out the status of your ticket...";
+            string message = $"LUIS - status - {result.Query} Let me find out the status of your tickets...";
 
             await context.PostAsync(message);
 
-            Ticket ticket = DialogHelper.EntertainIntentStatus(context, result);
-
-            if (ticket != null)
+            if (result.Entities.Count == 1)
             {
+                //SCENARIO: a single ticket ID is passed to LUIS
 
-                IMessageActivity reply = context.MakeMessage();
-                reply.Attachments = new List<Attachment>();
+                Ticket ticket = DialogHelper.EntertainIntentStatus(context, result);
 
-                ThumbnailCard card = new ThumbnailCard()
+                if (ticket != null)
                 {
-                    Title = $"{ticket.Title}",
-                    Subtitle = $"#{ticket.SubTitle}",
-                    Text = ticket.Text,
-                    Images = new List<CardImage>()
+                    IMessageActivity reply = context.MakeMessage();
+                    reply.Attachments = new List<Attachment>();
+
+                    ThumbnailCard card = new ThumbnailCard()
+                    {
+                        Title = $"{ticket.Title}",
+                        Subtitle = $"#{ticket.SubTitle}",
+                        Text = ticket.Text,
+                        Images = new List<CardImage>()
                 {
                     new CardImage()
                     {
                         Url = $"https://contosomanagedservices.azurewebsites.net/images/kloud88.png"
                     }
                 }
-                };
+                    };
 
-                // TODO: Retrieve Company Name from SharePoint configuration list.
-                var companyName = "kloudtraining";
-                card.Buttons = new List<CardAction>()
+                    // TODO: Retrieve Company Name from SharePoint configuration list.
+                    var companyName = "kloudtraining";
+                    card.Buttons = new List<CardAction>()
                 {
                     new CardAction("openUrl", "View ticket", null, string.Format("https://aus.myconnectwise.net/v4_6_release/services/system_io/Service/fv_sr100_request.rails?service_recid={0}&companyName={1}",ticket.SubTitle, companyName))
                 };
 
-                reply.Attachments.Add(card.ToAttachment());
+                    reply.Attachments.Add(card.ToAttachment());
+
+                    await context.PostAsync(reply);
+                }
+                else
+                {
+                    await context.PostAsync("LUIS - status - I could not find this ticket :(");
+                }
+            }
+            else 
+            {
+                //SCENARIO: all tickets or 5 tickets
+                //TODO: get customer ID dynamically
+                JArray ticketDetails = ConnectWiseHelper.GetTickets("1234");
+
+                IMessageActivity reply = context.MakeMessage();
+                reply.Attachments = new List<Attachment>();
+                reply.AttachmentLayout = AttachmentLayoutTypes.Carousel;
+
+                foreach (JObject o in ticketDetails)
+                {
+                    ThumbnailCard card = new ThumbnailCard()
+                    {
+                        Title = $"{o["summary"].ToString()}",
+                        Subtitle = $"Status: { o["status"]["name"].ToString()}," + $"  Date Entered: { o["dateEntered"].ToString()}",
+                        Text = $"Ticket Id: { o["id"].ToString()}" + $" Ticket Type: { o["recordType"].ToString()}"
+                    };
+
+                    reply.Attachments.Add(card.ToAttachment());
+                }
 
                 await context.PostAsync(reply);
-            }
-            else
-            {
-                await context.PostAsync("LUIS - status - I could not find this ticket :(");
             }
 
             context.Wait(this.MessageReceived);
