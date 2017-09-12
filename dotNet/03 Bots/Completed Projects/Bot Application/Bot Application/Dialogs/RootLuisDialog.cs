@@ -8,7 +8,8 @@ using Microsoft.Bot.Builder.FormFlow;
 using Microsoft.Bot.Builder.Luis;
 using Microsoft.Bot.Builder.Luis.Models;
 using Microsoft.Bot.Connector;
-
+using Bot_Application.Helper;
+using Bot_Application.Entities;
 
 namespace Bot_Application.Dialogs
 {
@@ -92,17 +93,37 @@ namespace Bot_Application.Dialogs
         {
             string message = $"LUIS - status - {result.Query} Let me find out the status of your ticket";
 
-            await context.PostAsync(message);
+            Ticket ticket = DialogHelper.EntertainIntentStatus(context, result);
 
-            /*
-            await context.PostAsync(result.Query);
-            await context.PostAsync(result.AlteredQuery);
-            await context.PostAsync(result.CompositeEntities.Count.ToString());
-            await context.PostAsync(result.Dialog.Status);
-            await context.PostAsync(result.Entities.Count.ToString());
-            await context.PostAsync(result.Intents.Count.ToString());
-            await context.PostAsync(result.TopScoringIntent.Intent);
-            */
+            //await context.PostAsync(ticket.Text);
+
+            IMessageActivity reply = context.MakeMessage();
+            reply.Attachments = new List<Attachment>();
+
+            ThumbnailCard card = new ThumbnailCard()
+            {
+                Title = $"{ticket.Title}",
+                Subtitle = $"#{ticket.SubTitle}",
+                Text = ticket.Text,
+                Images = new List<CardImage>()
+                {
+                    new CardImage()
+                    {
+                        Url = $"https://contosomanagedservices.azurewebsites.net/images/kloud88.png"
+                    }
+                }
+            };
+
+            // TODO: Retrieve Company Name from SharePoint configuration list.
+            var companyName = "kloudtraining";
+            card.Buttons = new List<CardAction>()
+                {
+                    new CardAction("openUrl", "View ticket", null, string.Format("https://aus.myconnectwise.net/v4_6_release/services/system_io/Service/fv_sr100_request.rails?service_recid={0}&companyName={1}",ticket.SubTitle, companyName))
+                };
+
+            reply.Attachments.Add(card.ToAttachment());
+
+            await context.PostAsync(reply);
 
             context.Wait(this.MessageReceived);
         }
