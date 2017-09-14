@@ -5,6 +5,7 @@ using System.Linq;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Text;
+using System.Web.Script.Serialization;
 
 namespace Bot_Application.Helper
 {
@@ -25,11 +26,11 @@ namespace Bot_Application.Helper
                 BaseAddress = new Uri(awsURI)
             };
             httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-            var response = httpClient.PostAsJsonAsync(awsURI, postMessage);
+            var json = new JavaScriptSerializer().Serialize(postMessage);
+            var content = new StringContent(json.ToString(), Encoding.UTF8, "application/json");
+            var response = httpClient.PostAsync(awsURI, content);
             response.Wait();
-            var responseMessage = response.Result.Content.ReadAsAsync<HttpResponseMessage>();
-            responseMessage.Wait();
-            return responseMessage.Result;
+            return response.Result;
         }
 
         /// <summary>
@@ -70,7 +71,7 @@ namespace Bot_Application.Helper
         /// <param name="operationName">The operation name</param>
         /// <param name="scheduledTime">the scheduled time</param>
         /// <returns></returns>
-        public static bool RunOperation(string instanceId, string operationName, DateTime scheduledTime)
+        public static bool RunOperation(string instanceId, string operationName, DateTime? scheduledTime = null)
         {
             HttpResponseMessage response = GetAWSResponse(CreateAWSPostMessage(instanceId, operationName, scheduledTime));
             return response.IsSuccessStatusCode;
@@ -84,7 +85,7 @@ namespace Bot_Application.Helper
         /// <param name="operationName">The operation name</param>
         /// <param name="scheduledTime">the scheduled time</param>
         /// <returns></returns>
-        private static AWSPostMessage CreateAWSPostMessage(string instanceId, string operationName, DateTime scheduledTime)
+        private static AWSPostMessage CreateAWSPostMessage(string instanceId, string operationName, DateTime? scheduledTime = null)
         {
             return new AWSPostMessage
             {
@@ -99,7 +100,9 @@ namespace Bot_Application.Helper
                     ChangeNumber = 1,
                     InstanceId = instanceId,
                     OperationName = operationName.ToLower(),
-                    ScheduledTimestamp = scheduledTime.AddMinutes(1).ToString("s")
+                    ScheduledTimestamp = scheduledTime.HasValue 
+                        ? scheduledTime.Value.AddMinutes(1).ToString("s") 
+                        : DateTime.UtcNow.AddMinutes(1).ToString("s")
                 },
                 TicketId = 1,
                 TicketRequesterEmail = "39fd55d0.kloud.com.au@apac.teams.ms",
