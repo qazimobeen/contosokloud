@@ -46,7 +46,17 @@ namespace Bot_Application.Dialogs
         [LuisIntent("boot")]
         public async Task boot(IDialogContext context, LuisResult result)
         {
-            string message = "Cerainly!  Let me help you boot a Virtual Machine (VM)... As soon as the developer writes this code.";
+            string message = "Certainly!  Let me help you boot a Virtual Machine (VM)... As soon as the developer writes this code.";
+
+            await context.PostAsync(message);
+
+            context.Wait(this.MessageReceived);
+        }
+
+        [LuisIntent("stop")]
+        public async Task stop(IDialogContext context, LuisResult result)
+        {
+            string message = "Certainly!  Let me help you stop a Virtual Machine (VM)... As soon as the developer writes this code.";
 
             await context.PostAsync(message);
 
