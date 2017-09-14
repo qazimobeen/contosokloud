@@ -18,3 +18,5 @@ KloudMananagedServices/KloudManagedServices/KloudManagedServicesBot/.vs/
 KloudMananagedServices/KloudManagedServices/KloudManagedServicesBot/packages/
 KloudMananagedServices/KloudManagedServices/KloudManagedServicesBot/bin/
 KloudMananagedServices/KloudManagedServices/KloudManagedServicesBot/obj/
+/KloudMananagedServices/KloudManagedServices/packages
+/KloudMananagedServices/KloudManagedServices/KloudManagedServices/KloudManagedServices.csproj.user
