@@ -5,6 +5,7 @@ using System.Linq;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Text;
+using System.Web.Script.Serialization;
 
 namespace Bot_Application.Helper
 {
@@ -13,7 +14,8 @@ namespace Bot_Application.Helper
         public const string awsURI = @"https://kloud-thunderhead-func-dev-aue.azurewebsites.net/api/zendesk/tickets/aws/ec2/instances/operations?code=9W1egedDlQRviJXGtM4BEHfFGdXvN9K9WPQPlSd0fTjj5kzl72bCKA==";
 
         /// <summary>
-        /// HTTPResponseMessage
+        /// Posts an <see cref="AWSPostMessage"/> to the <see cref="awsURI"/> 
+        /// to schedule an operation to be performed via AWS on a VM.
         /// </summary>
         /// <param name="uri"></param>
         /// <returns></returns>
@@ -24,7 +26,11 @@ namespace Bot_Application.Helper
                 BaseAddress = new Uri(awsURI)
             };
             httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-            return httpClient.PostAsJsonAsync(awsURI, postMessage).Result;
+            var json = new JavaScriptSerializer().Serialize(postMessage);
+            var content = new StringContent(json.ToString(), Encoding.UTF8, "application/json");
+            var response = httpClient.PostAsync(awsURI, content);
+            response.Wait();
+            return response.Result;
         }
 
         /// <summary>
@@ -63,14 +69,23 @@ namespace Bot_Application.Helper
         /// </summary>
         /// <param name="instanceId">The target VM</param>
         /// <param name="operationName">The operation name</param>
+        /// <param name="scheduledTime">the scheduled time</param>
         /// <returns></returns>
-        public static bool RunOperation(string instanceId, string operationName)
+        public static bool RunOperation(string instanceId, string operationName, DateTime? scheduledTime = null)
         {
-            HttpResponseMessage response = GetAWSResponse(CreateAWSPostMessage(instanceId, operationName));
+            HttpResponseMessage response = GetAWSResponse(CreateAWSPostMessage(instanceId, operationName, scheduledTime));
             return response.IsSuccessStatusCode;
         }
 
-        private static AWSPostMessage CreateAWSPostMessage(string instanceId, string operationName)
+        /// <summary>
+        /// Creates a POST <see cref="AWSPostMessage"/> that will invoke the supplied <paramref name="operationName"/> 
+        /// based on the <paramref name="instanceId"/> provided, by the <paramref name="scheduledTime"/> supplied.
+        /// </summary>
+        /// <param name="instanceId">The target VM</param>
+        /// <param name="operationName">The operation name</param>
+        /// <param name="scheduledTime">the scheduled time</param>
+        /// <returns></returns>
+        private static AWSPostMessage CreateAWSPostMessage(string instanceId, string operationName, DateTime? scheduledTime = null)
         {
             return new AWSPostMessage
             {
@@ -85,7 +100,9 @@ namespace Bot_Application.Helper
                     ChangeNumber = 1,
                     InstanceId = instanceId,
                     OperationName = operationName.ToLower(),
-                    ScheduledTimestamp = DateTime.UtcNow.AddMinutes(1).ToString("s")
+                    ScheduledTimestamp = scheduledTime.HasValue 
+                        ? scheduledTime.Value.AddMinutes(1).ToString("s") 
+                        : DateTime.UtcNow.AddMinutes(1).ToString("s")
                 },
                 TicketId = 1,
                 TicketRequesterEmail = "39fd55d0.kloud.com.au@apac.teams.ms",
@@ -95,6 +112,12 @@ namespace Bot_Application.Helper
             };
         }
 
+        /// <summary>
+        /// Capitalises the first letter of the <paramref name="operationName"/> supplied.
+        /// This should be used for pretty text formatting.
+        /// </summary>
+        /// <param name="operationName"></param>
+        /// <returns></returns>
         private static string CapitaliseOperationName(string operationName)
         {
             var result = new StringBuilder();
