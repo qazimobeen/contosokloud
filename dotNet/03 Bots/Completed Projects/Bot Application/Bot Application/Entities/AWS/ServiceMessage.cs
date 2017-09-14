@@ -5,6 +5,7 @@ using System.Web;
 
 namespace Bot_Application.Entities.AWS
 {
+    [Serializable]
     public class ServiceMessage
     {
         public OperationType OperationType { get; }

@@ -114,7 +114,7 @@ namespace Bot_Application.Helper
                         serviceName = @"Restart/start/stop Amazon EC2 instance";
                         ticketDescription = operationTypeName + " an existing Amazon virtual machine";
                         ticketSubject = operationTypeName + " Amazon Virtual Machine";
-                    };
+                    }
                     break;
                     case OperationType.Resize:
                     {
@@ -140,7 +140,7 @@ namespace Bot_Application.Helper
                         ChangeNumber = 1,
                         InstanceId = instanceId,
                         OperationName = operationTypeName.ToLower(),
-                        InstanceType = serviceMessage != null
+                        InstanceType = serviceMessage.ServiceConfiguration != null
                             ? serviceMessage.ServiceConfiguration.SelectedInstanceType
                             : string.Empty,
                         ScheduledTimestamp = scheduledTime.HasValue

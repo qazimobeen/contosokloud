@@ -8,6 +8,7 @@ namespace Bot_Application.Entities.AWS
     /// <summary>
     /// Instance Family Types that AWS understands
     /// </summary>
+    [Serializable]
     public enum InstanceFamilyType
     {
         None,
@@ -21,6 +22,7 @@ namespace Bot_Application.Entities.AWS
     /// <summary>
     /// Storage related Instance Types that AWS understands
     /// </summary>
+    [Serializable]
     public enum StorageInstanceType
     {
         d2_xlarge,

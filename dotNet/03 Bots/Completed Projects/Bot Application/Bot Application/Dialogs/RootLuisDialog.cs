@@ -123,7 +123,8 @@ namespace Bot_Application.Dialogs
                     var myIdx = allVms.Keys.ToList().IndexOf(this.vmName);
                     this.vmAWSID = allVms.Values.ElementAt(myIdx);
                     DateTime dt = DateTime.UtcNow.AddMinutes(numOfMins);
-                    Helper.AWSHelper.RunOperation(this.vmAWSID, "restart", dt);
+                    var serviceMessage = new ServiceMessage(OperationType.Restart);
+                    Helper.AWSHelper.RunOperation(this.vmAWSID, serviceMessage, dt);
                     await context.PostAsync("Sounds good, I'll attempt to reboot the " + this.vmName + " VM in " + numOfMins + " minutes.");
                 }
                 else
