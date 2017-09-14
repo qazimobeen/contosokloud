@@ -111,3 +111,7 @@ D:\GIT\contosokloud\KloudMananagedServices\KloudManagedServices\KloudManagedServ
 D:\GIT\contosokloud\KloudMananagedServices\KloudManagedServices\KloudManagedServices\obj\Debug\KloudManagedServices.csprojResolveAssemblyReference.cache
 D:\GIT\contosokloud\KloudMananagedServices\KloudManagedServices\KloudManagedServices\obj\Debug\KloudManagedServices.dll
 D:\GIT\contosokloud\KloudMananagedServices\KloudManagedServices\KloudManagedServices\obj\Debug\KloudManagedServices.pdb
+C:\Users\cphil\Source\Repos\KloudBots\KloudMananagedServices\KloudManagedServices\KloudManagedServices\obj\Debug\KloudManagedServices.csprojResolveAssemblyReference.cache
+C:\Users\cphil\Source\Repos\KloudBots\KloudMananagedServices\KloudManagedServices\KloudManagedServices\obj\Debug\KloudManagedServices.csproj.CoreCompileInputs.cache
+C:\Users\cphil\Source\Repos\KloudBots\KloudMananagedServices\KloudManagedServices\KloudManagedServices\obj\Debug\KloudManagedServices.dll
+C:\Users\cphil\Source\Repos\KloudBots\KloudMananagedServices\KloudManagedServices\KloudManagedServices\obj\Debug\KloudManagedServices.pdb

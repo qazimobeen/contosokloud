@@ -12,11 +12,36 @@ namespace Bot_Application.Dialogs
     public class MachineRebootInquireDialog : IDialog<string>
     {
         private int attempts = 3;
+        Dictionary<string, string> allVms = new Dictionary<string, string>();
+
         public async Task StartAsync(IDialogContext context)
         {
-           await context.PostAsync("What machine do you want to reboot?");
-            context.Wait(this.MessageReceivedAsync);
+            //await context.PostAsync("What machine do you want to reboot?  Below is a list of possible VMs.");
+            //await context.PostAsync("What machine do you want to reboot2?");
+            //await context.PostAsync("What machine do you want to reboot3?");
+            allVms.Add("bob", "bob123");
+            allVms.Add("sally", "sally123");
+
+            List<string> vmList = allVms.Keys.ToList();
+
+            PromptDialog.Choice(context, this.OnOptionsSelected, vmList, "What machine do you want to reboot?  Below is a list of possible VMs.", "I'm sorry, I don't understand your reply. Please choose from the list or with the name of a VM.", 3);
+
+            //context.Wait(this.MessageReceivedAsync);
+
         }
+
+        private async Task OnOptionsSelected(IDialogContext context, IAwaitable<string> result)
+        {
+            string optionSelected = await result;
+
+            List<string> vmList = allVms.Keys.ToList();
+
+            if (vmList.Contains(optionSelected))
+            {
+                context.Done(optionSelected);
+            }
+        }
+
 
         private async Task MessageReceivedAsync(IDialogContext context, IAwaitable<IMessageActivity> result)
         {
