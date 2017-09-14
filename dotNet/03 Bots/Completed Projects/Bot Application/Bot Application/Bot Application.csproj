@@ -132,7 +132,9 @@
   <ItemGroup>
     <Compile Include="App_Start\WebApiConfig.cs" />
     <Compile Include="Controllers\MessagesController.cs" />
+    <Compile Include="Dialogs\MachineBootConfirmDialog.cs" />
     <Compile Include="Dialogs\MachineRebootConfirmDialog.cs" />
+    <Compile Include="Dialogs\MachineBootInquireDialog.cs" />
     <Compile Include="Dialogs\MachineRebootInquireDialog.cs" />
     <Compile Include="Dialogs\RootDialog.cs" />
     <Compile Include="Dialogs\RootLuisDialog.cs" />
