@@ -133,6 +133,7 @@
     <Compile Include="App_Start\WebApiConfig.cs" />
     <Compile Include="Controllers\MessagesController.cs" />
     <Compile Include="Dialogs\MachineBootConfirmDialog.cs" />
+    <Compile Include="Dialogs\MachineCalendarPickDialog.cs" />
     <Compile Include="Dialogs\MachineRebootConfirmDialog.cs" />
     <Compile Include="Dialogs\MachineBootInquireDialog.cs" />
     <Compile Include="Dialogs\MachineRebootInquireDialog.cs" />

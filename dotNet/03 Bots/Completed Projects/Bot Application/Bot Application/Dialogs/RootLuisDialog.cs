@@ -46,7 +46,17 @@ namespace Bot_Application.Dialogs
         [LuisIntent("boot")]
         public async Task boot(IDialogContext context, LuisResult result)
         {
-            string message = "Cerainly!  Let me help you boot a Virtual Machine (VM)";
+            string message = "Certainly!  Let me help you boot a Virtual Machine (VM)... As soon as the developer writes this code.";
+
+            await context.PostAsync(message);
+
+            context.Wait(this.MessageReceived);
+        }
+
+        [LuisIntent("stop")]
+        public async Task stop(IDialogContext context, LuisResult result)
+        {
+            string message = "Certainly!  Let me help you stop a Virtual Machine (VM)... As soon as the developer writes this code.";
 
             await context.PostAsync(message);
 
@@ -88,7 +98,7 @@ namespace Bot_Application.Dialogs
                     allVms = Helper.AWSHelper.GetVMs();
                     var myIdx = allVms.Keys.ToList().IndexOf(this.vmName);
                     this.vmAWSID = allVms.Values.ElementAt(myIdx);
-                    Helper.AWSHelper.RunOperation(this.vmAWSID, "stop");
+                    Helper.AWSHelper.RunOperation(this.vmAWSID, "restart");
                     await context.PostAsync("Ok, I'm attempting to reboot " + this.vmName + " (known as \"" + this.vmAWSID + "\" in AWS)...");
                 }
                 else
@@ -106,7 +116,8 @@ namespace Bot_Application.Dialogs
         [LuisIntent("resize")]
         public async Task resize(IDialogContext context, LuisResult result)
         {
-            string message = "Sure, how you want me to resize it?";
+            //string message = "Sure, how do you want me to resize it?";
+            string message = "I appreciate what you're asking for, but I have no idea how to do that at this point.";
 
             await context.PostAsync(message);
 
