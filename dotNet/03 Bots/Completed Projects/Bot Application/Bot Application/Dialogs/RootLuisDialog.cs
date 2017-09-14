@@ -35,12 +35,98 @@ namespace Bot_Application.Dialogs
         [LuisIntent("boot")]
         public async Task boot(IDialogContext context, LuisResult result)
         {
-            string message = $"LUIS - boot - Booting it up for you!";
+            string message = $"LUIS - boot - Getting the VMs to boot!";
 
             await context.PostAsync(message);
 
-            context.Wait(this.MessageReceived);
+            context.Call(new MachineBootInquireDialog(), this.BootInquireResumeAfter);
+
+            //context.Wait(this.MessageReceived);
         }
+
+        private async Task BootInquireResumeAfter(IDialogContext context, IAwaitable<string> result)
+        {
+            try
+            {
+                this.vmName = await result;
+                context.Call(new MachineRebootConfirmDialog(this.vmName), this.BootConfirmResumeAfter);
+                //await context.PostAsync("Reboot Successfull");
+            }
+            catch (Exception)
+            {
+                await context.PostAsync("Boot Aborted");
+                throw;
+            }
+        }
+
+        private async Task BootConfirmResumeAfter(IDialogContext context, IAwaitable<string> result)
+        {
+            try
+            {
+                confirmMessage = await result;
+                if (confirmMessage.ToLower().Equals("yes"))
+                {
+                    Dictionary<string, string> allVms = new Dictionary<string, string>();
+                    allVms = Helper.AWSHelper.GetVMs();
+                    //allVms.Add("bob", "bob123");
+                    //allVms.Add("sally", "sally123");
+                    var myIdx = allVms.Keys.ToList().IndexOf(this.vmName);
+                    this.vmAWSID = allVms.Values.ElementAt(myIdx);
+                    Helper.AWSHelper.RunOperation(this.vmAWSID, "reboot");
+                    await context.PostAsync("Attempting to reboot " + this.vmName + " (known as " + this.vmAWSID + " in AWS)...");
+                }
+                else
+                {
+                    await context.PostAsync("Reboot Aborted");
+                }
+            }
+            catch (Exception)
+            {
+                await context.PostAsync("Reboot Unsuccessful");
+                throw;
+            }
+
+            private async Task RebootInquireResumeAfter(IDialogContext context, IAwaitable<string> result)
+            {
+                try
+                {
+                    this.vmName = await result;
+                    context.Call(new MachineRebootConfirmDialog(this.vmName), this.RebootConfirmResumeAfter);
+                    //await context.PostAsync("Reboot Successfull");
+                }
+                catch (Exception)
+                {
+                    await context.PostAsync("Reboot Aborted");
+                    throw;
+                }
+            }
+
+            private async Task RebootConfirmResumeAfter(IDialogContext context, IAwaitable<string> result)
+            {
+                try
+                {
+                    confirmMessage = await result;
+                    if (confirmMessage.ToLower().Equals("yes"))
+                    {
+                        Dictionary<string, string> allVms = new Dictionary<string, string>();
+                        allVms = Helper.AWSHelper.GetVMs();
+                        //allVms.Add("bob", "bob123");
+                        //allVms.Add("sally", "sally123");
+                        var myIdx = allVms.Keys.ToList().IndexOf(this.vmName);
+                        this.vmAWSID = allVms.Values.ElementAt(myIdx);
+                        Helper.AWSHelper.RunOperation(this.vmAWSID, "reboot");
+                        await context.PostAsync("Attempting to reboot " + this.vmName + " (known as " + this.vmAWSID + " in AWS)...");
+                    }
+                    else
+                    {
+                        await context.PostAsync("Reboot Aborted");
+                    }
+                }
+                catch (Exception)
+                {
+                    await context.PostAsync("Reboot Unsuccessful");
+                    throw;
+                }
 
         [LuisIntent("reboot")]
         public async Task reboot(IDialogContext context, LuisResult result)
@@ -77,10 +163,12 @@ namespace Bot_Application.Dialogs
                if(confirmMessage.ToLower().Equals("yes"))
                 {
                     Dictionary<string, string> allVms = new Dictionary<string, string>();
-                    allVms.Add("bob", "bob123");
-                    allVms.Add("sally", "sally123");
+                    allVms = Helper.AWSHelper.GetVMs();
+                    //allVms.Add("bob", "bob123");
+                    //allVms.Add("sally", "sally123");
                     var myIdx = allVms.Keys.ToList().IndexOf(this.vmName);
                     this.vmAWSID = allVms.Values.ElementAt(myIdx);
+                    Helper.AWSHelper.RunOperation(this.vmAWSID, "reboot");
                     await context.PostAsync("Attempting to reboot " + this.vmName + " (known as " + this.vmAWSID + " in AWS)...");
                 }
                else

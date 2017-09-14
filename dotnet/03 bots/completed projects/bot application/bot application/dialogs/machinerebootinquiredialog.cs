@@ -9,7 +9,7 @@ using Microsoft.Bot.Connector;
 namespace Bot_Application.Dialogs
 {
     [Serializable]
-    public class MachineBootInquireDialog : IDialog<string>
+    public class MachineRebootInquireDialog : IDialog<string>
     {
         private int attempts = 3;
         Dictionary<string, string> allVms = new Dictionary<string, string>();
@@ -19,7 +19,8 @@ namespace Bot_Application.Dialogs
             //await context.PostAsync("What machine do you want to reboot?  Below is a list of possible VMs.");
             //await context.PostAsync("What machine do you want to reboot2?");
             //await context.PostAsync("What machine do you want to reboot3?");
-            allVms = Helper.AWSHelper.GetVMs();
+            //allVms.Add("bob", "bob123");
+            //allVms.Add("sally", "sally123");
 
             List<string> vmList = allVms.Keys.ToList();
 
