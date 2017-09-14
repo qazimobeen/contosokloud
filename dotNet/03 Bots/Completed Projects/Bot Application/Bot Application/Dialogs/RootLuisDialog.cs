@@ -18,6 +18,9 @@ namespace Bot_Application.Dialogs
     [Serializable]
     public class RootLuisDialog : LuisDialog<object>
     {
+        private string vmName = string.Empty;
+        private string vmAWSID = string.Empty;
+        private string confirmMessage = string.Empty;
         [LuisIntent("")]
         [LuisIntent("None")]
         public async Task None(IDialogContext context, LuisResult result)
@@ -42,11 +45,54 @@ namespace Bot_Application.Dialogs
         [LuisIntent("reboot")]
         public async Task reboot(IDialogContext context, LuisResult result)
         {
-            string message = $"LUIS - reboot - Are you sure?";
+            string message = $"LUIS - reboot - Great let me help you reboot";
 
             await context.PostAsync(message);
 
-            context.Wait(this.MessageReceived);
+            context.Call(new MachineRebootInquireDialog(), this.RebootInquireResumeAfter);
+
+            //context.Wait(this.MessageReceived);
+        }
+
+        private async Task RebootInquireResumeAfter(IDialogContext context, IAwaitable<string> result)
+        {
+            try
+            {
+                this.vmName = await result;
+                context.Call(new MachineRebootConfirmDialog(this.vmName), this.RebootConfirmResumeAfter);
+                //await context.PostAsync("Reboot Successfull");
+            }
+            catch (Exception)
+            {
+                await context.PostAsync("Reboot Aborted");
+                throw;
+            }
+        }
+
+        private async Task RebootConfirmResumeAfter(IDialogContext context, IAwaitable<string> result)
+        {
+            try
+            {
+               confirmMessage = await result;
+               if(confirmMessage.ToLower().Equals("yes"))
+                {
+                    Dictionary<string, string> allVms = new Dictionary<string, string>();
+                    allVms.Add("bob", "bob123");
+                    allVms.Add("sally", "sally123");
+                    var myIdx = allVms.Keys.ToList().IndexOf(this.vmName);
+                    this.vmAWSID = allVms.Values.ElementAt(myIdx);
+                    await context.PostAsync("Attempting to reboot " + this.vmName + " (known as " + this.vmAWSID + " in AWS)...");
+                }
+               else
+                {
+                    await context.PostAsync("Reboot Aborted");
+                }
+            }
+            catch (Exception)
+            {
+                await context.PostAsync("Reboot Unsuccessful");
+                throw;
+            }
         }
 
         [LuisIntent("resize")]

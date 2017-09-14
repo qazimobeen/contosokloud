@@ -1,0 +1,2 @@
+C:\Users\cphil\Source\Repos\KloudBots\KloudMananagedServices\KloudManagedServicesBot\obj\Debug\KloudManagedServicesBot.csprojResolveAssemblyReference.cache
+C:\Users\cphil\Source\Repos\KloudBots\KloudMananagedServices\KloudManagedServicesBot\obj\Debug\KloudManagedServicesBot.csproj.CoreCompileInputs.cache
