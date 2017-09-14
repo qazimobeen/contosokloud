@@ -141,6 +141,10 @@
     <Compile Include="Dialogs\RootLuisDialog.cs" />
     <Compile Include="Entities\AccountManager.cs" />
     <Compile Include="Entities\AWS\AWSPostMessage.cs" />
+    <Compile Include="Entities\AWS\ServiceConfiguration.cs" />
+    <Compile Include="Entities\AWS\InstanceFamilyType.cs" />
+    <Compile Include="Entities\AWS\OperationType.cs" />
+    <Compile Include="Entities\AWS\ServiceMessage.cs" />
     <Compile Include="Entities\AWS\TicketFields.cs" />
     <Compile Include="Entities\Company.cs" />
     <Compile Include="Entities\Ticket.cs" />
