@@ -11,6 +11,7 @@ using Microsoft.Bot.Connector;
 using Bot_Application.Helper;
 using Bot_Application.Entities;
 using Newtonsoft.Json.Linq;
+using Bot_Application.Entities.AWS;
 
 namespace Bot_Application.Dialogs
 {
@@ -123,7 +124,8 @@ namespace Bot_Application.Dialogs
                     this.vmAWSID = allVms.Values.ElementAt(myIdx);
                     DateTime dt = new DateTime();
                     dt.AddMinutes(numOfMins);
-                    Helper.AWSHelper.RunOperation(this.vmAWSID, "restart", dt);
+                    ServiceMessage serviceMessage = new ServiceMessage(OperationType.Restart);
+                    Helper.AWSHelper.RunOperation(this.vmAWSID, serviceMessage, dt);
                     await context.PostAsync("Sounds good, I'll attempt to reboot the " + this.vmName + " VM in " + numOfMins + " minutes.");
                 }
                 else
