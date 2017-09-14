@@ -24,8 +24,6 @@ namespace Bot_Application.Dialogs
 
         public async Task StartAsync(IDialogContext context)
         {
-            //await context.PostAsync($"Do you want to Reboot - {this.vmName} ?");
-            //context.Wait(this.MessageReceivedAsync);
             PromptDialog.Choice(context, this.OnOptionsSelected, new List<string> { YesOption, NoOption }, $"Do you want to Reboot - {this.vmName} ?", "I'm sorry, I don't understand your reply. Please reply with 'Yes' or 'No'?", 3);
         }
 
@@ -40,46 +38,5 @@ namespace Bot_Application.Dialogs
                     break;
             }
         }
-
-        private async Task MessageReceivedAsync(IDialogContext context, IAwaitable<IMessageActivity> result)
-        {
-            var message = await result;
-            if ((message.Text != null) && (message.Text.Trim().Length > 0))
-            {
-                if (message.Text.ToLower().Contains("yes") || message.Text.ToLower().Contains("no"))
-                { 
-                    context.Done(message.Text);
-                }
-                else
-                {
-                    --confirmattempts;
-                    if (confirmattempts > 0)
-                    {
-                        await context.PostAsync("I'm sorry, I don't understand your reply. Please reply with 'Yes' or 'No'?");
-
-                        context.Wait(this.MessageReceivedAsync);
-                    }
-                    else
-                    {
-                        context.Fail(new TooManyAttemptsException("Message was not a string or was an empty string."));
-                    }
-                }
-            }
-            else
-            {
-                --nullattempts;
-                if (nullattempts > 0)
-                {
-                    await context.PostAsync("I'm sorry, I don't understand your reply. Please reply with 'Yes' or 'No'?");
-
-                    context.Wait(this.MessageReceivedAsync);
-                }
-                else
-                {
-                    context.Fail(new TooManyAttemptsException("Message was not a string or was an empty string."));
-                }
-            }
-        }
-
     }
 }
