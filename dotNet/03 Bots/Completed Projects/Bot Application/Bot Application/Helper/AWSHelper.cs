@@ -85,7 +85,7 @@ namespace Bot_Application.Helper
                     ChangeNumber = 1,
                     InstanceId = instanceId,
                     OperationName = operationName.ToLower(),
-                    ScheduledTimestamp = DateTime.Now.AddHours(-10).AddMinutes(1).ToString("s")
+                    ScheduledTimestamp = DateTime.UtcNow.AddMinutes(1).ToString("s")
                 },
                 TicketId = 1,
                 TicketRequesterEmail = "39fd55d0.kloud.com.au@apac.teams.mu",
