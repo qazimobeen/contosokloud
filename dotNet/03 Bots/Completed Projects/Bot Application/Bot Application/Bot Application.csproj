@@ -154,6 +154,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="packages.config" />
+    <None Include="Properties\PublishProfiles\BotApplication20170914044126 - Web Deploy.pubxml" />
     <None Include="Properties\PublishProfiles\ContosoManagedservicesBOTApi - FTP.pubxml" />
     <None Include="Properties\PublishProfiles\ContosoManagedservicesBOTApi - Web Deploy.pubxml" />
     <None Include="Web.Debug.config">
