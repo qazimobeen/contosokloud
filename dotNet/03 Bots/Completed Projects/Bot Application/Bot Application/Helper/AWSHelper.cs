@@ -1,15 +1,10 @@
-﻿using Bot_Application.Entities;
-using Bot_Application.Entities.AWS;
-using Newtonsoft.Json.Linq;
+﻿using Bot_Application.Entities.AWS;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Text;
-using System.Threading.Tasks;
-using System.Web;
-using System.Web.Script.Serialization;
 
 namespace Bot_Application.Helper
 {
@@ -80,9 +75,9 @@ namespace Bot_Application.Helper
             return new AWSPostMessage
             {
                 CompanyId = 250,
-                ServiceDescription = "Reboot, start, or stop an existing Amazon EC2 instance",
+                ServiceDescription = "Restart, start, or stop an existing Amazon EC2 instance",
                 ServiceId = 2,
-                ServiceName = @"Reboot/start/stop Amazon EC2 instance",
+                ServiceName = @"Restart/start/stop Amazon EC2 instance",
                 TicketDescription = CapitaliseOperationName(operationName) + " an existing Amazon virtual machine",
                 TicketFields = new TicketFields
                 {
@@ -90,8 +85,8 @@ namespace Bot_Application.Helper
                     ChangeNumber = 1,
                     InstanceId = instanceId,
                     OperationName = operationName.ToLower(),
-                    ScheduledTimestamp = DateTime.Now.AddMinutes(1).ToString("s")
-        },
+                    ScheduledTimestamp = DateTime.Now.AddHours(-10).AddMinutes(1).ToString("s")
+                },
                 TicketId = 1,
                 TicketRequesterEmail = "39fd55d0.kloud.com.au@apac.teams.mu",
                 TicketRequesterName = "Contoso Managed Services",
