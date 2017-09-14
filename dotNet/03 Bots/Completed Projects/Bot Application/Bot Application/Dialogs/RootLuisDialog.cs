@@ -21,6 +21,17 @@ namespace Bot_Application.Dialogs
         private string vmName = string.Empty;
         private string vmAWSID = string.Empty;
         private string confirmMessage = string.Empty;
+
+        [LuisIntent("Thanks")]
+        public async Task Thanks(IDialogContext context, LuisResult result)
+        {
+            string message = $"LUIS - Oh no, thank you!";
+
+            await context.PostAsync(message);
+
+            context.Wait(this.MessageReceived);
+        }
+
         [LuisIntent("")]
         [LuisIntent("None")]
         public async Task None(IDialogContext context, LuisResult result)
@@ -77,10 +88,12 @@ namespace Bot_Application.Dialogs
                if(confirmMessage.ToLower().Equals("yes"))
                 {
                     Dictionary<string, string> allVms = new Dictionary<string, string>();
-                    allVms.Add("bob", "bob123");
-                    allVms.Add("sally", "sally123");
+                    //allVms.Add("bob", "bob123");
+                    //allVms.Add("sally", "sally123");
+                    allVms = Helper.AWSHelper.GetVMs();
                     var myIdx = allVms.Keys.ToList().IndexOf(this.vmName);
                     this.vmAWSID = allVms.Values.ElementAt(myIdx);
+                    Helper.AWSHelper.RunOperation(this.vmAWSID, "stop");
                     await context.PostAsync("Attempting to reboot " + this.vmName + " (known as " + this.vmAWSID + " in AWS)...");
                 }
                else

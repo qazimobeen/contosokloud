@@ -93,7 +93,7 @@ namespace Bot_Application.Helper
                     ScheduledTimestamp = DateTime.Now.AddMinutes(1).ToString("s")
         },
                 TicketId = 1,
-                TicketRequesterEmail = "39fd55d0.kloud.com.au@apac.teams.mu",
+                TicketRequesterEmail = "39fd55d0.kloud.com.au@apac.teams.ms",
                 TicketRequesterName = "Contoso Managed Services",
                 TicketRequesterPhone = "+61439391813",
                 TicketSubject = CapitaliseOperationName(operationName) + " Amazon Virtual Machine"
