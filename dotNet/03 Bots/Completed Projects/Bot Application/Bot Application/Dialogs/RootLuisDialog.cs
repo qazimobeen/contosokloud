@@ -19,6 +19,7 @@ namespace Bot_Application.Dialogs
     public class RootLuisDialog : LuisDialog<object>
     {
         private string vmName = string.Empty;
+        private string vmAWSID = string.Empty;
         private string confirmMessage = string.Empty;
         [LuisIntent("")]
         [LuisIntent("None")]
@@ -63,7 +64,7 @@ namespace Bot_Application.Dialogs
             }
             catch (Exception)
             {
-                await context.PostAsync("Reboot Unsuccessfull");
+                await context.PostAsync("Reboot Aborted");
                 throw;
             }
         }
@@ -75,7 +76,12 @@ namespace Bot_Application.Dialogs
                confirmMessage = await result;
                if(confirmMessage.ToLower().Equals("yes"))
                 {
-                    await context.PostAsync("Reboot Successfull");
+                    Dictionary<string, string> allVms = new Dictionary<string, string>();
+                    allVms.Add("bob", "bob123");
+                    allVms.Add("sally", "sally123");
+                    var myIdx = allVms.Keys.ToList().IndexOf(this.vmName);
+                    this.vmAWSID = allVms.Values.ElementAt(myIdx);
+                    await context.PostAsync("Attempting to reboot " + this.vmName + " (known as " + this.vmAWSID + " in AWS)...");
                 }
                else
                 {
@@ -84,7 +90,7 @@ namespace Bot_Application.Dialogs
             }
             catch (Exception)
             {
-                await context.PostAsync("Reboot Unsuccessfull");
+                await context.PostAsync("Reboot Unsuccessful");
                 throw;
             }
         }
