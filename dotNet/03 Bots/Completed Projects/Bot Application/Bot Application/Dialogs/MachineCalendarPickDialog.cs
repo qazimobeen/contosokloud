@@ -14,30 +14,35 @@ namespace Bot_Application.Dialogs
         private int nullattempts = 3;
         private int confirmattempts = 3;
         private string vmName;
-        private const string YesOption = "Yes";
-        private const string NoOption = "No";
+        Dictionary<string, int> timeChoices;
 
         public MachineCalendarPickDialog(string vmName)
         {
             this.vmName = vmName;
+            timeChoices = new Dictionary<string, int>();
+            timeChoices.Add("now", 0);
+            timeChoices.Add("5 minutes", 5);
+            timeChoices.Add("15 minutes", 15);
+            timeChoices.Add("30 minutes", 30);
+            timeChoices.Add("An hour", 60);
+            timeChoices.Add("6 hours", 360);
+            timeChoices.Add("In 12 hours from now", 720);
+            timeChoices.Add("This time tomorrow (24 hours)", 1440);
         }
 
         public async Task StartAsync(IDialogContext context)
         {
             //await context.PostAsync($"Do you want to Reboot - {this.vmName} ?");
             //context.Wait(this.MessageReceivedAsync);
+            
+            List<string> timeOptions = timeChoices.Keys.ToList<string>();
+            PromptDialog.Choice(context, this.onTimeProvided, timeOptions, "Choose from the list below when to restart", "I'm sorry, I don't understand your reply. Please choose from the list", 3);
         }
 
-        private async Task OnOptionsSelected(IDialogContext context, IAwaitable<string> result)
+        private async Task onTimeProvided(IDialogContext context, IAwaitable<string> result)
         {
             string optionSelected = await result;
-            switch(optionSelected)
-            {
-                case YesOption:
-                case NoOption:
-                    context.Done(optionSelected);
-                    break;
-            }
+            context.Done(timeChoices[optionSelected].ToString());
         }
 
         private async Task MessageReceivedAsync(IDialogContext context, IAwaitable<IMessageActivity> result)
