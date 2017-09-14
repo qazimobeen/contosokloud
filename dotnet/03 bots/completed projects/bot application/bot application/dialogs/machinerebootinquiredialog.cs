@@ -21,6 +21,7 @@ namespace Bot_Application.Dialogs
             //await context.PostAsync("What machine do you want to reboot3?");
             //allVms.Add("bob", "bob123");
             //allVms.Add("sally", "sally123");
+            allVms = Helper.AWSHelper.GetVMs();
 
             List<string> vmList = allVms.Keys.ToList();
 

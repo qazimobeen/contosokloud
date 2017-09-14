@@ -7,5 +7,77 @@ by editing this MSBuild file. In order to learn more about this please visit htt
   <PropertyGroup>
     <TimeStampOfAssociatedLegacyPublishXmlFile />
     <EncryptedPassword>AQAAANCMnd8BFdERjHoAwE/Cl+sBAAAAvNqFZCATVE2SF4hyKNwfFgAAAAACAAAAAAAQZgAAAAEAACAAAABEMKPSoDPEl2a/lX0IfkpHRWQo/WNxZ8VS1ef7+40ieAAAAAAOgAAAAAIAACAAAADrP7wOGY23ydYqFCO9vwihbLpa5OTJ4TN0wg3oFOr7mYAAAAAsVRkNrbafeJDVvKjBH7nkUTXos4+Zj8u0gYY+OCZ+8SgIaWZhBGgPuLTcKck/OdNJFOklQOBPFOnUJ5g2F0T+4xrs41eG4UCrW5fveSHKw0VnDEsPU7SZHc9cYk0/IkgcNUVlbnLyj9pOl8OcTgLde95vthQRjzJG3X3w5QC+3kAAAABNr0bU7iNqxAx8eL6sq/kDQRmmtlPQuA2WhwsPXKKRJay4e4xnYPdjVokJrzj/PLcOdIh9xDBFYvOaXWPbNHls</EncryptedPassword>
+    <_PublishTargetUrl>ftp://waws-prod-bay-061.ftp.azurewebsites.windows.net/site/wwwroot</_PublishTargetUrl>
   </PropertyGroup>
+  <ItemGroup>
+    <File Include="bin/Autofac.dll">
+      <publishTime>07/25/2017 05:11:08</publishTime>
+    </File>
+    <File Include="bin/Bot Application1.dll">
+      <publishTime>09/14/2017 17:43:20</publishTime>
+    </File>
+    <File Include="bin/Bot Application1.pdb">
+      <publishTime>09/14/2017 17:43:20</publishTime>
+    </File>
+    <File Include="bin/Chronic.dll">
+      <publishTime>05/09/2016 10:16:50</publishTime>
+    </File>
+    <File Include="bin/Microsoft.Bot.Builder.Autofac.dll">
+      <publishTime>09/12/2017 04:53:30</publishTime>
+    </File>
+    <File Include="bin/Microsoft.Bot.Builder.dll">
+      <publishTime>09/12/2017 04:53:30</publishTime>
+    </File>
+    <File Include="bin/Microsoft.Bot.Connector.dll">
+      <publishTime>09/12/2017 04:53:30</publishTime>
+    </File>
+    <File Include="bin/Microsoft.Bot.Connector.Teams.dll">
+      <publishTime>08/29/2017 13:47:36</publishTime>
+    </File>
+    <File Include="bin/Microsoft.Cognitive.LUIS.dll">
+      <publishTime>04/07/2017 01:04:32</publishTime>
+    </File>
+    <File Include="bin/Microsoft.IdentityModel.Protocol.Extensions.dll">
+      <publishTime>03/06/2017 16:09:02</publishTime>
+    </File>
+    <File Include="bin/Microsoft.Rest.ClientRuntime.dll">
+      <publishTime>09/04/2017 23:11:14</publishTime>
+    </File>
+    <File Include="bin/Microsoft.WindowsAzure.Configuration.dll">
+      <publishTime>10/25/2016 10:48:08</publishTime>
+    </File>
+    <File Include="bin/Newtonsoft.Json.dll">
+      <publishTime>06/18/2017 13:57:10</publishTime>
+    </File>
+    <File Include="bin/Polly.dll">
+      <publishTime>08/06/2017 10:54:26</publishTime>
+    </File>
+    <File Include="bin/Polly.pdb">
+      <publishTime>08/06/2017 10:54:26</publishTime>
+    </File>
+    <File Include="bin/System.IdentityModel.Tokens.Jwt.dll">
+      <publishTime>03/06/2017 16:09:04</publishTime>
+    </File>
+    <File Include="bin/System.Net.Http.Formatting.dll">
+      <publishTime>01/28/2015 04:02:42</publishTime>
+    </File>
+    <File Include="bin/System.Web.Http.dll">
+      <publishTime>01/28/2015 04:02:54</publishTime>
+    </File>
+    <File Include="bin/System.Web.Http.WebHost.dll">
+      <publishTime>01/28/2015 04:03:46</publishTime>
+    </File>
+    <File Include="default.htm">
+      <publishTime>09/13/2017 12:39:28</publishTime>
+    </File>
+    <File Include="Global.asax">
+      <publishTime>09/13/2017 12:39:28</publishTime>
+    </File>
+    <File Include="packages.config">
+      <publishTime>09/13/2017 13:53:51</publishTime>
+    </File>
+    <File Include="Web.config">
+      <publishTime>09/14/2017 17:43:28</publishTime>
+    </File>
+  </ItemGroup>
 </Project>
