@@ -24,9 +24,7 @@ namespace Bot_Application.Dialogs
 
         public async Task StartAsync(IDialogContext context)
         {
-            //await context.PostAsync($"Do you want to Reboot - {this.vmName} ?");
-            //context.Wait(this.MessageReceivedAsync);
-            PromptDialog.Choice(context, this.OnOptionsSelected, new List<string> { YesOption, NoOption }, $"Do you want to Reboot - {this.vmName} ?", "I'm sorry, I don't understand your reply. Please reply with 'Yes' or 'No'?", 3);
+            PromptDialog.Choice(context, this.OnOptionsSelected, new List<string> { YesOption, NoOption }, $"Do you want to Boot - {this.vmName} ?", "I'm sorry, I don't understand your reply. Please reply with 'Yes' or 'No'?", 3);
         }
 
         private async Task OnOptionsSelected(IDialogContext context, IAwaitable<string> result)

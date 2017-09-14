@@ -22,10 +22,10 @@ namespace Bot_Application.Dialogs
         private string vmAWSID = string.Empty;
         private string confirmMessage = string.Empty;
 
-        [LuisIntent("Thanks")]
+        [LuisIntent("thanks")]
         public async Task Thanks(IDialogContext context, LuisResult result)
         {
-            string message = $"LUIS - Oh no, thank you!";
+            string message = "Oh no, thank you!";
 
             await context.PostAsync(message);
 
@@ -33,7 +33,7 @@ namespace Bot_Application.Dialogs
         }
 
         [LuisIntent("")]
-        [LuisIntent("None")]
+        [LuisIntent("none")]
         public async Task None(IDialogContext context, LuisResult result)
         {
             string message = $"LUIS - None - Sorry, I did not understand '{result.Query}'. Type 'help' if you need assistance.";
@@ -46,7 +46,7 @@ namespace Bot_Application.Dialogs
         [LuisIntent("boot")]
         public async Task boot(IDialogContext context, LuisResult result)
         {
-            string message = $"LUIS - boot - Booting it up for you!";
+            string message = "Cerainly!  Let me help you boot a Virtual Machine (VM)";
 
             await context.PostAsync(message);
 
@@ -56,13 +56,11 @@ namespace Bot_Application.Dialogs
         [LuisIntent("reboot")]
         public async Task reboot(IDialogContext context, LuisResult result)
         {
-            string message = $"LUIS - reboot - Great let me help you reboot";
+            string message = "Great!  Let me help you reboot a Virtual Machine (VM).";
 
             await context.PostAsync(message);
 
             context.Call(new MachineRebootInquireDialog(), this.RebootInquireResumeAfter);
-
-            //context.Wait(this.MessageReceived);
         }
 
         private async Task RebootInquireResumeAfter(IDialogContext context, IAwaitable<string> result)
@@ -71,11 +69,10 @@ namespace Bot_Application.Dialogs
             {
                 this.vmName = await result;
                 context.Call(new MachineRebootConfirmDialog(this.vmName), this.RebootConfirmResumeAfter);
-                //await context.PostAsync("Reboot Successfull");
             }
             catch (Exception)
             {
-                await context.PostAsync("Reboot Aborted");
+                await context.PostAsync("Reboot Aborted!");
                 throw;
             }
         }
@@ -84,26 +81,24 @@ namespace Bot_Application.Dialogs
         {
             try
             {
-               confirmMessage = await result;
-               if(confirmMessage.ToLower().Equals("yes"))
+                confirmMessage = await result;
+                if(confirmMessage.ToLower().Equals("yes"))
                 {
                     Dictionary<string, string> allVms = new Dictionary<string, string>();
-                    //allVms.Add("bob", "bob123");
-                    //allVms.Add("sally", "sally123");
                     allVms = Helper.AWSHelper.GetVMs();
                     var myIdx = allVms.Keys.ToList().IndexOf(this.vmName);
                     this.vmAWSID = allVms.Values.ElementAt(myIdx);
                     Helper.AWSHelper.RunOperation(this.vmAWSID, "stop");
-                    await context.PostAsync("Attempting to reboot " + this.vmName + " (known as " + this.vmAWSID + " in AWS)...");
+                    await context.PostAsync("Ok, I'm attempting to reboot " + this.vmName + " (known as \"" + this.vmAWSID + "\" in AWS)...");
                 }
-               else
+                else
                 {
-                    await context.PostAsync("Reboot Aborted");
+                    await context.PostAsync("Reboot Aborted!");
                 }
             }
             catch (Exception)
             {
-                await context.PostAsync("Reboot Unsuccessful");
+                await context.PostAsync("Reboot Unsuccessful :(");
                 throw;
             }
         }
@@ -111,7 +106,7 @@ namespace Bot_Application.Dialogs
         [LuisIntent("resize")]
         public async Task resize(IDialogContext context, LuisResult result)
         {
-            string message = $"LUIS - resize - Surely, how you want me to resize it?";
+            string message = "Sure, how you want me to resize it?";
 
             await context.PostAsync(message);
 
