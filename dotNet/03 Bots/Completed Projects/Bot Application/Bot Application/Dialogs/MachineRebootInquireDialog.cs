@@ -20,7 +20,7 @@ namespace Bot_Application.Dialogs
 
             List<string> vmList = allVms.Keys.ToList();
 
-            PromptDialog.Choice(context, this.OnOptionsSelected, vmList, "What machine do you want to reboot?  Below is a list of possible VMs.", "I'm sorry, I don't understand your reply. Please choose from the list or with the name of a VM.", 3);
+            PromptDialog.Choice(context, this.OnOptionsSelected, vmList, "Which machine do you want to reboot?  Below is a list of possible VMs.", "I'm sorry, I don't understand your response. Please choose from the list or with the name of a VM.", 3);
         }
 
         private async Task OnOptionsSelected(IDialogContext context, IAwaitable<string> result)
