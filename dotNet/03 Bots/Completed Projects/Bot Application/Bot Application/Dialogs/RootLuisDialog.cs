@@ -98,7 +98,7 @@ namespace Bot_Application.Dialogs
                     allVms = Helper.AWSHelper.GetVMs();
                     var myIdx = allVms.Keys.ToList().IndexOf(this.vmName);
                     this.vmAWSID = allVms.Values.ElementAt(myIdx);
-                    Helper.AWSHelper.RunOperation(this.vmAWSID, "restart");
+                    //Helper.AWSHelper.RunOperation(this.vmAWSID, "restart");
                     await context.PostAsync("Ok, I'm attempting to reboot " + this.vmName + " (known as \"" + this.vmAWSID + "\" in AWS)...");
                 }
                 else

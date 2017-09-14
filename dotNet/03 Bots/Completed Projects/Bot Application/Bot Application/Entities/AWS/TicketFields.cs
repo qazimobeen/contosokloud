@@ -11,6 +11,7 @@ namespace Bot_Application.Entities.AWS
         public string AccountId { get; set; }
         public int ChangeNumber { get; set; }
         public string InstanceId { get; set; }
+        public string InstanceType { get; set; }
         public string OperationName { get; set; }
         /// <summary>
         /// In UTC time
