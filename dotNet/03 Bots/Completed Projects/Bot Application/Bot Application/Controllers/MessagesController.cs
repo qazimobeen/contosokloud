@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using System.Web.Http;
 using System.Web.Http.Description;
 using Microsoft.Bot.Connector;
+using Microsoft.Bot.Connector.Teams;
 using Newtonsoft.Json;
 using System.Net.Http.Headers;
 using System.Collections.Generic;
@@ -47,7 +48,7 @@ namespace Bot_Application
                 //}
 
                 //await connector.Conversations.ReplyToActivityAsync(reply);
-
+                activity.Text = activity.GetTextWithoutMentions();
                 await Conversation.SendAsync(activity, () => new Bot_Application.Dialogs.RootLuisDialog());
 
                 //await Conversation.SendAsync(activity, () => new Bot_Application.RootDialog());

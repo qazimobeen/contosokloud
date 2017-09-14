@@ -1,0 +1,147 @@
+{
+    "$schema": "https://statics.teams.microsoft.com/sdk/v1.0/manifest/MicrosoftTeams.schema.json",
+    "manifestVersion": "1.0",
+    "version": "1.0.0",
+    "id": "c0bd576f-7dd0-443b-ace9-cbe290a09d91",
+    "packageName": "com.kloud.teams.managedservicesapp",
+    "developer": {
+        "name": "Kloud Solutions",
+        "websiteUrl": "http://www.kloud.com.au",
+        "privacyUrl": "http://www.kloud.com.au/privacy",
+        "termsOfUseUrl": "http://www.kloud.com.au/termsofuse"
+    },
+    "name": {
+        "short": "Asish Kloud Managed Services",
+        "full": "Asish Kloud Managed Services - Microsoft Teams App"
+    },
+    "description": {
+        "short": "Lorem ipsum dolor sit amet.",
+        "full": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."
+    },
+    "icons": {
+        "outline": "kloud44.png",
+        "color": "kloud88.png"
+    },
+    "accentColor": "#3F487F",
+    "staticTabs": [
+        {
+            "entityId": "help",
+            "name": "Help",
+            "contentUrl": "https://contosomanagedservices.azurewebsites.net/help.html",
+            "websiteUrl": "https://contosomanagedservices.azurewebsites.net/help.html?web=1",
+            "scopes": [
+                "personal"
+            ]
+        },
+        {
+            "entityId": "index",
+            "name": "Index",
+            "contentUrl": "https://contosomanagedservices.azurewebsites.net/index.html",
+            "websiteUrl": "https://contosomanagedservices.azurewebsites.net/index.html?web=1",
+            "scopes": [
+                "personal"
+            ]
+        }
+    ],
+	  "tabs": [
+		{
+		  "id": "c1dfba10-37bd-45e5-8967-d774a01b7f3f",
+		  "name": "Dashboard",
+		  "description": {
+			"short": "Display service management dashboard.",
+			"full": "Display service management dashboard as a tab."
+		  },
+		  "icons": {
+			"44": "https://contosomanagedservices.azurewebsites.net/images/kloud44.png",
+			"88": "https://contosomanagedservices.azurewebsites.net/images/kloud88.png"
+		  },
+		  "accentColor": "#223344",
+		  "configUrl": "https://contosomanagedservices.azurewebsites.net/configuration.html",
+		  "canUpdateConfig": true
+		}
+	  ],
+    "configurableTabs": [
+        {
+            "configurationUrl": "https://contosomanagedservices.azurewebsites.net/configuration.html",
+            "canUpdateConfiguration": true,
+            "scopes": [
+                "team"
+            ]
+        }
+    ],
+    "bots": [
+        {
+            "botId": "c0bd576f-7dd0-443b-ace9-cbe290a09d91",
+            "isNotificationOnly": false,
+            "scopes": [
+                "team",
+                "personal"
+            ],
+            "commandLists": [
+                {
+                    "scopes": [
+                        "team"
+                    ],
+                    "commands": [
+                        {
+                            "title": "contact",
+                            "description": "Query for account manager contact information"
+                        },
+                        {
+                            "title": "hours",
+                            "description": "Query remaining hours for service agreement"
+                        },
+                        {
+                            "title": "status",
+                            "description": "Query status of service request or incident"
+                        },
+                        {
+                            "title": "tickets",
+                            "description": "Query for service requests and incidents"
+                        }
+					]
+                }
+            ]
+        }
+    ],
+    "connectors": [
+        {
+            "connectorId": "c1dfba10-37bd-45e5-8967-d774a01b7f3f",
+            "scopes": [
+                "team"
+            ]
+        }
+    ],
+    "composeExtensions": [
+        {
+            "botId": "c0bd576f-7dd0-443b-ace9-cbe290a09d91",
+            "scopes": [
+                "personal",
+                "team"
+            ],
+            "commands": [
+                {
+                    "id": "searchCmd",
+                    "title": "Search tickets",
+                    "initialRun": true,
+                    "description": "Search tickets",
+                    "parameters": [
+                        {
+                            "name": "search",
+                            "title": "Search",
+                            "description": "Search tickets"
+                        }
+                    ]
+                }
+            ]
+        }
+    ],
+    "permissions": [
+        "identity",
+        "messageTeamMembers"
+    ],
+    "validDomains": [
+        "contosomanagedservices.azurewebsites.net",
+        "contosomanagedservicesbotapi.azurewebsites.net"
+    ]
+}
