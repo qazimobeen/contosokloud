@@ -71,9 +71,7 @@ namespace Bot_Application.Helper
         /// <returns></returns>
         public static bool RunOperation(string instanceId, string operationName)
         {
-            var postMessage = CreateAWSPostMessage(instanceId, operationName);
-            var json = new JavaScriptSerializer().Serialize(postMessage);
-            HttpResponseMessage response = GetAWSResponse(postMessage);
+            HttpResponseMessage response = GetAWSResponse(CreateAWSPostMessage(instanceId, operationName));
             return response.IsSuccessStatusCode;
         }
 
