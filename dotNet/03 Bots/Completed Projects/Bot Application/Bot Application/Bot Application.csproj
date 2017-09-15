@@ -147,7 +147,6 @@
     <Compile Include="Entities\AWS\ServiceMessage.cs" />
     <Compile Include="Entities\AWS\TicketFields.cs" />
     <Compile Include="Entities\Company.cs" />
-    <Compile Include="Entities\FilterValues.cs" />
     <Compile Include="Entities\TabContext.cs" />
     <Compile Include="Entities\Ticket.cs" />
     <Compile Include="Global.asax.cs">

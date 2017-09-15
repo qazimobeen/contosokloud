@@ -1,17 +1,18 @@
-﻿using System;
+﻿using Bot_Application.Entities;
+using Bot_Application.Entities.AWS;
+using Bot_Application.Helper;
+using Microsoft.Bot.Builder.Dialogs;
+using Microsoft.Bot.Builder.Luis;
+using Microsoft.Bot.Builder.Luis.Models;
+using Microsoft.Bot.Connector;
+using Microsoft.Bot.Connector.Teams.Models;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Web;
-using Microsoft.Bot.Builder.Dialogs;
-using Microsoft.Bot.Builder.FormFlow;
-using Microsoft.Bot.Builder.Luis;
-using Microsoft.Bot.Builder.Luis.Models;
-using Microsoft.Bot.Connector;
-using Bot_Application.Helper;
-using Bot_Application.Entities;
-using Newtonsoft.Json.Linq;
-using Bot_Application.Entities.AWS;
 
 namespace Bot_Application.Dialogs
 {
@@ -246,12 +247,14 @@ namespace Bot_Application.Dialogs
                 }
                     };
 
+
                     // TODO: Retrieve Company Name from SharePoint configuration list.
                     var companyName = ticket.CompanyName;
                     card.Buttons = new List<CardAction>()
-                {
-                    new CardAction("openUrl", "View ticket", null, string.Format("https://aus.myconnectwise.net/v4_6_release/services/system_io/Service/fv_sr100_request.rails?service_recid={0}&companyName={1}",ticket.SubTitle, companyName))
-                };
+                    {
+                        new CardAction("openUrl", "View ticket", null, string.Format("https://aus.myconnectwise.net/v4_6_release/services/system_io/Service/fv_sr100_request.rails?service_recid={0}&companyName={1}",ticket.SubTitle, companyName)),
+                        new CardAction("openUrl", "View ticket in new tab", null, SendDeeplink(context, context.Activity, "new tab"))
+                    };
 
                     reply.Attachments.Add(card.ToAttachment());
 
@@ -275,7 +278,7 @@ namespace Bot_Application.Dialogs
                 foreach (JObject o in ticketDetails)
                 {
                     ThumbnailCard card = new ThumbnailCard()
-                    {
+                    { 
                         Title = $"{o["summary"].ToString()}",
                         Subtitle = $"Status: { o["status"]["name"].ToString()}," + $"  Date Entered: { o["dateEntered"].ToString()}",
                         Text = $"Ticket Id: { o["id"].ToString()}" + $" Ticket Type: { o["recordType"].ToString()}"
@@ -288,6 +291,37 @@ namespace Bot_Application.Dialogs
             }
 
             context.Wait(this.MessageReceived);
+        }
+
+        /// <summary>
+        /// Helper method to create a deep link to a given tab name.  
+        /// 
+        /// For more information, see: https://msdn.microsoft.com/en-us/microsoft-teams/deeplinks#generating-a-deep-link-to-your-tab-for-use-in-a-bot-or-connector-message
+        /// 
+        /// </summary>
+        /// <param name="context"></param>
+        /// <param name="activity"></param>
+        /// <param name="tabName"></param>
+        /// <returns></returns>
+        private string SendDeeplink(IDialogContext context, IActivity activity, string tabName)
+        {
+            var teamsChannelData = activity.GetChannelData<TeamsChannelData>();
+            var teamId = teamsChannelData.Team.Id;
+            var channelId = teamsChannelData.Channel.Id;
+
+            // The app ID, stored in the web.config file, should be the appID from your manifest.json file.
+            var appId = System.Configuration.ConfigurationManager.AppSettings["TeamsAppId"];
+            var entity = $"kloud-{tabName}-{teamId}-{channelId}"; // Match the entity ID we setup when configuring the tab
+            var tabContext = new TabContext()
+            {
+                ChannelId = channelId,
+                CanvasUrl = "https://teams.microsoft.com"
+            };
+
+            var url = $"https://teams.microsoft.com/l/entity/{HttpUtility.UrlEncode(appId)}/{HttpUtility.UrlEncode(entity)}?label={HttpUtility.UrlEncode(tabName)}&context={HttpUtility.UrlEncode(JsonConvert.SerializeObject(tabContext))}";
+
+            var text = $"I've created a deep link to {tabName}! Click [here]({url}) to navigate to the tab.";
+            return text;
         }
     }
 }
