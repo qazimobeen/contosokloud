@@ -50,11 +50,52 @@ namespace Bot_Application.Dialogs
         [LuisIntent("boot")]
         public async Task boot(IDialogContext context, LuisResult result)
         {
-            string message = "Certainly!  Let me help you boot a Virtual Machine (VM)... As soon as the developer writes this code.";
+            string message = "Certainly!  Let me help you boot a Virtual Machine (VM).";
 
             await context.PostAsync(message);
 
-            context.Wait(this.MessageReceived);
+            context.Call(new MachineBootInquireDialog(), this.BootInquireResumeAfter);
+        }
+
+        private async Task BootInquireResumeAfter(IDialogContext context, IAwaitable<string> result)
+        {
+            try
+            {
+                this.vmName = await result;
+                context.Call(new MachineBootConfirmDialog(this.vmName), this.BootConfirmResumeAfter);
+            }
+            catch (Exception)
+            {
+                await context.PostAsync("Boot Aborted!");
+                throw;
+            }
+        }
+
+        private async Task BootConfirmResumeAfter(IDialogContext context, IAwaitable<string> result)
+        {
+            try
+            {
+                confirmMessage = await result;
+                if (confirmMessage.ToLower().Equals("yes"))
+                {
+                    Dictionary<string, string> allVms = new Dictionary<string, string>();
+                    allVms = Helper.AWSHelper.GetVMs();
+                    var myIdx = allVms.Keys.ToList().IndexOf(this.vmName);
+                    this.vmAWSID = allVms.Values.ElementAt(myIdx);        
+                    var serviceMessage = new ServiceMessage(OperationType.Start);
+                    Helper.AWSHelper.RunOperation(this.vmAWSID, serviceMessage);
+                    await context.PostAsync("Sounds good, I'll attempt to boot the " + this.vmName);
+                }
+                else
+                {
+                    await context.PostAsync("Boot Aborted - Sorry, the time could not be understood.");
+                }
+            }
+            catch (Exception)
+            {
+                await context.PostAsync("Boot Unsuccessful :(");
+                throw;
+            }
         }
 
         [LuisIntent("stop")]
