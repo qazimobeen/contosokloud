@@ -200,7 +200,7 @@ namespace Bot_Application.Dialogs
                     this.vmAWSID = allVms.Values.ElementAt(myIdx);
                     var serviceMessage = new ServiceMessage(OperationType.Restart, confirmStorage, InstanceFamilyType.Storage);
                     Helper.AWSHelper.RunOperation(this.vmAWSID, serviceMessage);
-                    await context.PostAsync("Sounds good, I'll attempt to resize the " + this.vmName + " VM in " + numOfMins + " minutes.");
+                    await context.PostAsync("Sounds good, I'll attempt to resize the " + this.vmName);
 
                 }
                 else
@@ -218,11 +218,54 @@ namespace Bot_Application.Dialogs
         [LuisIntent("snapshot")]
         public async Task snapshot(IDialogContext context, LuisResult result)
         {
-            string message = $"LUIS - snapshot - Yes, I can do it for you. What you want?";
+            string message = $"Snapshot - Yes, I can do it for you. What you want?";
 
             await context.PostAsync(message);
 
-            context.Wait(this.MessageReceived);
+            context.Call(new MachineSnapshotInquireDialog(), this.SnapshotInquireResumeAfter);
+        }
+
+        private async Task SnapshotInquireResumeAfter(IDialogContext context, IAwaitable<string> result)
+        {
+            try
+            {
+                this.vmName = await result;
+                context.Call(new MachineSnapshotConfirmDialog(this.vmName), this.SnapshotConfirmResumeAfter);
+            }
+            catch (Exception)
+            {
+                await context.PostAsync("Snapshot Aborted!");
+                throw;
+            }
+        }
+
+        private async Task SnapshotConfirmResumeAfter(IDialogContext context, IAwaitable<string> result)
+        {
+            try
+            {
+                confirmMessage = await result;
+                if (confirmMessage.ToLower().Equals("yes"))
+                {
+
+                    Dictionary<string, string> allVms = new Dictionary<string, string>();
+                    allVms = Helper.AWSHelper.GetVMs();
+                    var myIdx = allVms.Keys.ToList().IndexOf(this.vmName);
+                    this.vmAWSID = allVms.Values.ElementAt(myIdx);
+                    var serviceMessage = new ServiceMessage(OperationType.Snapshot);
+                    Helper.AWSHelper.RunOperation(this.vmAWSID, serviceMessage);
+                    await context.PostAsync("Sounds good, I'll attempt to snapshot the " + this.vmName);
+
+                }
+                else
+                {
+                    await context.PostAsync("Snapshot Aborted!");
+                }
+            }
+            catch (Exception)
+            {
+                await context.PostAsync("Snapshot Unsuccessful :(");
+                throw;
+            }
         }
 
         [LuisIntent("contact")]
