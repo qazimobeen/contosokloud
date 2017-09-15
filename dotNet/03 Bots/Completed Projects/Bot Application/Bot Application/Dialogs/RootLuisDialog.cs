@@ -148,8 +148,6 @@ namespace Bot_Application.Dialogs
             await context.PostAsync(message);
 
             context.Call(new MachineResizeInquireDialog(), this.ResizeInquireResumeAfter);
-
-           // context.Wait(this.MessageReceived);
         }
 
 
@@ -158,11 +156,32 @@ namespace Bot_Application.Dialogs
             try
             {
                 this.vmName = await result;
-                context.Call(new MachineResizeConfirmDialog(this.vmName), this.ResizeConfirmResumeAfter);
+                context.Call(new MachineStoragePickDialog(this.vmName), this.ResizeConfirmStorageResumeAfter);
             }
             catch (Exception)
             {
                 await context.PostAsync("Resize Aborted!");
+                throw;
+            }
+        }
+
+        private async Task ResizeConfirmStorageResumeAfter(IDialogContext context, IAwaitable<string> result)
+        {
+            try
+            {
+                confirmStorage = await result;
+                if (confirmStorage != string.Empty)
+                {
+                    context.Call(new MachineResizeConfirmDialog(this.vmName), this.ResizeConfirmResumeAfter);
+                }
+                else
+                {
+                    await context.PostAsync("Resize Aborted - Sorry, the storage could not be understood.");
+                }
+            }
+            catch (Exception)
+            {
+                await context.PostAsync("Resize Unsuccessful :(");
                 throw;
             }
         }
@@ -174,7 +193,15 @@ namespace Bot_Application.Dialogs
                 confirmMessage = await result;
                 if (confirmMessage.ToLower().Equals("yes"))
                 {
-                    context.Call(new MachineStoragePickDialog(this.vmName), this.ResizeConfirmStorageResumeAfter);
+
+                    Dictionary<string, string> allVms = new Dictionary<string, string>();
+                    allVms = Helper.AWSHelper.GetVMs();
+                    var myIdx = allVms.Keys.ToList().IndexOf(this.vmName);
+                    this.vmAWSID = allVms.Values.ElementAt(myIdx);
+                    var serviceMessage = new ServiceMessage(OperationType.Restart, confirmStorage, InstanceFamilyType.Storage);
+                    Helper.AWSHelper.RunOperation(this.vmAWSID, serviceMessage);
+                    await context.PostAsync("Sounds good, I'll attempt to resize the " + this.vmName + " VM in " + numOfMins + " minutes.");
+
                 }
                 else
                 {
@@ -188,34 +215,6 @@ namespace Bot_Application.Dialogs
             }
         }
 
-        private async Task ResizeConfirmStorageResumeAfter(IDialogContext context, IAwaitable<string> result)
-        {
-            try
-            {
-                confirmStorage = await result;
-              //  numOfMins = Convert.ToInt32(confirmMessage);
-                if (confirmStorage != string.Empty)
-                {
-                    Dictionary<string, string> allVms = new Dictionary<string, string>();
-                    allVms = Helper.AWSHelper.GetVMs();
-                    var myIdx = allVms.Keys.ToList().IndexOf(this.vmName);
-                    this.vmAWSID = allVms.Values.ElementAt(myIdx);
-                //    DateTime dt = DateTime.UtcNow.AddMinutes(numOfMins);
-                    var serviceMessage = new ServiceMessage(OperationType.Restart, confirmStorage, InstanceFamilyType.Storage);
-                    Helper.AWSHelper.RunOperation(this.vmAWSID, serviceMessage);
-                    await context.PostAsync("Sounds good, I'll attempt to resize the " + this.vmName + " VM in " + numOfMins + " minutes.");
-                }
-                else
-                {
-                    await context.PostAsync("Resize Aborted - Sorry, the time could not be understood.");
-                }
-            }
-            catch (Exception)
-            {
-                await context.PostAsync("Resize Unsuccessful :(");
-                throw;
-            }
-        }
         [LuisIntent("snapshot")]
         public async Task snapshot(IDialogContext context, LuisResult result)
         {
