@@ -98,6 +98,22 @@
                         {
                             "title": "tickets",
                             "description": "Query for service requests and incidents"
+                        },
+                        {
+                            "title": "reboot VM",
+                            "description": "Request to restart a virtual machine"
+                        },
+                        {
+                            "title": "start VM",
+                            "description": "Request to start a virtual machine"
+                        },
+                        {
+                            "title": "stop VM",
+                            "description": "Request to stop a virtual machine"
+                        },
+                        {
+                            "title": "resize VM",
+                            "description": "Request to resize a virtual machine"
                         }
 					]
                 }
