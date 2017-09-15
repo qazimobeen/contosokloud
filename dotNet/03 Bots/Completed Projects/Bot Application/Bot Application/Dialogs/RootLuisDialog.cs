@@ -105,7 +105,7 @@ namespace Bot_Application.Dialogs
 
             await context.PostAsync(message);
 
-            context.Wait(this.MessageReceived);
+            context.Call(new MachineStopInquireDialog(), this.StopInquireResumeAfter);
         }
 
         private async Task StopInquireResumeAfter(IDialogContext context, IAwaitable<string> result)
