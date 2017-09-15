@@ -68,48 +68,94 @@ namespace Bot_Application.Helper
         /// Runs the requested action against the target VM.
         /// </summary>
         /// <param name="instanceId">The target VM</param>
-        /// <param name="operationName">The operation name</param>
+        /// <param name="serviceMessage">The service message to parse</param>
         /// <param name="scheduledTime">the scheduled time</param>
         /// <returns></returns>
-        public static bool RunOperation(string instanceId, string operationName, DateTime? scheduledTime = null)
+        public static bool RunOperation(string instanceId, ServiceMessage serviceMessage, DateTime? scheduledTime = null)
         {
-            HttpResponseMessage response = GetAWSResponse(CreateAWSPostMessage(instanceId, operationName, scheduledTime));
+            HttpResponseMessage response = GetAWSResponse(CreateAWSPostMessage(instanceId, serviceMessage, scheduledTime));
             return response.IsSuccessStatusCode;
         }
 
+        public static List<string> GetResizeFamilies()
+        {
+            return Enum.GetNames(typeof(InstanceFamilyType)).ToList();
+        }
+
+        public static List<string> GetStorageInstanceTypes()
+        {
+            return Enum.GetNames(typeof(StorageInstanceType)).ToList();
+        }
+
         /// <summary>
-        /// Creates a POST <see cref="AWSPostMessage"/> that will invoke the supplied <paramref name="operationName"/> 
-        /// based on the <paramref name="instanceId"/> provided, by the <paramref name="scheduledTime"/> supplied.
+        /// Creates a POST <see cref="AWSPostMessage"/> that will parse the <paramref name="serviceMessage"/> and determine
+        /// what actions to do for the <paramref name="instanceId"/> provided, by the <paramref name="scheduledTime"/> supplied.
         /// </summary>
         /// <param name="instanceId">The target VM</param>
-        /// <param name="operationName">The operation name</param>
+        /// <param name="serviceMessage">The service message to parse</param>
         /// <param name="scheduledTime">the scheduled time</param>
         /// <returns></returns>
-        private static AWSPostMessage CreateAWSPostMessage(string instanceId, string operationName, DateTime? scheduledTime = null)
+        private static AWSPostMessage CreateAWSPostMessage(string instanceId, ServiceMessage serviceMessage, DateTime? scheduledTime = null)
         {
-            return new AWSPostMessage
+            if (serviceMessage != null)
             {
-                CompanyId = 250,
-                ServiceDescription = "Restart, start, or stop an existing Amazon EC2 instance",
-                ServiceId = 2,
-                ServiceName = @"Restart/start/stop Amazon EC2 instance",
-                TicketDescription = CapitaliseOperationName(operationName) + " an existing Amazon virtual machine",
-                TicketFields = new TicketFields
+                var serviceDescription = string.Empty;
+                var serviceName = string.Empty;
+                var ticketDescription = string.Empty;
+                var ticketSubject = string.Empty;
+                var operationTypeName = GetNameOfOperationType(serviceMessage.OperationType);
+                switch (serviceMessage.OperationType)
                 {
-                    AccountId = "411808402448",
-                    ChangeNumber = 1,
-                    InstanceId = instanceId,
-                    OperationName = operationName.ToLower(),
-                    ScheduledTimestamp = scheduledTime.HasValue 
-                        ? scheduledTime.Value.AddMinutes(1).ToString("s") 
-                        : DateTime.UtcNow.AddMinutes(1).ToString("s")
-                },
-                TicketId = 1,
-                TicketRequesterEmail = "39fd55d0.kloud.com.au@apac.teams.ms",
-                TicketRequesterName = "Contoso Managed Services",
-                TicketRequesterPhone = "+61439391813",
-                TicketSubject = CapitaliseOperationName(operationName) + " Amazon Virtual Machine"
-            };
+                    case OperationType.Start:
+                    case OperationType.Stop:
+                    case OperationType.Restart:
+                    {                        
+                        serviceDescription = "Restart, start, or stop an existing Amazon EC2 instance";
+                        serviceName = @"Restart/start/stop Amazon EC2 instance";
+                        ticketDescription = operationTypeName + " an existing Amazon virtual machine";
+                        ticketSubject = operationTypeName + " Amazon Virtual Machine";
+                    }
+                    break;
+                    case OperationType.Resize:
+                    {
+                        serviceDescription = operationTypeName + " an existing Amazon EC2 instance";
+                        serviceName = operationTypeName + " Amazon EC2 instance";
+                        ticketDescription = operationTypeName + " an existing Amazon virtual machine";
+                        ticketSubject = operationTypeName + " Amazon Virtual Machine";
+                    }
+                    break;
+                }
+
+                // compose the post message
+                return new AWSPostMessage
+                {
+                    CompanyId = 250,
+                    ServiceDescription = serviceDescription,
+                    ServiceId = serviceMessage.CurrentServiceId,
+                    ServiceName = serviceName,
+                    TicketDescription = ticketDescription,
+                    TicketFields = new TicketFields
+                    {
+                        AccountId = "411808402448",
+                        ChangeNumber = 1,
+                        InstanceId = instanceId,
+                        OperationName = operationTypeName.ToLower(),
+                        InstanceType = serviceMessage.ServiceConfiguration != null
+                            ? serviceMessage.ServiceConfiguration.SelectedInstanceType
+                            : string.Empty,
+                        ScheduledTimestamp = scheduledTime.HasValue
+                        ? scheduledTime.Value.ToString("s")
+                        : DateTime.UtcNow.ToString("s")
+                    },
+                    TicketId = 1,
+                    TicketRequesterEmail = "39fd55d0.kloud.com.au@apac.teams.ms",
+                    TicketRequesterName = "Contoso Managed Services",
+                    TicketRequesterPhone = "+61439391813",
+                    TicketSubject = ticketSubject
+                };
+            }
+            // just return an empty message if the serviceMessage provided was invalid
+            return new AWSPostMessage();
         }
 
         /// <summary>
@@ -124,6 +170,16 @@ namespace Bot_Application.Helper
             result.Append(operationName.First().ToString().ToUpper());
             result.Append(operationName.Substring(1));
             return result.ToString();
+        }
+
+        /// <summary>
+        /// Gets the enum name of the <see cref="OperationType"/> provided.
+        /// </summary>
+        /// <param name="type">the type to get the name of</param>
+        /// <returns>The name of the enum value</returns>
+        private static string GetNameOfOperationType(OperationType type)
+        {
+            return Enum.GetName(typeof(OperationType), type);
         }
     }
 }

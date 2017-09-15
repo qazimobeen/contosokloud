@@ -11,6 +11,7 @@ using Microsoft.Bot.Connector;
 using Bot_Application.Helper;
 using Bot_Application.Entities;
 using Newtonsoft.Json.Linq;
+using Bot_Application.Entities.AWS;
 
 namespace Bot_Application.Dialogs
 {
@@ -21,6 +22,7 @@ namespace Bot_Application.Dialogs
         private string vmName = string.Empty;
         private string vmAWSID = string.Empty;
         private string confirmMessage = string.Empty;
+        private int numOfMins = 0;
 
         [LuisIntent("thanks")]
         public async Task Thanks(IDialogContext context, LuisResult result)
@@ -92,18 +94,42 @@ namespace Bot_Application.Dialogs
             try
             {
                 confirmMessage = await result;
-                if(confirmMessage.ToLower().Equals("yes"))
+                if (confirmMessage.ToLower().Equals("yes"))
+                {
+                    context.Call(new MachineCalendarPickDialog(this.vmName), this.RebootConfirmTimeResumeAfter);
+                }
+                else
+                {
+                    await context.PostAsync("Reboot Aborted!");
+                }
+            }
+            catch (Exception)
+            {
+                await context.PostAsync("Reboot Unsuccessful :(");
+                throw;
+            }
+        }
+
+        private async Task RebootConfirmTimeResumeAfter(IDialogContext context, IAwaitable<string> result)
+        {
+            try
+            {
+                confirmMessage = await result;
+                numOfMins = Convert.ToInt32(confirmMessage);
+                if (numOfMins >= 0)
                 {
                     Dictionary<string, string> allVms = new Dictionary<string, string>();
                     allVms = Helper.AWSHelper.GetVMs();
                     var myIdx = allVms.Keys.ToList().IndexOf(this.vmName);
                     this.vmAWSID = allVms.Values.ElementAt(myIdx);
-                    Helper.AWSHelper.RunOperation(this.vmAWSID, "restart");
-                    await context.PostAsync("Ok, I'm attempting to reboot " + this.vmName + " (known as \"" + this.vmAWSID + "\" in AWS)...");
+                    DateTime dt = DateTime.UtcNow.AddMinutes(numOfMins);
+                    var serviceMessage = new ServiceMessage(OperationType.Restart);
+                    Helper.AWSHelper.RunOperation(this.vmAWSID, serviceMessage, dt);
+                    await context.PostAsync("Sounds good, I'll attempt to reboot the " + this.vmName + " VM in " + numOfMins + " minutes.");
                 }
                 else
                 {
-                    await context.PostAsync("Reboot Aborted!");
+                    await context.PostAsync("Reboot Aborted - Sorry, the time could not be understood.");
                 }
             }
             catch (Exception)
