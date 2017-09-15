@@ -9,22 +9,24 @@ using Microsoft.Bot.Connector;
 namespace Bot_Application.Dialogs
 {
     [Serializable]
-    public class MachineBootConfirmDialog : IDialog<string>
+    public class MachineActionConfirmDialog : IDialog<string>
     {
         private int nullattempts = 3;
         private int confirmattempts = 3;
         private string vmName;
+        private string actionName;
         private const string YesOption = "Yes";
         private const string NoOption = "No";
 
-        public MachineBootConfirmDialog(string vmName)
+        public MachineActionConfirmDialog(string vmName, string actionName)
         {
             this.vmName = vmName;
+            this.actionName = actionName;
         }
 
         public async Task StartAsync(IDialogContext context)
         {
-            PromptDialog.Choice(context, this.OnOptionsSelected, new List<string> { YesOption, NoOption }, $"Do you want to Boot - {this.vmName} ?", "I'm sorry, I don't understand your reply. Please reply with 'Yes' or 'No'?", 3);
+            PromptDialog.Choice(context, this.OnOptionsSelected, new List<string> { YesOption, NoOption }, $"Do you want to {this.actionName} - {this.vmName} ?", "I'm sorry, I don't understand your reply. Please reply with 'Yes' or 'No'?", 3);
         }
 
         private async Task OnOptionsSelected(IDialogContext context, IAwaitable<string> result)
