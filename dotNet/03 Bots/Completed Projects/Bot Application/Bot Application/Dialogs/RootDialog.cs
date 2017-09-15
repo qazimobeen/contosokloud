@@ -262,7 +262,8 @@ namespace Bot_Application
                 + "* To find out remaining hours in my service agreement this month, you can type **hours**\n"
                 + "* To get latest status of service request or incident, you can type **status** followed by the ticket number\n"
                 + "* To find most recent service requests or incidents, you can type **tickets**\n"
-                + "* To find service requests or incidents for a specific period, you can type **tickets** followed by from date and to date";
+                + "* To find service requests or incidents for a specific period, you can type **tickets** followed by from date and to date"
+                + "* To perform actions on a VM, you can type **reboot, start, stop or resize** followed by the name of the VM";
 
             await context.PostAsync(helpMessage);
         }
