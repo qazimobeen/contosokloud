@@ -166,18 +166,10 @@
   <ItemGroup>
     <Compile Include="App_Start\WebApiConfig.cs" />
     <Compile Include="Controllers\MessagesController.cs" />
-    <Compile Include="Dialogs\MachineBootConfirmDialog.cs" />
-    <Compile Include="Dialogs\MachineStopInquireDialog.cs" />
-    <Compile Include="Dialogs\MachineStopConfirmDialog.cs" />
-    <Compile Include="Dialogs\MachineSnapshotConfirmDialog.cs" />
-    <Compile Include="Dialogs\MachineSnapshotInquireDialog.cs" />
+    <Compile Include="Dialogs\MachineActionConfirmDialog.cs" />
     <Compile Include="Dialogs\MachineStoragePickDialog.cs" />
     <Compile Include="Dialogs\MachineCalendarPickDialog.cs" />
-    <Compile Include="Dialogs\MachineResizeConfirmDialog.cs" />
-    <Compile Include="Dialogs\MachineRebootConfirmDialog.cs" />
-    <Compile Include="Dialogs\MachineBootInquireDialog.cs" />
-    <Compile Include="Dialogs\MachineResizeInquireDialog.cs" />
-    <Compile Include="Dialogs\MachineRebootInquireDialog.cs" />
+    <Compile Include="Dialogs\MachineActionInquireDialog.cs" />
     <Compile Include="Dialogs\QnADialog.cs" />
     <Compile Include="Dialogs\RootDialog.cs" />
     <Compile Include="Dialogs\RootLuisDialog.cs" />

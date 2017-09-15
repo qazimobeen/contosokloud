@@ -9,18 +9,27 @@ using Microsoft.Bot.Connector;
 namespace Bot_Application.Dialogs
 {
     [Serializable]
-    public class MachineSnapshotInquireDialog : IDialog<string>
+    public class MachineActionInquireDialog : IDialog<string>
     {
         private int attempts = 3;
+        private string actionName;
         Dictionary<string, string> allVms = new Dictionary<string, string>();
+
+        public MachineActionInquireDialog( string actionName)
+        {
+            this.actionName = actionName;
+        }
 
         public async Task StartAsync(IDialogContext context)
         {
+            //await context.PostAsync("What machine do you want to reboot?  Below is a list of possible VMs.");
+            //await context.PostAsync("What machine do you want to reboot2?");
+            //await context.PostAsync("What machine do you want to reboot3?");
             allVms = Helper.AWSHelper.GetVMs();
 
             List<string> vmList = allVms.Keys.ToList();
 
-            PromptDialog.Choice(context, this.OnOptionsSelected, vmList, "What machine do you want to snapshot?  Below is a list of possible VMs.", "I'm sorry, I don't understand your reply. Please choose from the list or with the name of a VM.", 3);
+            PromptDialog.Choice(context, this.OnOptionsSelected, vmList, $"What machine do you want to {this.actionName}?  Below is a list of possible VMs.", "I'm sorry, I don't understand your reply. Please choose from the list or with the name of a VM.", 3);
 
             //context.Wait(this.MessageReceivedAsync);
 

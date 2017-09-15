@@ -15,10 +15,12 @@ namespace Bot_Application.Dialogs
         private int confirmattempts = 3;
         private string vmName;
         Dictionary<string, int> timeChoices;
+        private string actionName;
 
-        public MachineCalendarPickDialog(string vmName)
+        public MachineCalendarPickDialog(string vmName, string actionName)
         {
             this.vmName = vmName;
+            this.actionName = actionName;
             timeChoices = new Dictionary<string, int>();
             timeChoices.Add("now", 0);
             timeChoices.Add("5 minutes", 5);
@@ -36,7 +38,7 @@ namespace Bot_Application.Dialogs
             //context.Wait(this.MessageReceivedAsync);
             
             List<string> timeOptions = timeChoices.Keys.ToList<string>();
-            PromptDialog.Choice(context, this.onTimeProvided, timeOptions, "Choose from the list below when to restart", "I'm sorry, I don't understand your reply. Please choose from the list", 3);
+            PromptDialog.Choice(context, this.onTimeProvided, timeOptions, $"Choose from the list below when to {this.actionName}", "I'm sorry, I don't understand your reply. Please choose from the list", 3);
         }
 
         private async Task onTimeProvided(IDialogContext context, IAwaitable<string> result)

@@ -26,6 +26,13 @@ namespace Bot_Application.Dialogs
         private string confirmStorage = string.Empty;
         private int numOfMins = 0;
 
+        private const string bootString = "boot";
+        private const string RebootString = "reboot";
+        private const string ResizeString = "resize";
+        private const string SnapshotString = "snapshot";
+        private const string StopString = "stop";
+
+
         [LuisIntent("thanks")]
         public async Task Thanks(IDialogContext context, LuisResult result)
         {
@@ -54,7 +61,7 @@ namespace Bot_Application.Dialogs
 
             await context.PostAsync(message);
 
-            context.Call(new MachineBootInquireDialog(), this.BootInquireResumeAfter);
+            context.Call(new MachineActionInquireDialog(bootString), this.BootInquireResumeAfter);
         }
 
         private async Task BootInquireResumeAfter(IDialogContext context, IAwaitable<string> result)
@@ -62,7 +69,7 @@ namespace Bot_Application.Dialogs
             try
             {
                 this.vmName = await result;
-                context.Call(new MachineBootConfirmDialog(this.vmName), this.BootConfirmResumeAfter);
+                context.Call(new MachineActionConfirmDialog(this.vmName,bootString), this.BootConfirmResumeAfter);
             }
             catch (Exception)
             {
@@ -105,7 +112,7 @@ namespace Bot_Application.Dialogs
 
             await context.PostAsync(message);
 
-            context.Call(new MachineStopInquireDialog(), this.StopInquireResumeAfter);
+            context.Call(new MachineActionInquireDialog(StopString), this.StopInquireResumeAfter);
         }
 
         private async Task StopInquireResumeAfter(IDialogContext context, IAwaitable<string> result)
@@ -113,7 +120,7 @@ namespace Bot_Application.Dialogs
             try
             {
                 this.vmName = await result;
-                context.Call(new MachineStopConfirmDialog(this.vmName), this.StopConfirmResumeAfter);
+                context.Call(new MachineActionConfirmDialog(this.vmName, StopString), this.StopConfirmResumeAfter);
             }
             catch (Exception)
             {
@@ -129,7 +136,7 @@ namespace Bot_Application.Dialogs
                 confirmMessage = await result;
                 if (confirmMessage.ToLower().Equals("yes"))
                 {
-                    context.Call(new MachineCalendarPickDialog(this.vmName), this.StopConfirmTimeResumeAfter);
+                    context.Call(new MachineCalendarPickDialog(this.vmName, StopString), this.StopConfirmTimeResumeAfter);
                 }
                 else
                 {
@@ -179,7 +186,7 @@ namespace Bot_Application.Dialogs
 
             await context.PostAsync(message);
 
-            context.Call(new MachineRebootInquireDialog(), this.RebootInquireResumeAfter);
+            context.Call(new MachineActionInquireDialog(RebootString), this.RebootInquireResumeAfter);
         }
 
         private async Task RebootInquireResumeAfter(IDialogContext context, IAwaitable<string> result)
@@ -187,7 +194,7 @@ namespace Bot_Application.Dialogs
             try
             {
                 this.vmName = await result;
-                context.Call(new MachineRebootConfirmDialog(this.vmName), this.RebootConfirmResumeAfter);
+                context.Call(new MachineActionConfirmDialog(this.vmName, RebootString), this.RebootConfirmResumeAfter);
             }
             catch (Exception)
             {
@@ -203,7 +210,7 @@ namespace Bot_Application.Dialogs
                 confirmMessage = await result;
                 if (confirmMessage.ToLower().Equals("yes"))
                 {
-                    context.Call(new MachineCalendarPickDialog(this.vmName), this.RebootConfirmTimeResumeAfter);
+                    context.Call(new MachineCalendarPickDialog(this.vmName, RebootString), this.RebootConfirmTimeResumeAfter);
                 }
                 else
                 {
@@ -253,7 +260,7 @@ namespace Bot_Application.Dialogs
 
             await context.PostAsync(message);
 
-            context.Call(new MachineResizeInquireDialog(), this.ResizeInquireResumeAfter);
+            context.Call(new MachineActionInquireDialog(ResizeString), this.ResizeInquireResumeAfter);
         }
 
 
@@ -278,7 +285,7 @@ namespace Bot_Application.Dialogs
                 confirmStorage = await result;
                 if (confirmStorage != string.Empty)
                 {
-                    context.Call(new MachineResizeConfirmDialog(this.vmName), this.ResizeConfirmResumeAfter);
+                    context.Call(new MachineActionConfirmDialog(this.vmName, ResizeString), this.ResizeConfirmResumeAfter);
                 }
                 else
                 {
@@ -328,7 +335,7 @@ namespace Bot_Application.Dialogs
 
             await context.PostAsync(message);
 
-            context.Call(new MachineSnapshotInquireDialog(), this.SnapshotInquireResumeAfter);
+            context.Call(new MachineActionInquireDialog(SnapshotString), this.SnapshotInquireResumeAfter);
         }
 
         private async Task SnapshotInquireResumeAfter(IDialogContext context, IAwaitable<string> result)
@@ -336,7 +343,7 @@ namespace Bot_Application.Dialogs
             try
             {
                 this.vmName = await result;
-                context.Call(new MachineSnapshotConfirmDialog(this.vmName), this.SnapshotConfirmResumeAfter);
+                context.Call(new MachineActionConfirmDialog(this.vmName, SnapshotString), this.SnapshotConfirmResumeAfter);
             }
             catch (Exception)
             {
