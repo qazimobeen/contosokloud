@@ -1,0 +1,176 @@
+﻿{
+  "$schema": "https://statics.teams.microsoft.com/sdk/v1.0/manifest/MicrosoftTeams.schema.json",
+  "manifestVersion": "1.0",
+  "version": "1.0",
+  "id": "c0bd576f-7dd0-443b-ace9-cbe290a09d91",
+  "packageName": "com.kloud.teams.managedservicesapp",
+  "developer": {
+      "name": "Kloud Solutions",
+      "websiteUrl": "http://www.kloud.com.au",
+      "privacyUrl": "http://www.kloud.com.au/privacy",
+      "termsOfUseUrl": "http://www.kloud.com.au/termsofuse"
+  },
+  "name": {
+    "short": "Asish Search Test Bot",
+    "full": "Asish Compose Extension Test Bot"
+  },
+  "description": {
+    "short": "Asish Compose Extension Test Bot - a template for testing Compose extension",
+    "full": "The Compose Extension test bot is meant to test extensions with Connectwise."
+  },
+  "icons": {
+    "outline": "bot_blue.png",
+    "color": "bot_blue.png"
+  },
+  "accentColor": "#0079bf",
+  "configurableTabs": [
+    {
+      "configurationUrl": "https://contosomanagedservices.azurewebsites.net/tab/tabConfig/index.html",
+      "canUpdateConfiguration": false,
+      "scopes": [
+        "team"
+      ]
+    }
+  ],
+  "staticTabs": [
+    {
+      "contentUrl": "https://contosomanagedservices.azurewebsites.net/loading",
+      "entityId": "1on1test123",
+      "name": "Bot Info",
+      "scopes": [
+        "team",
+        "personal"
+      ]
+    }
+  ],
+  "bots": [
+    {
+      "botId": "c0bd576f-7dd0-443b-ace9-cbe290a09d91",
+      "scopes": [
+        "team",
+        "personal"
+      ],
+      "commandLists": [
+        {
+          "scopes": [
+            "team"
+          ],
+          "commands": [
+            {
+              "title": "hello",
+              "description": "Runs the simplest hello dialog"
+            },
+            {
+              "title": "multi dialog 2",
+              "description": "Displays a card with invoke buttons"
+            },
+            {
+              "title": "roster",
+              "description": "Fetches the full roster payload for the current conversation"
+            },
+            {
+              "title": "names",
+              "description": "Lists the names of the users for the current conversation"
+            },
+            {
+              "title": "last dialog",
+              "description": "Shows which dialog sent the last message"
+            },
+            {
+              "title": "send message to 1:1",
+              "description": "Send the user a 1:1 message"
+            },
+            {
+              "title": "setup text message",
+              "description": "Sets up a text message that can be updated"
+            },
+            {
+              "title": "update text message",
+              "description": "Updates a text message once it is setup to be updated"
+            },
+            {
+              "title": "setup card message",
+              "description": "Sets up a card that can be updated"
+            }
+          ]
+        },
+        {
+          "scopes": [
+            "personal"
+          ],
+          "commands": [
+            {
+              "title": "hello",
+              "description": "Runs the simplest hello dialog"
+            },
+            {
+              "title": "multi dialog 2",
+              "description": "Displays a card with invoke buttons"
+            },
+            {
+              "title": "roster",
+              "description": "Fetches the full roster payload for the current conversation"
+            },
+            {
+              "title": "names",
+              "description": "Lists the names of the users for the current conversation"
+            },
+            {
+              "title": "last dialog",
+              "description": "Shows which dialog sent the last message"
+            },
+            {
+              "title": "send message to 1:1",
+              "description": "Send the user a 1:1 message"
+            },
+            {
+              "title": "setup text message",
+              "description": "Sets up a text message that can be updated"
+            },
+            {
+              "title": "update text message",
+              "description": "Updates a text message once it is setup to be updated"
+            },
+            {
+              "title": "setup card message",
+              "description": "Sets up a card that can be updated"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "composeExtensions": [
+    {
+      "botId": "c0bd576f-7dd0-443b-ace9-cbe290a09d91",
+      "scopes": [
+        "personal",
+        "team"
+      ],
+      "canUpdateConfiguration": true,
+      "commands": [
+        {
+          "id": "search123",
+          "description": "Find a card",
+          "title": "Search",
+          "initialRun": true,
+          "parameters": [
+            {
+              "title": "query123",
+              "name": "query",
+              "description": "Search string"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "permissions": [
+    "identity",
+    "messageTeamMembers"
+  ],
+  "validDomains": [
+    "contosomanagedservices.azurewebsites.net",
+    "contosomanagedservicesbotapi.azurewebsites.net"
+  ]
+}
