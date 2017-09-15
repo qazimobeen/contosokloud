@@ -148,7 +148,7 @@ namespace Bot_Application.Helper
                         : DateTime.UtcNow.ToString("s")
                     },
                     TicketId = 1,
-                    TicketRequesterEmail = "39fd55d0.kloud.com.au@apac.teams.ms",
+                    TicketRequesterEmail = "bruce.albany@kloud.com.au", //"39fd55d0.kloud.com.au@apac.teams.ms"
                     TicketRequesterName = "Contoso Managed Services",
                     TicketRequesterPhone = "+61439391813",
                     TicketSubject = ticketSubject
