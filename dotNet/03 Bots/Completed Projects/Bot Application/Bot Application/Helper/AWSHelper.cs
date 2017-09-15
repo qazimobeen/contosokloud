@@ -99,27 +99,21 @@ namespace Bot_Application.Helper
         {
             if (serviceMessage != null)
             {
-                var serviceDescription = string.Empty;
-                var serviceName = string.Empty;
-                var ticketDescription = string.Empty;
-                var ticketSubject = string.Empty;
+                // default descriptions
                 var operationTypeName = GetNameOfOperationType(serviceMessage.OperationType);
+                var serviceDescription = operationTypeName + " an existing Amazon EC2 instance";
+                var serviceName = operationTypeName + " Amazon EC2 instance";
+                var ticketDescription = operationTypeName + " an existing Amazon virtual machine";
+                var ticketSubject = operationTypeName + " Amazon Virtual Machine";
+                // format descriptions for different actions
                 switch (serviceMessage.OperationType)
                 {
                     case OperationType.Start:
                     case OperationType.Stop:
                     case OperationType.Restart:
-                    {                        
+                    {
                         serviceDescription = "Restart, start, or stop an existing Amazon EC2 instance";
                         serviceName = @"Restart/start/stop Amazon EC2 instance";
-                        ticketDescription = operationTypeName + " an existing Amazon virtual machine";
-                        ticketSubject = operationTypeName + " Amazon Virtual Machine";
-                    }
-                    break;
-                    case OperationType.Resize:
-                    {
-                        serviceDescription = operationTypeName + " an existing Amazon EC2 instance";
-                        serviceName = operationTypeName + " Amazon EC2 instance";
                         ticketDescription = operationTypeName + " an existing Amazon virtual machine";
                         ticketSubject = operationTypeName + " Amazon Virtual Machine";
                     }
