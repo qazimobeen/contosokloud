@@ -60,11 +60,75 @@ namespace Bot_Application.Dialogs
         [LuisIntent("stop")]
         public async Task stop(IDialogContext context, LuisResult result)
         {
-            string message = "Certainly!  Let me help you stop a Virtual Machine (VM)... As soon as the developer writes this code.";
+            string message = "Certainly!  Let me help you stop a Virtual Machine (VM)...";
 
             await context.PostAsync(message);
 
             context.Wait(this.MessageReceived);
+        }
+
+        private async Task StopInquireResumeAfter(IDialogContext context, IAwaitable<string> result)
+        {
+            try
+            {
+                this.vmName = await result;
+                context.Call(new MachineStopConfirmDialog(this.vmName), this.StopConfirmResumeAfter);
+            }
+            catch (Exception)
+            {
+                await context.PostAsync("Stop Aborted!");
+                throw;
+            }
+        }
+
+        private async Task StopConfirmResumeAfter(IDialogContext context, IAwaitable<string> result)
+        {
+            try
+            {
+                confirmMessage = await result;
+                if (confirmMessage.ToLower().Equals("yes"))
+                {
+                    context.Call(new MachineCalendarPickDialog(this.vmName), this.StopConfirmTimeResumeAfter);
+                }
+                else
+                {
+                    await context.PostAsync("Stop Aborted!");
+                }
+            }
+            catch (Exception)
+            {
+                await context.PostAsync("Stop Unsuccessful :(");
+                throw;
+            }
+        }
+
+        private async Task StopConfirmTimeResumeAfter(IDialogContext context, IAwaitable<string> result)
+        {
+            try
+            {
+                confirmMessage = await result;
+                numOfMins = Convert.ToInt32(confirmMessage);
+                if (numOfMins >= 0)
+                {
+                    Dictionary<string, string> allVms = new Dictionary<string, string>();
+                    allVms = Helper.AWSHelper.GetVMs();
+                    var myIdx = allVms.Keys.ToList().IndexOf(this.vmName);
+                    this.vmAWSID = allVms.Values.ElementAt(myIdx);
+                    DateTime dt = DateTime.UtcNow.AddMinutes(numOfMins);
+                    var serviceMessage = new ServiceMessage(OperationType.Stop);
+                    Helper.AWSHelper.RunOperation(this.vmAWSID, serviceMessage, dt);
+                    await context.PostAsync("Sounds good, I'll attempt to stop the " + this.vmName + " VM in " + numOfMins + " minutes.");
+                }
+                else
+                {
+                    await context.PostAsync("Reboot Aborted - Sorry, the time could not be understood.");
+                }
+            }
+            catch (Exception)
+            {
+                await context.PostAsync("Reboot Unsuccessful :(");
+                throw;
+            }
         }
 
         [LuisIntent("reboot")]

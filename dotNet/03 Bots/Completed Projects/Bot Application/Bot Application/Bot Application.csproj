@@ -167,6 +167,8 @@
     <Compile Include="App_Start\WebApiConfig.cs" />
     <Compile Include="Controllers\MessagesController.cs" />
     <Compile Include="Dialogs\MachineBootConfirmDialog.cs" />
+    <Compile Include="Dialogs\MachineStopInquireDialog.cs" />
+    <Compile Include="Dialogs\MachineStopConfirmDialog.cs" />
     <Compile Include="Dialogs\MachineSnapshotConfirmDialog.cs" />
     <Compile Include="Dialogs\MachineSnapshotInquireDialog.cs" />
     <Compile Include="Dialogs\MachineStoragePickDialog.cs" />
