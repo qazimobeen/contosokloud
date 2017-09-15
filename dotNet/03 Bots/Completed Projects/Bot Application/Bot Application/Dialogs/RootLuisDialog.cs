@@ -466,7 +466,6 @@ namespace Bot_Application.Dialogs
                     card.Buttons = new List<CardAction>()
                     {
                         new CardAction("openUrl", "View ticket", null, string.Format("https://aus.myconnectwise.net/v4_6_release/services/system_io/Service/fv_sr100_request.rails?service_recid={0}&companyName={1}",ticket.SubTitle, companyName)),
-                        new CardAction("openUrl", "View ticket in new tab", null, SendDeeplink(context, context.Activity, "new tab"))
                     };
 
                     reply.Attachments.Add(card.ToAttachment());
@@ -490,11 +489,17 @@ namespace Bot_Application.Dialogs
 
                 foreach (JObject o in ticketDetails)
                 {
+                    var text = $"Ticket Id: { o["id"].ToString()}" + $" Ticket Type: { o["recordType"].ToString()}";
                     ThumbnailCard card = new ThumbnailCard()
                     { 
                         Title = $"{o["summary"].ToString()}",
                         Subtitle = $"Status: { o["status"]["name"].ToString()}," + $"  Date Entered: { o["dateEntered"].ToString()}",
-                        Text = $"Ticket Id: { o["id"].ToString()}" + $" Ticket Type: { o["recordType"].ToString()}"
+                        Text = text
+                    };
+
+                    card.Buttons = new List<CardAction>()
+                    {
+                        new CardAction("openUrl", "View ticket in new tab", null, SendDeeplink(context, context.Activity, text))
                     };
 
                     reply.Attachments.Add(card.ToAttachment());
