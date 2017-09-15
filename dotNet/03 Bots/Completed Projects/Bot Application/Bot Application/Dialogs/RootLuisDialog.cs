@@ -22,6 +22,7 @@ namespace Bot_Application.Dialogs
         private string vmName = string.Empty;
         private string vmAWSID = string.Empty;
         private string confirmMessage = string.Empty;
+        private string confirmStorage = string.Empty;
         private int numOfMins = 0;
 
         [LuisIntent("thanks")]
@@ -142,14 +143,79 @@ namespace Bot_Application.Dialogs
         [LuisIntent("resize")]
         public async Task resize(IDialogContext context, LuisResult result)
         {
-            //string message = "Sure, how do you want me to resize it?";
-            string message = "I appreciate what you're asking for, but I have no idea how to do that at this point.";
+            string message = "Great!  Let me help you resize a Virtual Machine (VM).";
 
             await context.PostAsync(message);
 
-            context.Wait(this.MessageReceived);
+            context.Call(new MachineResizeInquireDialog(), this.ResizeInquireResumeAfter);
+
+           // context.Wait(this.MessageReceived);
         }
 
+
+        private async Task ResizeInquireResumeAfter(IDialogContext context, IAwaitable<string> result)
+        {
+            try
+            {
+                this.vmName = await result;
+                context.Call(new MachineResizeConfirmDialog(this.vmName), this.ResizeConfirmResumeAfter);
+            }
+            catch (Exception)
+            {
+                await context.PostAsync("Resize Aborted!");
+                throw;
+            }
+        }
+
+        private async Task ResizeConfirmResumeAfter(IDialogContext context, IAwaitable<string> result)
+        {
+            try
+            {
+                confirmMessage = await result;
+                if (confirmMessage.ToLower().Equals("yes"))
+                {
+                    context.Call(new MachineStoragePickDialog(this.vmName), this.ResizeConfirmStorageResumeAfter);
+                }
+                else
+                {
+                    await context.PostAsync("Resize Aborted!");
+                }
+            }
+            catch (Exception)
+            {
+                await context.PostAsync("Resize Unsuccessful :(");
+                throw;
+            }
+        }
+
+        private async Task ResizeConfirmStorageResumeAfter(IDialogContext context, IAwaitable<string> result)
+        {
+            try
+            {
+                confirmStorage = await result;
+              //  numOfMins = Convert.ToInt32(confirmMessage);
+                if (confirmStorage != string.Empty)
+                {
+                    Dictionary<string, string> allVms = new Dictionary<string, string>();
+                    allVms = Helper.AWSHelper.GetVMs();
+                    var myIdx = allVms.Keys.ToList().IndexOf(this.vmName);
+                    this.vmAWSID = allVms.Values.ElementAt(myIdx);
+                //    DateTime dt = DateTime.UtcNow.AddMinutes(numOfMins);
+                    var serviceMessage = new ServiceMessage(OperationType.Restart, confirmStorage, InstanceFamilyType.Storage);
+                    Helper.AWSHelper.RunOperation(this.vmAWSID, serviceMessage);
+                    await context.PostAsync("Sounds good, I'll attempt to resize the " + this.vmName + " VM in " + numOfMins + " minutes.");
+                }
+                else
+                {
+                    await context.PostAsync("Resize Aborted - Sorry, the time could not be understood.");
+                }
+            }
+            catch (Exception)
+            {
+                await context.PostAsync("Resize Unsuccessful :(");
+                throw;
+            }
+        }
         [LuisIntent("snapshot")]
         public async Task snapshot(IDialogContext context, LuisResult result)
         {
